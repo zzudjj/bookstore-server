@@ -127,11 +127,9 @@ public class UserController {
     @GetMapping("/getUserAddress")
     public Map<String,Object> getUserAddress(@RequestParam("account")String account){
         Map<String,Object> map = new HashMap<>();
-        System.out.println("=============="+account+"===========");
+        logger.info("获取用户地址列表: {}", account);
         List<Address> addressList = addressService.addressList(account);
-        for(Address address:addressList){
-            System.out.println("======"+address.toString()+"========");
-        }
+        logger.debug("找到{}个地址", addressList.size());
         map.put("addressList",addressList);
         return ResultUtil.resultSuccess(map);
     }
@@ -215,8 +213,7 @@ public class UserController {
         User user = new User();
         user.setId(id);
         user.setEnable(true);
-        System.out.println("=======id======:"+id);
-        System.out.println("=======status======:"+status);
+        logger.info("修改用户状态: id={}, status={}", id, status);
         if(userService.updateUser(user)>0){
             return ResultUtil.resultCode(200,"修改成功");
         }
