@@ -74,7 +74,7 @@ public class UserController {
      * @param password 用户密码
      * @return 注册结果
      */
-    @PostMapping(value = "/user/register")
+    @GetMapping(value = "/user/register")
     public Map<String, Object> registerUser(@RequestParam(value = "account") String account,
                                            @RequestParam(value = "password") String password) {
         logger.info("开始用户注册: {}", account);
