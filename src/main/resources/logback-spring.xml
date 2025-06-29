@@ -111,7 +111,7 @@
     </springProfile>
     
     <!-- 默认配置（如果没有指定profile） -->
-    <springProfile name="!dev & !test & !prod">
+    <springProfile name="!dev &amp; !test &amp; !prod">
         <logger name="org.springframework" level="INFO"/>
         <logger name="com.huang.store.mapper" level="DEBUG"/>
         <logger name="com.huang.store" level="DEBUG"/>
