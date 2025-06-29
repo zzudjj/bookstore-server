@@ -1,5 +1,6 @@
 package com.huang.store.controller;
 
+import com.huang.store.configure.FileUploadConfig;
 import com.huang.store.entity.book.BookSort;
 import com.huang.store.entity.book.Recommend;
 import com.huang.store.entity.dto.SortBookRes;
@@ -22,8 +23,8 @@ import com.huang.store.entity.book.Book;
 @RequestMapping(value = "/book")
 public class BookController {
 
-    private String basePath="D://ITsoftware//IDEA//data//Vue//book_01//";
-    private String bookPath="static//image//book//";
+    @Autowired
+    private FileUploadConfig fileUploadConfig;
 
     @Autowired
     @Qualifier("firstVersion")
@@ -210,7 +211,13 @@ public class BookController {
      */
     @GetMapping(value = "/getSortBookList")
     public Map<String, Object> getSortBookList(@RequestParam(value = "sortId")int sortId){
+        System.out.println("======获取分类图书列表======= sortId: " + sortId);
         BookSort bookSort = sortService.getBookSortById(sortId);
+        if(bookSort == null){
+            System.err.println("未找到分类ID为 " + sortId + " 的分类信息");
+            return ResultUtil.resultCode(404, "未找到指定的图书分类");
+        }
+        System.out.println("找到分类: " + bookSort.getSortName());
         List<Book> upperBookList = bookService.getBooksByFirst(bookSort.getSortName(),1,14);
         for(int i=0;i<upperBookList.size();i++){
             String img = bookService.getBookCover(upperBookList.get(i).getisbn());
@@ -361,7 +368,7 @@ public class BookController {
         Book book = bookService.getBook(bookId);
         List<String> imgPaths = bookService.getBookImgSrcList(book.getisbn());
         for(int i=0;i<imgPaths.size();i++){
-            String path=basePath+imgPaths.get(i);
+            String path=fileUploadConfig.getFullPath(imgPaths.get(i));
             imgPaths.set(i,path);
         }
         if(bookService.deleteBook(bookId)>0 && bookService.deleteBookImgOfOne(book.getisbn())>0){

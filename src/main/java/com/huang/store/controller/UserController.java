@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,30 @@ public class UserController {
 //  ============= 注册 =====================
 
     /**
+     * 验证账号是否已被注册
+     * @param account
+     * @return
+     */
+    @GetMapping(value = "/user/accountVerify")
+    @ResponseBody
+    public Map<String, Object> accountVerify(@RequestParam(value = "account") String account){
+        try {
+            System.out.println("======验证账号是否已注册======= account: " + account);
+            User user = userService.getUser(account);
+            if(user != null){
+                System.out.println("该账号已经被注册！");
+                return ResultUtil.resultCode(500,"该账号已被注册！");
+            }
+            System.out.println("该账号可以注册");
+            return ResultUtil.resultCode(200,"该账号可以注册");
+        } catch (Exception e) {
+            System.err.println("验证账号时发生异常: " + e.getMessage());
+            e.printStackTrace();
+            return ResultUtil.resultCode(500,"验证账号时发生错误");
+        }
+    }
+
+    /**
      * 用户注册
      * @param account
      * @param password
@@ -54,7 +79,9 @@ public class UserController {
         user.setAccount(account);
         user.setPassword(passwordEncoder.encode(password));
         user.setManage(false);
+        user.setEnable(true);  // 设置账号为启用状态
         Date date = new Date();
+        user.setRegisterTime(new Timestamp(date.getTime()));  // 设置注册时间
 
         if(userService.addUser(user)>0){
             return ResultUtil.resultCode(200,"注册成功");

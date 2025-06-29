@@ -4,7 +4,7 @@
 
     <!--对书的分类 -->
     <insert id="addSort" parameterType="com.huang.store.entity.book.BookSort">
-        insert into booksort(upperName,sortName,level,rank)
+        insert into booksort(upperName,sortName,level,`rank`)
         values (#{upperName},#{sortName},#{level},#{rank})
     </insert>
 
@@ -21,7 +21,7 @@
         update booksort
             set upperName=#{upperName},
                 sortName=#{sortName},
-                rank=#{rank},
+                `rank`=#{rank},
                 sortName=#{sortName}
             where id=#{id}
     </update>

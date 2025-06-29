@@ -1,5 +1,7 @@
 package com.huang.store.controller;
 
+import com.huang.store.configure.FileUploadConfig;
+import com.huang.store.entity.book.Book;
 import com.huang.store.entity.book.BookImg;
 import com.huang.store.service.imp.BookService;
 import com.huang.store.util.FileUtil;
@@ -26,8 +28,9 @@ import org.slf4j.LoggerFactory;
 @ResponseBody
 public class FileController {
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
-    private String basePath="D://ITsoftware//IDEA//data//Vue//book_01//";
-    private String bookPath="static//image//book01//";
+
+    @Autowired
+    private FileUploadConfig fileUploadConfig;
 
     @Autowired
     @Qualifier("firstVersion")
@@ -47,19 +50,43 @@ public class FileController {
         if(map.size() >0){
             try{
                 isbn = map.get("isbn").toString();
+                System.out.println("接收到的ISBN: " + isbn);
             }catch (Exception e){
-                return ResultUtil.resultCode(500,"上传图片失败");
+                return ResultUtil.resultCode(500,"获取ISBN参数失败");
             }
         }
-        String path = basePath+bookPath;
+
+        // 验证ISBN是否为空
+        if(isbn == null || isbn.trim().isEmpty()){
+            return ResultUtil.resultCode(400,"ISBN不能为空");
+        }
+
+        // 验证ISBN是否在book表中存在
+        try {
+            Book existingBook = bookService.getBookByIsbn(isbn);
+            if(existingBook == null){
+                System.err.println("ISBN " + isbn + " 在book表中不存在");
+                return ResultUtil.resultCode(404,"指定的图书不存在，请先添加图书信息");
+            }
+            System.out.println("找到对应图书: " + existingBook.getBookName());
+        } catch (Exception e) {
+            System.err.println("验证ISBN时发生错误: " + e.getMessage());
+            return ResultUtil.resultCode(500,"验证图书信息时发生错误");
+        }
+
+        String path = fileUploadConfig.getBookUploadPath();
         String imgName = UploadUtil.uploadFile(file,path);
+        if("上传失败".equals(imgName)){
+            return ResultUtil.resultCode(500,"文件上传失败");
+        }
+
         BookImg bookImg = new BookImg();
-        bookImg.setImgSrc(bookPath+imgName);
+        bookImg.setImgSrc(fileUploadConfig.getBookPath()+imgName);
         bookImg.setIsbn(isbn);
         if(bookService.addBookImg(bookImg)>0){
             return ResultUtil.resultCode(200,"上传图片成功");
         }
-        return ResultUtil.resultCode(500,"上传图片失败");
+        return ResultUtil.resultCode(500,"保存图片信息失败");
     }
 
     /**
@@ -73,7 +100,7 @@ public class FileController {
                                      @RequestParam(value = "isbn")String isbn){
         System.out.println("删除图片");
         System.out.println("bookId:"+isbn);
-        String path = basePath+url;
+        String path = fileUploadConfig.getFullPath(url);
         System.out.println("删除的图片的路径是："+path);
         FileUtil.delOneImg(path);
         if(bookService.deleteOneBookImg(isbn,url)>0){
@@ -81,28 +108,6 @@ public class FileController {
         }
         return ResultUtil.resultCode(200,"删除图片失败");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @PostMapping("/batch")
     public String handleFileUpload(HttpServletRequest request) {
@@ -119,7 +124,7 @@ public class FileController {
                     byte[] bytes = file.getBytes();
                     String fileName = file.getOriginalFilename();
                     String suffixName = fileName.substring(fileName.lastIndexOf("."));
-                    String path = bookPath + id + suffixName;
+                    String path = fileUploadConfig.getBookUploadPath() + id + suffixName;
                     stream = new BufferedOutputStream(new FileOutputStream(
                             new File(path)));//设置文件路径及名字
                     stream.write(bytes);// 写入
@@ -238,7 +243,7 @@ public class FileController {
                 id = id.replaceAll("\\-","");
                 String fileName = file[i].getOriginalFilename();
                 String suffixName = fileName.substring(fileName.lastIndexOf("."));
-                String path = bookPath + id +suffixName;
+                String path = fileUploadConfig.getBookUploadPath() + id +suffixName;
                 File dest = new File(path);
                 if(!dest.getParentFile().exists()){
                     dest.getParentFile().mkdirs();//新建文件夹

@@ -3,11 +3,13 @@ package com.huang.store.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,9 @@ public class JwtTokenUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
-    private static final String secret = "huangLong";
+    // 使用固定的密钥字符串，确保重启后Token仍然有效
+    private static final String SECRET_STRING = "huangLongBookStoreSecretKeyForJWT2024ThisIsAVeryLongSecretKeyToMeetHS512Requirements";
+    private static final SecretKey secret = Keys.hmacShaKeyFor(SECRET_STRING.getBytes());
     private static final Long expiration = 1800L;
 
     /**
@@ -32,7 +36,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(secret, SignatureAlgorithm.HS512)  // 新版本API的签名方式
                 .compact();
     }
 
@@ -42,8 +46,9 @@ public class JwtTokenUtil {
     private Claims getClaimsFromToken(String token) {
         Claims claims = null;
         try {
-            claims = Jwts.parser()
+            claims = Jwts.parserBuilder()  // 新版本API使用parserBuilder
                     .setSigningKey(secret)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {

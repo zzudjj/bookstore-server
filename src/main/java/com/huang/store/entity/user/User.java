@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
 /**
- * @author: 黄龙
- * @date: 2020/7/30 17:56
  * @description: 用户类
  */
 public class User {

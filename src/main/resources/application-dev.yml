@@ -4,6 +4,7 @@ server:
 spring:
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   shardingsphere:
     datasource:
       names:
@@ -132,6 +133,13 @@ mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: com.huang.store.entity
 
-web:
-  upload-path: D:/temp/upload/study17/
+# 文件上传配置
+file:
+  upload:
+    # 基础路径 - 现在指向服务端resources下的static文件夹
+    base-path: classpath:static/
+    # 图书图片相对路径
+    book-path: image/book/
+    # 书单封面相对路径
+    topic-path: image/topic/
 

@@ -1,5 +1,6 @@
 package com.huang.store.controller;
 
+import com.huang.store.configure.FileUploadConfig;
 import com.huang.store.entity.book.Book;
 import com.huang.store.entity.book.BookTopic;
 import com.huang.store.entity.book.SubBookTopic;
@@ -22,8 +23,8 @@ import java.util.*;
 @RequestMapping(value = "/topic")
 public class TopicController {
 
-    private String basePath="D://ITsoftware//IDEA//data//Vue//book_01//";
-    private String coverPath="static//image//topic//";
+    @Autowired
+    private FileUploadConfig fileUploadConfig;
 
     @Qualifier("firstTopic")
     @Autowired
@@ -48,9 +49,9 @@ public class TopicController {
         bookTopic.setPut(Boolean.valueOf(map.get("put")));
         System.out.println(map.get("put"));
         System.out.println(bookTopic.toString());
-        String path = basePath+coverPath;
+        String path = fileUploadConfig.getTopicUploadPath();
         String imgName = UploadUtil.uploadFile(file,path);
-        bookTopic.setCover(coverPath+imgName);
+        bookTopic.setCover(fileUploadConfig.getTopicPath()+imgName);
         if(topicService.addBookTopic(bookTopic)>0){
             return ResultUtil.resultCode(200,"添加书单成功");
         }
@@ -81,7 +82,7 @@ public class TopicController {
     public Map<String,Object> delImg(@RequestParam(value = "url") String url,
                                      @RequestParam(value = "id")int id){
         System.out.println("删除图片");
-        String path = basePath+url;
+        String path = fileUploadConfig.getFullPath(url);
         System.out.println("删除的图片的路径是："+path);
         FileUtil.delOneImg(path);
         BookTopic topic = new BookTopic();
@@ -106,8 +107,8 @@ public class TopicController {
         int id = Integer.parseInt(map.get("id"));
         BookTopic bookTopic = new BookTopic();
         bookTopic.setId(id);
-        String imgName = UploadUtil.uploadFile(file,basePath+coverPath);
-        bookTopic.setCover(coverPath+imgName);
+        String imgName = UploadUtil.uploadFile(file,fileUploadConfig.getTopicUploadPath());
+        bookTopic.setCover(fileUploadConfig.getTopicPath()+imgName);
         if(topicService.modifyBookTopic(bookTopic)>0){
             return ResultUtil.resultCode(200,"添加图片成功");
         }

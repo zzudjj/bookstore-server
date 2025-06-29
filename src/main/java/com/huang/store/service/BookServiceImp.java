@@ -186,6 +186,12 @@ public class BookServiceImp implements BookService {
     }
 
     @Override
+    public Book getBookByIsbn(String isbn) {
+        System.out.println("=========根据ISBN从数据库中查询图书==========");
+        return bookMapper.getBookByIsbn(isbn);
+    }
+
+    @Override
     public Book getBookDetail(String ISBN) {
         return null;
     }

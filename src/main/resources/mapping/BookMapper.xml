@@ -4,7 +4,7 @@
 
     <!--这些是对book表的查询-->
     <insert id="addBook" parameterType="com.huang.store.entity.book.Book">
-        insert into book(author,rank,bookName,isbn,publish,birthday,marketPrice,price,stock,description,put,newProduct,recommend)
+        insert into book(author,`rank`,bookName,isbn,publish,birthday,marketPrice,price,stock,description,put,newProduct,recommend)
         values (#{author},#{rank},#{bookName},#{isbn},#{publish},#{birthday},#{marketPrice},#{price},#{stock},#{description},#{put},#{newProduct},#{recommend})
     </insert>
 
@@ -27,7 +27,7 @@
                 stock=#{stock},
                 description=#{description},
                 put=#{put},
-                rank=#{rank},
+                `rank`=#{rank},
                 newProduct=#{newProduct},
                 recommend=#{recommend},
                 isbn=#{isbn}
@@ -74,6 +74,10 @@
 
     <select id="getBook" resultType="com.huang.store.entity.book.Book">
         select * from book where id = #{id}
+    </select>
+
+    <select id="getBookByIsbn" resultType="com.huang.store.entity.book.Book">
+        select * from book where isbn = #{isbn}
     </select>
 
     <select id="getBooksByPage" resultType="com.huang.store.entity.book.Book">
@@ -153,7 +157,7 @@
 
     <!--这些是对推荐图书表的操作(recommend)-->
     <insert id="addToRecommend" parameterType="com.huang.store.entity.book.Recommend">
-        insert into recommend (bookId,rank,addTime) values (#{bookId},#{rank},#{addTime})
+        insert into recommend (bookId,`rank`,addTime) values (#{bookId},#{rank},#{addTime})
     </insert>
 
     <delete id="deleteFromRecommend">
@@ -161,11 +165,11 @@
     </delete>
 
     <update id="modifyRecommendRank">
-        update recommend set rank=#{rank} where bookId=#{bookId}
+        update recommend set `rank`=#{rank} where bookId=#{bookId}
     </update>
 
     <update id="modifyRecommend" parameterType="com.huang.store.entity.book.Recommend">
-        update recommend set rank=#{rank},
+        update recommend set `rank`=#{rank},
                              bookId=#{bookId},
                              addTime=#{addTime}
                             where id=#{id}
@@ -184,7 +188,7 @@
 
     <!--这些是对新品推荐表的操作(newproduct)    -->
     <insert id="addToNewProduct" parameterType="com.huang.store.entity.book.Recommend">
-        insert into newproduct (bookId,rank,addTime) values (#{bookId},#{rank},#{addTime})
+        insert into newproduct (bookId,`rank`,addTime) values (#{bookId},#{rank},#{addTime})
     </insert>
 
     <delete id="deleteFromNewProduct">
@@ -192,11 +196,11 @@
     </delete>
 
     <update id="modifyNewProductRank">
-        update newproduct set rank=#{rank} where bookId=#{bookId}
+        update newproduct set `rank`=#{rank} where bookId=#{bookId}
     </update>
 
     <update id="modifyNewProduct" parameterType="com.huang.store.entity.book.Recommend">
-        update newproduct set rank=#{rank},
+        update newproduct set `rank`=#{rank},
                              bookId=#{bookId},
                              addTime=#{addTime}
                             where id=#{id}

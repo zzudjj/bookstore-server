@@ -27,8 +27,9 @@ import java.util.*;
 @SpringBootTest
 class StoreApplicationTests {
 
-    @Value("${web.upload-path}")
-    private String uploadPath;
+    // 移除了web.upload-path配置，现在使用FileUploadConfig统一管理路径
+    // @Value("${web.upload-path}")
+    // private String uploadPath;
 
     @Autowired
     @Qualifier("firstVersion")
@@ -265,8 +266,9 @@ class StoreApplicationTests {
 //        System.out.println(subBookTopic1.toString());
 
     }
-    private String basePath="D://ITsoftware//IDEA//data//Vue//book_01//";
-    private String bookPath="static//image//";
+    // 移除硬编码路径，现在使用FileUploadConfig统一管理
+    // private String basePath="D://ITsoftware//IDEA//data//Vue//book_01//";
+    // private String bookPath="static//image//";
 
     @Autowired
     BookMapper mapper;
