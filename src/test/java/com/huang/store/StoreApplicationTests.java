@@ -179,7 +179,7 @@ class StoreApplicationTests {
         Date date = new Date();
         Timestamp timeStamp = new Timestamp(date.getTime());
         Cart cart = new Cart();
-        cart.setAccount("黄哈哈哈哈龙");
+        cart.setAccount("testUser");
 //        cart.setIsbn("3ewe2434522335");
         cart.setNum(2);
         cart.setAddTime(timeStamp);
@@ -257,7 +257,7 @@ class StoreApplicationTests {
 
         SubBookTopic subBookTopic = new SubBookTopic();
 //        subBookTopic.setIsbn("黄小龙湖龙");
-        subBookTopic.setRecommendReason("狗胖");
+        subBookTopic.setRecommendReason("测试推荐理由");
 //        subBookTopic.setTopicName("小小胖");
 //        int result = bookService.delFromSubBookTopic(subBookTopic.getTopicName(),subBookTopic.getIsbn());
 //        System.out.println(result);
@@ -447,7 +447,7 @@ class StoreApplicationTests {
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                System.out.println("===========哈哈哈哈哈哈============");
+//                System.out.println("===========测试线程============");
 //                for (int i = 0; i < 5; i++) {
 //                    Timestamp timestamp = new Timestamp(new Date().getTime());
 //                    System.out.println(timestamp.getTime());

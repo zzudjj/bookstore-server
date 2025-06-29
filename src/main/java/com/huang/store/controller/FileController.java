@@ -44,7 +44,7 @@ public class FileController {
      */
     @RequestMapping(value = "/uploadBookImg")
     public Map<String,Object> upload(@RequestParam Map<String,String> map,@RequestParam("file") MultipartFile file) {
-        System.out.println("上传图片起作用！");
+        // 开始上传图片
         Map<String,Object> m = new HashMap<>();
         String isbn = "";
         if(map.size() >0){
@@ -114,7 +114,7 @@ public class FileController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         MultipartFile file = null;
         BufferedOutputStream stream = null;
-        System.out.println("多文件上传起作用了");
+        // 开始多文件上传
         for (int i = 0; i < files.size(); ++i) {
             file = files.get(i);
             if (!file.isEmpty()) {
@@ -256,6 +256,6 @@ public class FileController {
             }
             return "上传成功";
         }
-        return "哈哈哈哈";
+        return "上传失败";
     }
 }

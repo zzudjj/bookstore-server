@@ -59,8 +59,8 @@ public class CartController {
      * @return
      */
     @GetMapping("/delCart")
-    public Map<String,Object> addCart(@RequestParam("id")int id,
-                                      @RequestParam("account")String account){
+    public Map<String,Object> deleteCart(@RequestParam("id")int id,
+                                         @RequestParam("account")String account){
         if(cartService.deleteProduct(account,id)>0){
             return ResultUtil.resultCode(200,"删除成功");
         }
@@ -74,8 +74,8 @@ public class CartController {
      * @return
      */
     @GetMapping("/batchDelCart")
-    public Map<String,Object> addCart(@RequestParam("ids")int[] ids,
-                                      @RequestParam("account")String account){
+    public Map<String,Object> batchDeleteCart(@RequestParam("ids")int[] ids,
+                                              @RequestParam("account")String account){
         if(cartService.delBatchProduct(account,ids)>0){
             return ResultUtil.resultCode(200,"删除成功");
         }

@@ -269,7 +269,7 @@ public class TopicController {
     @GetMapping("/getReason")
     public Map<String,Object> getRecReason(@RequestParam(value = "topicId")int topicId,
                                           @RequestParam(value = "bookId")int bookId){
-        System.out.println("得到推荐理由起作用了");
+        // 获取推荐理由
         String reason = topicService.getReason(topicId, bookId);
         Map<String,Object> map = new HashMap<>();
         map.put("reason",reason);
@@ -291,7 +291,7 @@ public class TopicController {
         subBookTopic.setBookId(bookId);
         subBookTopic.setTopicId(id);
         subBookTopic.setRecommendReason(recReason);
-        System.out.println("修改子类书单起作用了");
+        // 开始修改书单
         if(topicService.modifySubBookTopic(subBookTopic)>0){
             return ResultUtil.resultCode(200,"修改图书推荐理由成功");
         }

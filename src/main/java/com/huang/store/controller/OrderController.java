@@ -118,7 +118,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/getAdminOrderList")
-    public Map<String,Object> egtOrderList(@RequestParam("page")int page,
+    public Map<String,Object> getOrderList(@RequestParam("page")int page,
                                        @RequestParam("pageSize")int pageSize){
         System.out.println("=========请求到达获取订单接口===========");
         List<OrderDto> orderDtoList = orderService.orderDtoList("", page, pageSize,"",false);
@@ -165,7 +165,7 @@ public class OrderController {
     }
 
     @GetMapping("/deliverOrder")
-    public Map<String,Object> delOrdr(@RequestParam("id")int id,
+    public Map<String,Object> deliverOrder(@RequestParam("id")int id,
                                       @RequestParam("logisticsCompany")int logisticsCompany,
                                       @RequestParam("logisticsNum")String logisticsNum){
         System.out.println("============="+id+"=================");

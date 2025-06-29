@@ -75,7 +75,7 @@ public class BookController {
      */
     @PostMapping("/modifyBook")
     public Map<String,Object> modifyBook(@RequestBody Book book){
-        System.out.println("修改图书起作用了");
+        // 开始修改图书
         System.out.println(book.toString());
         int bookId = book.getId();
         String oldIsbn = bookService.getBookIsbn(bookId);
@@ -363,7 +363,7 @@ public class BookController {
      */
     @GetMapping("/delBook")
     public Map<String,Object> delBook(@RequestParam(value = "bookId")int bookId){
-        System.out.println("删除图书起作用");
+        // 开始删除图书
         System.out.println("isbn:"+bookId);
         Book book = bookService.getBook(bookId);
         List<String> imgPaths = bookService.getBookImgSrcList(book.getisbn());
