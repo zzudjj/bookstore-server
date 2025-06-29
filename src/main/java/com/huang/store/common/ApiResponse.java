@@ -3,6 +3,8 @@ package com.huang.store.common;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 统一API响应实体类
@@ -57,19 +59,32 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> success() {
         return new ApiResponse<>(200, "操作成功", null);
     }
-    
+
     /**
      * 成功响应（带数据）
      */
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(200, "操作成功", data);
     }
-    
+
     /**
      * 成功响应（自定义消息）
      */
     public static <T> ApiResponse<T> success(String message, T data) {
         return new ApiResponse<>(200, message, data);
+    }
+
+    /**
+     * 转换为兼容的Map格式（保持向后兼容）
+     */
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", this.code);
+        result.put("message", this.message);
+        if (this.data != null) {
+            result.put("data", this.data);
+        }
+        return result;
     }
     
     /**

@@ -1,17 +1,17 @@
 package com.huang.store.controller;
 
 import com.huang.store.entity.dto.CartBookDto;
-
 import com.huang.store.service.imp.BookService;
 import com.huang.store.service.imp.CartService;
 import com.huang.store.util.ResultUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +25,8 @@ import java.util.Map;
 @ResponseBody
 public class CartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
+
     @Autowired
     @Qualifier("firstCart")
     CartService cartService;
@@ -35,21 +37,45 @@ public class CartController {
 
     /**
      * 添加图书到购物车
-     * @param id
-     * @param num
-     * @return
+     * @param id 图书ID
+     * @param num 数量
+     * @param account 用户账号
+     * @return 添加结果
      */
     @GetMapping("/addCart")
-    public Map<String,Object> addCart(@RequestParam("id")int id,
-                                      @RequestParam("num")int num,
-                                      @RequestParam("account")String account){
-        if(cartService.existProduct(account,id)>0){//如果购物车中已经存在图书
-            return ResultUtil.resultCode(500,"购物车中已经存在该图书");
+    public Map<String, Object> addCart(@RequestParam("id") int id,
+                                      @RequestParam("num") int num,
+                                      @RequestParam("account") String account) {
+        logger.info("添加图书到购物车: 用户={}, 图书ID={}, 数量={}", account, id, num);
+
+        // 参数验证
+        if (account == null || account.trim().isEmpty()) {
+            logger.warn("账号参数为空");
+            return ResultUtil.resultCode(400, "账号不能为空");
         }
-        if(cartService.addProduct(account,id,num)>0){
-            return ResultUtil.resultCode(200,"添加到购物车成功");
+        if (id <= 0) {
+            logger.warn("图书ID无效: {}", id);
+            return ResultUtil.resultCode(400, "图书ID无效");
         }
-        return ResultUtil.resultCode(500,"添加到购物车失败");
+        if (num <= 0) {
+            logger.warn("数量无效: {}", num);
+            return ResultUtil.resultCode(400, "数量必须大于0");
+        }
+
+        // 检查购物车中是否已存在该图书
+        if (cartService.existProduct(account, id) > 0) {
+            logger.warn("购物车中已存在该图书: 用户={}, 图书ID={}", account, id);
+            return ResultUtil.resultCode(500, "购物车中已经存在该图书");
+        }
+
+        int result = cartService.addProduct(account, id, num);
+        if (result <= 0) {
+            logger.error("添加到购物车失败: 用户={}, 图书ID={}, 数量={}", account, id, num);
+            return ResultUtil.resultCode(500, "添加到购物车失败");
+        }
+
+        logger.info("添加到购物车成功: 用户={}, 图书ID={}, 数量={}", account, id, num);
+        return ResultUtil.resultCode(200, "添加到购物车成功");
     }
 
     /**

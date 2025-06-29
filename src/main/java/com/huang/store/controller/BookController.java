@@ -1,18 +1,26 @@
 package com.huang.store.controller;
 
+import com.huang.store.common.ApiResponse;
+import com.huang.store.common.ResponseCode;
 import com.huang.store.configure.FileUploadConfig;
 import com.huang.store.entity.book.BookSort;
 import com.huang.store.entity.book.Recommend;
 import com.huang.store.entity.dto.SortBookRes;
+import com.huang.store.exception.BusinessException;
 import com.huang.store.service.imp.BookService;
 import com.huang.store.service.imp.SortService;
 import com.huang.store.util.FileUtil;
 import com.huang.store.util.ResultUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -22,6 +30,8 @@ import com.huang.store.entity.book.Book;
 @ResponseBody
 @RequestMapping(value = "/book")
 public class BookController {
+
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
     @Autowired
     private FileUploadConfig fileUploadConfig;
@@ -43,7 +53,7 @@ public class BookController {
     public Map<String,Object> addBook(@RequestBody Book book){
         bookService.addBook(book);
         int bookId = bookService.getBookId(book.getisbn());
-        System.out.println("bookId:"+bookId);
+        logger.info("新增图书ID: {}", bookId);
         boolean newProduct = book.isNewProduct();
         Recommend r = new Recommend();
         Date date = new Date();
@@ -190,12 +200,12 @@ public class BookController {
     @GetMapping(value = "/getBookList")
     public Map<String, Object> getBook(@RequestParam(value = "page")int page,
                                        @RequestParam(value = "pageSize")int pageSize){
-        System.out.println("=========================按页得到图书的集合========================");
+        logger.info("按页获取图书列表: page={}, pageSize={}", page, pageSize);
         Map<String, Object> map = new HashMap<>();
         List<Book> bookList = bookService.getBooksByPage(page, pageSize);
         for(int i=0;i<bookList.size();i++){
             String img = bookService.getBookCover(bookList.get(i).getisbn());
-            System.out.println("=======设置了图书的封面图片========");
+            logger.debug("设置图书封面图片: isbn={}", bookList.get(i).getisbn());
             bookList.get(i).setCoverImg(img);
         }
         map.put("bookList",bookList);
@@ -211,13 +221,13 @@ public class BookController {
      */
     @GetMapping(value = "/getSortBookList")
     public Map<String, Object> getSortBookList(@RequestParam(value = "sortId")int sortId){
-        System.out.println("======获取分类图书列表======= sortId: " + sortId);
+        logger.info("获取分类图书列表: sortId={}", sortId);
         BookSort bookSort = sortService.getBookSortById(sortId);
         if(bookSort == null){
             System.err.println("未找到分类ID为 " + sortId + " 的分类信息");
             return ResultUtil.resultCode(404, "未找到指定的图书分类");
         }
-        System.out.println("找到分类: " + bookSort.getSortName());
+        logger.info("找到分类: {}", bookSort.getSortName());
         List<Book> upperBookList = bookService.getBooksByFirst(bookSort.getSortName(),1,14);
         for(int i=0;i<upperBookList.size();i++){
             String img = bookService.getBookCover(upperBookList.get(i).getisbn());

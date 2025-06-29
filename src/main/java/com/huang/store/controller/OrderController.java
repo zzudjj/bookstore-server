@@ -1,19 +1,26 @@
 package com.huang.store.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.huang.store.common.ApiResponse;
 import com.huang.store.entity.dto.*;
 import com.huang.store.entity.order.Expense;
 import com.huang.store.entity.user.Address;
+import com.huang.store.exception.BusinessException;
 import com.huang.store.service.imp.AddressService;
 import com.huang.store.service.imp.BookService;
 import com.huang.store.service.imp.CartService;
 import com.huang.store.service.imp.OrderService;
 import com.huang.store.util.ResultUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,6 +33,8 @@ import java.util.*;
 @Controller
 @ResponseBody
 public class OrderController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     @Qualifier("firstVersion")
@@ -120,7 +129,7 @@ public class OrderController {
     @GetMapping("/getAdminOrderList")
     public Map<String,Object> getOrderList(@RequestParam("page")int page,
                                        @RequestParam("pageSize")int pageSize){
-        System.out.println("=========请求到达获取订单接口===========");
+        logger.info("获取订单列表: page={}, pageSize={}", page, pageSize);
         List<OrderDto> orderDtoList = orderService.orderDtoList("", page, pageSize,"",false);
         Map<String,Object> map= new HashMap<>();
         map.put("orderDtoList",orderDtoList);
@@ -157,7 +166,7 @@ public class OrderController {
      */
     @GetMapping("/delOrder")
     public Map<String,Object> delOrder(@RequestParam("id")int id){
-        System.out.println("============="+id+"=================");
+        logger.info("删除订单: id={}", id);
         if(orderService.delOrder(id)>0){
             return ResultUtil.resultCode(200,"删除订单成功");
         }

@@ -6,12 +6,14 @@ import com.huang.store.service.UserServiceImp;
 import com.huang.store.service.imp.AddressService;
 import com.huang.store.service.imp.UserService;
 import com.huang.store.util.ResultUtil;
+import com.huang.store.util.ValidationUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@ResponseBody
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     @Qualifier("firstUser")
@@ -36,57 +41,81 @@ public class UserController {
 
     /**
      * 验证账号是否已被注册
-     * @param account
-     * @return
+     * @param account 用户账号（邮箱）
+     * @return 验证结果
      */
     @GetMapping(value = "/user/accountVerify")
-    @ResponseBody
-    public Map<String, Object> accountVerify(@RequestParam(value = "account") String account){
-        try {
-            System.out.println("======验证账号是否已注册======= account: " + account);
-            User user = userService.getUser(account);
-            if(user != null){
-                System.out.println("该账号已经被注册！");
-                return ResultUtil.resultCode(500,"该账号已被注册！");
-            }
-            System.out.println("该账号可以注册");
-            return ResultUtil.resultCode(200,"该账号可以注册");
-        } catch (Exception e) {
-            System.err.println("验证账号时发生异常: " + e.getMessage());
-            e.printStackTrace();
-            return ResultUtil.resultCode(500,"验证账号时发生错误");
+    public Map<String, Object> accountVerify(@RequestParam(value = "account") String account) {
+        logger.info("验证账号是否已注册: {}", account);
+
+        // 参数验证
+        if (ValidationUtil.isEmpty(account)) {
+            logger.warn("账号参数为空");
+            return ResultUtil.resultCode(400, "账号不能为空");
         }
+        if (!ValidationUtil.isValidEmail(account)) {
+            logger.warn("账号格式不正确: {}", account);
+            return ResultUtil.resultCode(400, "账号格式不正确");
+        }
+
+        User user = userService.getUser(account);
+        if (user != null) {
+            logger.warn("账号已被注册: {}", account);
+            return ResultUtil.resultCode(500, "该账号已被注册！");
+        }
+
+        logger.info("账号可以注册: {}", account);
+        return ResultUtil.resultCode(200, "该账号可以注册");
     }
 
     /**
      * 用户注册
-     * @param account
-     * @param password
-     * @return
+     * @param account 用户账号（邮箱）
+     * @param password 用户密码
+     * @return 注册结果
      */
-    @GetMapping(value = "/user/register")
-    @ResponseBody
+    @PostMapping(value = "/user/register")
     public Map<String, Object> registerUser(@RequestParam(value = "account") String account,
-                                       @RequestParam(value = "password") String password){
-        System.out.println("======开始注册=======");
-        User user1 = userService.getUser(account);
-        if(user1 != null){
-            System.out.println("该账号已经被注册！");
-            return ResultUtil.resultCode(500,"该账号已被注册！");
+                                           @RequestParam(value = "password") String password) {
+        logger.info("开始用户注册: {}", account);
+
+        // 参数验证
+        if (account == null || account.trim().isEmpty()) {
+            logger.warn("账号参数为空");
+            return ResultUtil.resultCode(400, "账号不能为空");
         }
-        System.out.println("该账号未被注册");
+        if (password == null || password.trim().isEmpty()) {
+            logger.warn("密码参数为空");
+            return ResultUtil.resultCode(400, "密码不能为空");
+        }
+        if (password.length() < 6) {
+            logger.warn("密码长度不足");
+            return ResultUtil.resultCode(400, "密码长度不能少于6位");
+        }
+
+        // 检查账号是否已存在
+        User existingUser = userService.getUser(account);
+        if (existingUser != null) {
+            logger.warn("账号已被注册: {}", account);
+            return ResultUtil.resultCode(500, "该账号已被注册！");
+        }
+
+        // 创建新用户
         User user = new User();
         user.setAccount(account);
         user.setPassword(passwordEncoder.encode(password));
         user.setManage(false);
-        user.setEnable(true);  // 设置账号为启用状态
-        Date date = new Date();
-        user.setRegisterTime(new Timestamp(date.getTime()));  // 设置注册时间
+        user.setEnable(true);
+        user.setRegisterTime(new Timestamp(new Date().getTime()));
 
-        if(userService.addUser(user)>0){
-            return ResultUtil.resultCode(200,"注册成功");
+        int result = userService.addUser(user);
+        if (result <= 0) {
+            logger.error("用户注册失败: {}", account);
+            return ResultUtil.resultCode(500, "注册失败，请稍后重试");
         }
-        return ResultUtil.resultCode(500,"注册失败");
+
+        logger.info("用户注册成功: {}", account);
+        return ResultUtil.resultCode(200, "注册成功");
     }
 
 //    =====================对用户地址的操作=====================================
