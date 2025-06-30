@@ -68,4 +68,7 @@ public interface BookService {
     int batchPutBook(int[] idS,boolean put);
     int batchRecBook(int[] idS,boolean recommend);
     int batchNewProBook(int[] idS,boolean newProduct);
+
+    // 清空图书缓存
+    void clearBookCache();
 }

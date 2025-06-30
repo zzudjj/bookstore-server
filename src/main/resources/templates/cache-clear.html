@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缓存管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 图书系统缓存管理</h1>
+        
+        <div style="text-align: center;">
+            <button class="btn btn-danger" onclick="clearBookCache()">
+                🗑️ 清空图书缓存
+            </button>
+            
+            <button class="btn" onclick="testBookApi()">
+                🔍 测试图书API
+            </button>
+        </div>
+        
+        <div id="result" class="result"></div>
+        
+        <div style="margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 5px;">
+            <h3>💡 使用说明</h3>
+            <ul>
+                <li><strong>清空图书缓存</strong>：清空Redis中所有图书相关的缓存数据，强制系统从数据库重新加载数据</li>
+                <li><strong>测试图书API</strong>：测试获取图书详情的API是否正常工作</li>
+            </ul>
+            
+            <h3>⚠️ 注意事项</h3>
+            <ul>
+                <li>清空缓存后，下次访问图书数据时会从数据库重新加载，可能会稍慢</li>
+                <li>建议在数据库数据更新后执行缓存清空操作</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result ' + type;
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+        }
+
+        async function clearBookCache() {
+            try {
+                showResult('正在清空缓存...', 'info');
+                
+                const response = await fetch('/book/clearBookCache');
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    showResult('✅ 缓存清空成功！现在可以重新访问图书页面查看最新数据。', 'success');
+                } else {
+                    showResult('❌ 缓存清空失败：' + data.message, 'error');
+                }
+            } catch (error) {
+                showResult('❌ 请求失败：' + error.message, 'error');
+            }
+        }
+
+        async function testBookApi() {
+            try {
+                showResult('正在测试API...', 'info');
+                
+                const response = await fetch('/book/getBook?id=1');
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    const book = data.book;
+                    showResult(`✅ API测试成功！<br>
+                        图书名称：${book.bookName}<br>
+                        作者：${book.author}<br>
+                        ISBN：${book.isbn}<br>
+                        出版社：${book.publish}`, 'success');
+                } else {
+                    showResult('❌ API测试失败：' + data.message, 'error');
+                }
+            } catch (error) {
+                showResult('❌ 请求失败：' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

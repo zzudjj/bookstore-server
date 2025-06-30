@@ -164,7 +164,7 @@ public class BookController {
     }
 
     /**
-     * 修改图书是否为新品状态
+     * 修改图书是否为新进状态
      * @param bookId
      * @param newProduct
      * @return
@@ -334,7 +334,11 @@ public class BookController {
         Book book = bookService.getBook(id);
         List<String> img = bookService.getBookImgSrcList(book.getisbn());
         book.setImgSrc(img);
+        // 设置封面图片
+        String coverImg = bookService.getBookCover(book.getisbn());
+        book.setCoverImg(coverImg);
         System.out.println("=======图书的封面：========="+book.getImgSrc()+"=========");
+        System.out.println("=======图书封面图片：========="+book.getCoverImg()+"=========");
         BookSort bookSort = bookService.getBookSort(id);
         int upperId=0;
         int childId=0;
@@ -364,6 +368,31 @@ public class BookController {
         List<String> imgPaths = bookService.getBookImgSrcList(isbn);
         map.put("imgPaths",imgPaths);
         return ResultUtil.resultSuccess(map);
+    }
+
+    /**
+     * 缓存管理页面
+     * @return
+     */
+    @GetMapping("/cache-manager")
+    public String cacheManager(){
+        return "cache-clear";
+    }
+
+    /**
+     * 清空图书缓存
+     * @return
+     */
+    @GetMapping("/clearBookCache")
+    public Map<String,Object> clearBookCache(){
+        System.out.println("==========清空图书缓存==============");
+        try {
+            bookService.clearBookCache();
+            return ResultUtil.resultCode(200, "缓存清空成功");
+        } catch (Exception e) {
+            System.err.println("清空缓存失败: " + e.getMessage());
+            return ResultUtil.resultCode(500, "缓存清空失败: " + e.getMessage());
+        }
     }
 
     /**

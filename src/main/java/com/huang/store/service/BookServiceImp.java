@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.Set;
 
 @Service("firstVersion")
 public class BookServiceImp implements BookService {
@@ -428,5 +429,32 @@ public class BookServiceImp implements BookService {
             }
         }
         return 1;
+    }
+
+    @Override
+    public void clearBookCache() {
+        System.out.println("==========开始清空图书缓存==========");
+
+        // 清空所有图书相关的缓存
+        Set<String> bookKeys = redisTemplate.keys(book_prefix + "*");
+        if (bookKeys != null && !bookKeys.isEmpty()) {
+            redisTemplate.delete(bookKeys);
+            System.out.println("清空了 " + bookKeys.size() + " 个图书缓存");
+        }
+
+        // 清空图书库存缓存
+        Set<String> stockKeys = redisTemplate.keys(book_stock + "*");
+        if (stockKeys != null && !stockKeys.isEmpty()) {
+            redisTemplate.delete(stockKeys);
+            System.out.println("清空了 " + stockKeys.size() + " 个库存缓存");
+        }
+
+        // 清空图书列表缓存
+        if (redisTemplate.hasKey(bookList_prefix)) {
+            redisTemplate.delete(bookList_prefix);
+            System.out.println("清空了图书列表缓存");
+        }
+
+        System.out.println("==========图书缓存清空完成==========");
     }
 }
