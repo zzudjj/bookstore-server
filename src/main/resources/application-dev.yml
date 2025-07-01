@@ -132,6 +132,14 @@ spring:
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: com.huang.store.entity
+  configuration:
+    # 开启驼峰命名转换
+    map-underscore-to-camel-case: true
+    # 开启二级缓存
+    cache-enabled: true
+    # 配置JdbcType为NULL时的处理
+    jdbc-type-for-null: 'null'
+  type-handlers-package: com.huang.store.config
 
 # 文件上传配置
 file:

@@ -7,10 +7,13 @@ import com.huang.store.entity.order.Order;
 import com.huang.store.entity.order.OrderDetail;
 import com.huang.store.entity.order.OrderStatusEnum;
 import com.huang.store.entity.user.User;
+import com.huang.store.entity.user.Address;
 import com.huang.store.mapper.BookMapper;
 import com.huang.store.mapper.ExpenseMapper;
 import com.huang.store.mapper.OrderMapper;
 import com.huang.store.service.imp.OrderService;
+import com.huang.store.service.imp.AddressService;
+import com.huang.store.service.imp.BookService;
 import com.huang.store.util.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -44,6 +47,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    AddressService addressService;
+
+    @Autowired
+    BookService bookService;
+
     private static final String stock_prefix="stock_";//这个用来设置锁
 
     private static final String book_stock="book_stock_";//这个用来存储库存的缓存
@@ -63,6 +72,67 @@ public class OrderServiceImpl implements OrderService {
         return newDate+result;
     }
 
+
+    @Override
+    public OrderInitDto initSpikeOrder(String orderId, String account) {
+        // 1. 根据订单ID查询订单信息
+        OrderDto orderDto = orderMapper.findOrderDtoByOrderId(orderId);
+        if (orderDto == null) {
+            throw new RuntimeException("订单不存在");
+        }
+
+        // 2. 查询订单明细
+        List<OrderDetailDto> orderDetailList = orderMapper.findOrderDetailDtoList(orderId);
+        if (orderDetailList == null || orderDetailList.isEmpty()) {
+            throw new RuntimeException("订单明细不存在");
+        }
+
+        // 3. 查询费用信息
+        Expense expense = expenseMapper.findExpenseByOrderId(orderId);
+        if (expense == null) {
+            throw new RuntimeException("订单费用信息不存在");
+        }
+
+        // 4. 查询用户地址列表
+        List<Address> addressList = addressService.addressList(account);
+
+        // 5. 转换订单明细为图书列表格式
+        List<OrderBookDto> bookList = new ArrayList<>();
+        for (OrderDetailDto detail : orderDetailList) {
+            OrderBookDto bookDto = new OrderBookDto();
+            bookDto.setId(detail.getBook().getId());
+            bookDto.setBookName(detail.getBook().getBookName());
+            bookDto.setAuthor(detail.getBook().getAuthor());
+            bookDto.setIsbn(detail.getBook().getisbn());
+            bookDto.setPublish(detail.getBook().getPublish());
+            bookDto.setBirthday(detail.getBook().getBirthday());
+            bookDto.setMarketPrice(detail.getBook().getMarketPrice());
+            bookDto.setPrice(detail.getPrice());
+            bookDto.setStock(detail.getBook().getStock());
+            bookDto.setDescription(detail.getBook().getDescription());
+            bookDto.setNum(Integer.parseInt(detail.getNum()));
+
+            // 单独查询并设置封面图片
+            String coverImg = bookService.getBookCover(detail.getBook().getisbn());
+            bookDto.setCoverImg(coverImg);
+
+            bookList.add(bookDto);
+        }
+
+        // 6. 构建OrderInitDto
+        OrderInitDto orderInitDto = new OrderInitDto();
+        orderInitDto.setAccount(account);
+        orderInitDto.setBookList(bookList);
+        orderInitDto.setAddressList(addressList);
+        orderInitDto.setExpense(expense);
+
+        // 7. 设置默认地址
+        if (addressList != null && !addressList.isEmpty()) {
+            orderInitDto.setAddress(addressList.get(0));
+        }
+
+        return orderInitDto;
+    }
 
     @Transactional
     @Override

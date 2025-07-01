@@ -53,6 +53,25 @@ public class OrderController {
     OrderService orderService;
 
     /**
+     * 初始化秒杀订单支付页面
+     * @param orderId 已创建的订单ID
+     * @param account 用户账号
+     * @return
+     */
+    @GetMapping("/initSpikeOrder")
+    public Map<String,Object> initSpikeOrder(@RequestParam(value = "orderId") String orderId,
+                                             @RequestParam(value = "account") String account){
+        Map<String,Object> map = new HashMap<>();
+        try {
+            OrderInitDto orderInitDto = orderService.initSpikeOrder(orderId, account);
+            map.put("orderInitDto", orderInitDto);
+            return ResultUtil.resultSuccess(map);
+        } catch (Exception e) {
+            return ResultUtil.resultCode(500, "初始化订单失败：" + e.getMessage());
+        }
+    }
+
+    /**
      * 初始化订单，得到用户购买的图书集合，得到费用信息，并返回前端费用信息和图书集合
      * @param ids 用户预购买的时候的图书id集合
      * @param from from用来标记下订单是从哪个页面操作的 0代表详情页 1代表购物车

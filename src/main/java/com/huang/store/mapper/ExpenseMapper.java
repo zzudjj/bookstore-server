@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExpenseMapper {
     int addExpense(Expense expense);
+
+    Expense findExpenseByOrderId(String orderId);
 }

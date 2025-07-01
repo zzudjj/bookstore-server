@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.SpikeRecordMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SpikeRecordResultMap" type="com.huang.store.entity.spike.SpikeRecord">
+        <id column="id" property="id"/>
+        <result column="spikeGoodsId" property="spikeGoodsId"/>
+        <result column="userAccount" property="userAccount"/>
+        <result column="quantity" property="quantity"/>
+        <result column="spikeTime" property="spikeTime"/>
+        <result column="result" property="result"/>
+        <result column="failReason" property="failReason"/>
+        <result column="ipAddress" property="ipAddress"/>
+        <result column="userAgent" property="userAgent"/>
+    </resultMap>
+
+    <!-- 包含秒杀商品信息的结果映射 -->
+    <resultMap id="SpikeRecordWithGoodsResultMap" type="com.huang.store.entity.spike.SpikeRecord" extends="SpikeRecordResultMap">
+        <association property="spikeGoods" javaType="com.huang.store.entity.spike.SpikeGoods">
+            <id column="goods_id" property="id"/>
+            <result column="goods_activityId" property="activityId"/>
+            <result column="goods_bookId" property="bookId"/>
+            <result column="goods_spikePrice" property="spikePrice"/>
+            <result column="goods_originalPrice" property="originalPrice"/>
+            <result column="goods_spikeStock" property="spikeStock"/>
+            <result column="goods_soldCount" property="soldCount"/>
+            <result column="goods_limitPerUser" property="limitPerUser"/>
+            <result column="goods_status" property="status"/>
+        </association>
+    </resultMap>
+
+    <!-- 插入秒杀记录 -->
+    <insert id="insertSpikeRecord" parameterType="com.huang.store.entity.spike.SpikeRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO spikeRecord (
+            spikeGoodsId, userAccount, quantity, spikeTime, result,
+            failReason, ipAddress, userAgent
+        ) VALUES (
+            #{spikeGoodsId}, #{userAccount}, #{quantity}, #{spikeTime}, #{result},
+            #{failReason}, #{ipAddress}, #{userAgent}
+        )
+    </insert>
+
+    <!-- 获取用户秒杀记录 -->
+    <select id="getUserSpikeRecords" resultMap="SpikeRecordWithGoodsResultMap">
+        SELECT 
+            sr.*,
+            sg.id as goods_id,
+            sg.activityId as goods_activityId,
+            sg.bookId as goods_bookId,
+            sg.spikePrice as goods_spikePrice,
+            sg.originalPrice as goods_originalPrice,
+            sg.spikeStock as goods_spikeStock,
+            sg.soldCount as goods_soldCount,
+            sg.limitPerUser as goods_limitPerUser,
+            sg.status as goods_status
+        FROM spikeRecord sr
+        LEFT JOIN spikeGoods sg ON sr.spikeGoodsId = sg.id
+        WHERE sr.userAccount = #{userAccount}
+        ORDER BY sr.spikeTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 获取商品秒杀记录 -->
+    <select id="getGoodsSpikeRecords" resultMap="SpikeRecordResultMap">
+        SELECT * FROM spikeRecord 
+        WHERE spikeGoodsId = #{spikeGoodsId}
+        ORDER BY spikeTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 获取用户对指定商品的秒杀次数 -->
+    <select id="getUserSpikeCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM spikeRecord 
+        WHERE userAccount = #{userAccount} 
+        AND spikeGoodsId = #{spikeGoodsId}
+    </select>
+
+    <!-- 获取秒杀成功率统计 -->
+    <select id="getSpikeStatistics" resultMap="SpikeRecordResultMap">
+        SELECT 
+            result,
+            COUNT(*) as count,
+            COUNT(*) * 100.0 / (SELECT COUNT(*) FROM spikeRecord WHERE spikeGoodsId = #{spikeGoodsId}) as percentage
+        FROM spikeRecord 
+        WHERE spikeGoodsId = #{spikeGoodsId}
+        GROUP BY result
+        ORDER BY result DESC
+    </select>
+
+    <!-- 检查用户对指定商品的成功购买数量（用于限购检查） -->
+    <select id="getUserSuccessPurchaseCount" resultType="int">
+        SELECT COALESCE(SUM(quantity), 0)
+        FROM spikeRecord
+        WHERE userAccount = #{userAccount}
+        AND spikeGoodsId = #{spikeGoodsId}
+        AND result = 1
+    </select>
+
+</mapper>

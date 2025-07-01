@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.SpikeGoodsMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="SpikeGoodsResultMap" type="com.huang.store.entity.spike.SpikeGoods">
+        <id column="id" property="id"/>
+        <result column="activityId" property="activityId"/>
+        <result column="bookId" property="bookId"/>
+        <result column="spikePrice" property="spikePrice"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="spikeStock" property="spikeStock"/>
+        <result column="soldCount" property="soldCount"/>
+        <result column="limitPerUser" property="limitPerUser"/>
+        <result column="sortOrder" property="sortOrder"/>
+        <result column="status" property="status"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+
+    <!-- 包含图书信息的结果映射 -->
+    <resultMap id="SpikeGoodsWithBookResultMap" type="com.huang.store.entity.spike.SpikeGoods" extends="SpikeGoodsResultMap">
+        <association property="book" javaType="com.huang.store.entity.book.Book">
+            <id column="book_id" property="id"/>
+            <result column="bookName" property="bookName"/>
+            <result column="author" property="author"/>
+            <result column="publish" property="publish"/>
+            <result column="isbn" property="isbn"/>
+            <result column="price" property="price"/>
+            <result column="marketPrice" property="marketPrice"/>
+            <result column="description" property="description"/>
+            <result column="stock" property="stock"/>
+        </association>
+    </resultMap>
+
+    <!-- 根据活动ID获取秒杀商品列表（包含图书信息） -->
+    <select id="getSpikeGoodsByActivity" resultMap="SpikeGoodsWithBookResultMap">
+        SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.activityId = #{activityId}
+        AND sg.status = 1
+        ORDER BY sg.sortOrder ASC
+    </select>
+
+    <!-- 获取秒杀商品详情（包含图书信息） -->
+    <select id="getSpikeGoodsDetail" resultMap="SpikeGoodsWithBookResultMap">
+        SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.id = #{id}
+    </select>
+
+    <!-- 根据图书ID获取秒杀商品 -->
+    <select id="getSpikeGoodsByBookId" resultMap="SpikeGoodsWithBookResultMap">
+        SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.bookId = #{bookId}
+        AND sg.status = 1
+        ORDER BY sg.createTime DESC
+    </select>
+
+    <!-- 插入秒杀商品 -->
+    <insert id="insertSpikeGoods" parameterType="com.huang.store.entity.spike.SpikeGoods" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO spikeGoods (
+            activityId, bookId, spikePrice, originalPrice, spikeStock,
+            soldCount, limitPerUser, sortOrder, status, createTime, updateTime
+        ) VALUES (
+            #{activityId}, #{bookId}, #{spikePrice}, #{originalPrice}, #{spikeStock},
+            #{soldCount}, #{limitPerUser}, #{sortOrder}, #{status}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <!-- 更新秒杀商品 -->
+    <update id="updateSpikeGoods" parameterType="com.huang.store.entity.spike.SpikeGoods">
+        UPDATE spikeGoods SET
+            activityId = #{activityId},
+            bookId = #{bookId},
+            spikePrice = #{spikePrice},
+            originalPrice = #{originalPrice},
+            spikeStock = #{spikeStock},
+            soldCount = #{soldCount},
+            limitPerUser = #{limitPerUser},
+            sortOrder = #{sortOrder},
+            status = #{status},
+            updateTime = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 扣减库存（乐观锁） -->
+    <update id="reduceStock">
+        UPDATE spikeGoods
+        SET spikeStock = spikeStock - #{quantity},
+            soldCount = soldCount + #{quantity},
+            updateTime = NOW()
+        WHERE id = #{id}
+        AND spikeStock >= #{quantity}
+    </update>
+
+    <!-- 恢复库存 -->
+    <update id="restoreStock">
+        UPDATE spikeGoods
+        SET spikeStock = spikeStock + #{quantity},
+            soldCount = soldCount - #{quantity},
+            updateTime = NOW()
+        WHERE id = #{id}
+        AND soldCount >= #{quantity}
+    </update>
+
+    <!-- 更新已售数量 -->
+    <update id="updateSoldCount">
+        UPDATE spikeGoods 
+        SET soldCount = soldCount + #{quantity},
+            updateTime = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取指定活动的商品数量 -->
+    <select id="getGoodsCountByActivity" resultType="int">
+        SELECT COUNT(*) FROM spikeGoods WHERE activityId = #{activityId}
+    </select>
+
+    <!-- 获取总商品数量 -->
+    <select id="getTotalGoodsCount" resultType="int">
+        SELECT COUNT(*) FROM spikeGoods
+    </select>
+
+    <!-- 删除秒杀商品 -->
+    <delete id="deleteSpikeGoods">
+        DELETE FROM spikeGoods WHERE id = #{id}
+    </delete>
+
+    <!-- 根据活动ID删除秒杀商品 -->
+    <delete id="deleteByActivityId">
+        DELETE FROM spikeGoods WHERE activityId = #{activityId}
+    </delete>
+
+    <!-- 分页获取活动商品 -->
+    <select id="getActivityGoodsPaged" resultMap="SpikeGoodsWithBookResultMap">
+        SELECT sg.*, b.id as book_id, b.bookName, b.author, b.publish, b.isbn, b.price, b.marketPrice, bi.imgSrc as coverImg
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        LEFT JOIN bookimg bi ON b.isbn = bi.isbn AND bi.cover = 1
+        WHERE sg.activityId = #{activityId}
+        ORDER BY sg.sortOrder ASC, sg.createTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 获取活动商品总数 -->
+    <select id="getActivityGoodsCount" resultType="int">
+        SELECT COUNT(*) FROM spikeGoods WHERE activityId = #{activityId}
+    </select>
+
+    <!-- 根据ID获取秒杀商品 -->
+    <select id="getSpikeGoodsById" resultMap="SpikeGoodsWithBookResultMap">
+        SELECT sg.*, b.id as book_id, b.bookName, b.author, b.publish, b.isbn, b.price, b.marketPrice, bi.imgSrc as coverImg
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        LEFT JOIN bookimg bi ON b.isbn = bi.isbn AND bi.cover = 1
+        WHERE sg.id = #{id}
+    </select>
+
+</mapper>

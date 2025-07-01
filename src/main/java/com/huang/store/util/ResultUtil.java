@@ -45,4 +45,19 @@ public class ResultUtil {
         return resultMap;
     }
 
+    /**
+     * 通用的返回结果（带数据）
+     * @param code
+     * @param msg
+     * @param data
+     * @return
+     */
+    public static Map<String, Object> resultCode(Integer code, String msg, Object data){
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("message",msg);
+        resultMap.put("code",code);
+        resultMap.put("data",data);
+        return resultMap;
+    }
+
 }

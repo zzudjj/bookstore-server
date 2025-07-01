@@ -13,4 +13,10 @@
             values (#{orderId},#{productTotalMoney},#{freight},#{coupon},#{activityDiscount},#{allPrice},#{finallyPrice})
     </insert>
 
+    <select id="findExpenseByOrderId" resultType="com.huang.store.entity.order.Expense">
+        select orderId, productTotalMoney, freight, coupon, activityDiscount, allPrice, finallyPrice
+        from expense
+        where orderId = #{orderId}
+    </select>
+
 </mapper>

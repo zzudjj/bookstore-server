@@ -120,6 +120,17 @@
         WHERE o.id = #{id}
     </select>
 
+    <!--根据订单ID查询订单信息-->
+    <select id="findOrderDtoByOrderId" resultMap="OrderDtoMap">
+        select
+        <include refid="orderColumns"/>
+        FROM
+        bookorder AS o
+        LEFT JOIN expense AS e ON o.orderId = e.orderId
+        LEFT JOIN address AS a ON a.id = o.addressId
+        WHERE o.orderId = #{orderId}
+    </select>
+
 <!--    orderStatus,beUserDelete-->
     <!--这里的id为订单的-->
     <select id="orderDtoList" resultMap="OrderDtoMap">

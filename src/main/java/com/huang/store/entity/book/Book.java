@@ -32,6 +32,7 @@ public class Book {
     private boolean newProduct;
     private boolean recommend;
     private int bookSort[];
+    private int sales = 0; // 销量，通过订单统计计算
 
     /**
      * 保持向后兼容性的方法

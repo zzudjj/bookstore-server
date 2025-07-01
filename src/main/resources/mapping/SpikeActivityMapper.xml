@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.SpikeActivityMapper">
+
+    <resultMap id="SpikeActivityResultMap" type="com.huang.store.entity.spike.SpikeActivity">
+        <id column="id" property="id"/>
+        <result column="activityName" property="activityName"/>
+        <result column="activityDesc" property="activityDesc"/>
+        <result column="startTime" property="startTime"/>
+        <result column="endTime" property="endTime"/>
+        <result column="status" property="status"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="createdBy" property="createdBy"/>
+    </resultMap>
+
+    <select id="getActiveActivities" resultMap="SpikeActivityResultMap">
+        SELECT * FROM spikeActivity 
+        WHERE status = 1 
+        AND NOW() BETWEEN startTime AND endTime
+        ORDER BY startTime ASC
+    </select>
+
+    <select id="getAllActivitiesOrderByTime" resultMap="SpikeActivityResultMap">
+        SELECT * FROM spikeActivity 
+        ORDER BY startTime ASC
+    </select>
+
+    <select id="getActivityById" resultMap="SpikeActivityResultMap">
+        SELECT * FROM spikeActivity WHERE id = #{id}
+    </select>
+
+    <insert id="insertActivity" parameterType="com.huang.store.entity.spike.SpikeActivity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO spikeActivity (
+            activityName, activityDesc, startTime, endTime, 
+            status, createTime, updateTime, createdBy
+        ) VALUES (
+            #{activityName}, #{activityDesc}, #{startTime}, #{endTime},
+            #{status}, #{createTime}, #{updateTime}, #{createdBy}
+        )
+    </insert>
+
+    <update id="updateActivity" parameterType="com.huang.store.entity.spike.SpikeActivity">
+        UPDATE spikeActivity SET
+            activityName = #{activityName},
+            activityDesc = #{activityDesc},
+            startTime = #{startTime},
+            endTime = #{endTime},
+            status = #{status},
+            updateTime = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getAllActivities" resultMap="SpikeActivityResultMap">
+        SELECT * FROM spikeActivity 
+        ORDER BY createTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getActivityCount" resultType="int">
+        SELECT COUNT(*) FROM spikeActivity
+    </select>
+
+    <delete id="deleteActivity">
+        DELETE FROM spikeActivity WHERE id = #{id}
+    </delete>
+
+    <update id="updateActivityStatus">
+        UPDATE spikeActivity SET
+            status = #{status},
+            updateTime = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="searchActivities" resultMap="SpikeActivityResultMap">
+        SELECT * FROM spikeActivity
+        <where>
+            <if test="searchParams.activityName != null and searchParams.activityName != ''">
+                AND activityName LIKE CONCAT('%', #{searchParams.activityName}, '%')
+            </if>
+            <if test="searchParams.status != null">
+                AND status = #{searchParams.status}
+            </if>
+            <if test="searchParams.startTime != null and searchParams.startTime != ''">
+                AND startTime >= #{searchParams.startTime}
+            </if>
+            <if test="searchParams.endTime != null and searchParams.endTime != ''">
+                AND endTime &lt;= #{searchParams.endTime}
+            </if>
+        </where>
+        ORDER BY createTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getSearchActivityCount" resultType="int">
+        SELECT COUNT(*) FROM spikeActivity
+        <where>
+            <if test="searchParams.activityName != null and searchParams.activityName != ''">
+                AND activityName LIKE CONCAT('%', #{searchParams.activityName}, '%')
+            </if>
+            <if test="searchParams.status != null">
+                AND status = #{searchParams.status}
+            </if>
+            <if test="searchParams.startTime != null and searchParams.startTime != ''">
+                AND startTime >= #{searchParams.startTime}
+            </if>
+            <if test="searchParams.endTime != null and searchParams.endTime != ''">
+                AND endTime &lt;= #{searchParams.endTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

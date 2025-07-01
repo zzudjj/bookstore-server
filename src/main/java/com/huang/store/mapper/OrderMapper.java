@@ -33,6 +33,8 @@ public interface OrderMapper {
 
     OrderDto findOrderDto(int id);//得到某个订单的所有信息明细
 
+    OrderDto findOrderDtoByOrderId(String orderId);//根据订单ID得到订单信息明细
+
     List<OrderDetailDto> findOrderDetailDtoList(String orderId);//得到指定订单所有图书的明细信息
 
     //按页得到所有订单的明细 userId为空则为管理员，userId不为空则为普通用户

@@ -81,7 +81,18 @@
     </select>
 
     <select id="getBooksByPage" resultType="com.huang.store.entity.book.Book">
-        select * from book limit #{page},#{pageSize}
+        select b.*,
+               COALESCE(sales_data.total_sales, 0) as sales
+        from book b
+        left join (
+            select od.bookId, sum(od.num) as total_sales
+            from orderdetail od
+            inner join bookorder bo on od.orderId = bo.orderId
+            where bo.orderStatus in ('已发货', '已收货', '已评价')
+            group by od.bookId
+        ) sales_data on b.id = sales_data.bookId
+        order by b.rank desc, b.id desc
+        limit #{page},#{pageSize}
     </select>
 
 

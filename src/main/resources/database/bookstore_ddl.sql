@@ -265,6 +265,257 @@ ALTER TABLE `orderdetail` ADD CONSTRAINT `fk_orderdetail_book` FOREIGN KEY (`boo
 ALTER TABLE `expense` ADD CONSTRAINT `fk_expense_order` FOREIGN KEY (`orderId`) REFERENCES `bookorder` (`orderId`) ON DELETE CASCADE;
 
 
+
+-- ========================================
+-- 秒杀系统表结构 - 适配现有bookstore系统
+-- 执行前请确保已连接到bookstore数据库
+-- ========================================
+
+USE `bookstore`;
+
+-- ========================================
+-- 1. 秒杀活动表
+-- ========================================
+CREATE TABLE `spikeActivity` (
+                                 `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '活动ID',
+                                 `activityName` varchar(100) NOT NULL COMMENT '活动名称',
+                                 `activityDesc` text COMMENT '活动描述',
+                                 `startTime` datetime NOT NULL COMMENT '开始时间',
+                                 `endTime` datetime NOT NULL COMMENT '结束时间',
+                                 `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态：0-未开始，1-进行中，2-已结束，3-已取消',
+                                 `createTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                 `updateTime` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                 `createdBy` varchar(100) COMMENT '创建人账号',
+                                 PRIMARY KEY (`id`),
+                                 KEY `idx_startEndTime` (`startTime`, `endTime`),
+                                 KEY `idx_status` (`status`),
+                                 KEY `idx_createdBy` (`createdBy`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='秒杀活动表';
+
+-- ========================================
+-- 2. 秒杀商品表
+-- ========================================
+CREATE TABLE `spikeGoods` (
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '秒杀商品ID',
+                              `activityId` bigint(20) NOT NULL COMMENT '活动ID',
+                              `bookId` int(11) NOT NULL COMMENT '图书ID',
+                              `spikePrice` decimal(10,2) NOT NULL COMMENT '秒杀价格',
+                              `originalPrice` decimal(10,2) NOT NULL COMMENT '原价',
+                              `spikeStock` int(11) NOT NULL COMMENT '秒杀库存',
+                              `soldCount` int(11) DEFAULT '0' COMMENT '已售数量',
+                              `limitPerUser` int(11) DEFAULT '1' COMMENT '每人限购数量',
+                              `sortOrder` int(11) DEFAULT '0' COMMENT '排序',
+                              `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态：0-下架，1-上架',
+                              `createTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `updateTime` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              PRIMARY KEY (`id`),
+                              KEY `idx_activityId` (`activityId`),
+                              KEY `idx_bookId` (`bookId`),
+                              KEY `idx_status` (`status`),
+                              KEY `idx_sortOrder` (`sortOrder`),
+                              CONSTRAINT `fk_spikeGoods_activity` FOREIGN KEY (`activityId`) REFERENCES `spikeActivity` (`id`) ON DELETE CASCADE,
+                              CONSTRAINT `fk_spikeGoods_book` FOREIGN KEY (`bookId`) REFERENCES `book` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='秒杀商品表';
+
+-- ========================================
+-- 3. 秒杀订单表
+-- ========================================
+CREATE TABLE `spikeOrder` (
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '秒杀订单ID',
+                              `orderId` varchar(50) NOT NULL COMMENT '订单号',
+                              `spikeGoodsId` bigint(20) NOT NULL COMMENT '秒杀商品ID',
+                              `userAccount` varchar(100) NOT NULL COMMENT '用户账号',
+                              `quantity` int(11) NOT NULL DEFAULT '1' COMMENT '购买数量',
+                              `spikePrice` decimal(10,2) NOT NULL COMMENT '秒杀价格',
+                              `totalAmount` decimal(10,2) NOT NULL COMMENT '总金额',
+                              `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态：0-待支付，1-已支付，2-已取消，3-已退款',
+                              `payTime` datetime COMMENT '支付时间',
+                              `cancelTime` datetime COMMENT '取消时间',
+                              `expireTime` datetime NOT NULL COMMENT '过期时间',
+                              `createTime` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `updateTime` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `uk_orderId` (`orderId`),
+                              KEY `idx_spikeGoodsId` (`spikeGoodsId`),
+                              KEY `idx_userAccount` (`userAccount`),
+                              KEY `idx_status` (`status`),
+                              KEY `idx_expireTime` (`expireTime`),
+                              KEY `idx_createTime` (`createTime`),
+                              CONSTRAINT `fk_spikeOrder_goods` FOREIGN KEY (`spikeGoodsId`) REFERENCES `spikeGoods` (`id`) ON DELETE CASCADE,
+                              CONSTRAINT `fk_spikeOrder_user` FOREIGN KEY (`userAccount`) REFERENCES `user` (`account`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='秒杀订单表';
+
+-- ========================================
+-- 4. 秒杀记录表
+-- ========================================
+CREATE TABLE `spikeRecord` (
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+                               `spikeGoodsId` bigint(20) NOT NULL COMMENT '秒杀商品ID',
+                               `userAccount` varchar(100) NOT NULL COMMENT '用户账号',
+                               `spikeTime` datetime NOT NULL COMMENT '秒杀时间',
+                               `result` tinyint(1) NOT NULL COMMENT '结果：0-失败，1-成功',
+                               `failReason` varchar(200) COMMENT '失败原因',
+                               `ipAddress` varchar(45) COMMENT 'IP地址',
+                               `userAgent` varchar(500) COMMENT '用户代理',
+                               PRIMARY KEY (`id`),
+                               KEY `idx_spikeGoodsUser` (`spikeGoodsId`, `userAccount`),
+                               KEY `idx_spikeTime` (`spikeTime`),
+                               KEY `idx_result` (`result`),
+                               KEY `idx_userAccount` (`userAccount`),
+                               CONSTRAINT `fk_spikeRecord_goods` FOREIGN KEY (`spikeGoodsId`) REFERENCES `spikeGoods` (`id`) ON DELETE CASCADE,
+                               CONSTRAINT `fk_spikeRecord_user` FOREIGN KEY (`userAccount`) REFERENCES `user` (`account`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='秒杀记录表';
+
+-- ========================================
+-- 5. 插入示例数据
+-- ========================================
+
+-- 插入秒杀活动
+INSERT INTO `spikeActivity` (`activityName`, `activityDesc`, `startTime`, `endTime`, `status`, `createdBy`) VALUES
+                                                                                                                ('新年特惠秒杀', '新年期间限时秒杀活动，精选图书超低价', '2024-01-01 10:00:00', '2024-01-01 12:00:00', 1, 'admin@bookstore.com'),
+                                                                                                                ('午间秒杀场', '午间休息时间秒杀专场', '2024-01-01 12:00:00', '2024-01-01 14:00:00', 0, 'admin@bookstore.com'),
+                                                                                                                ('晚间秒杀场', '晚间黄金时段秒杀活动', '2024-01-01 20:00:00', '2024-01-01 22:00:00', 0, 'admin@bookstore.com');
+
+-- 插入秒杀商品（基于现有的图书数据）
+INSERT INTO `spikeGoods` (`activityId`, `bookId`, `spikePrice`, `originalPrice`, `spikeStock`, `limitPerUser`, `sortOrder`) VALUES
+                                                                                                                                (1, 1, 19.90, 45.00, 50, 2, 1),  -- 红楼梦
+                                                                                                                                (1, 2, 49.90, 98.00, 30, 1, 2),  -- Java核心技术
+                                                                                                                                (1, 3, 69.90, 128.00, 20, 1, 3), -- 算法导论
+                                                                                                                                (2, 4, 39.90, 69.00, 40, 2, 1),  -- Spring Boot实战
+                                                                                                                                (2, 5, 15.90, 38.00, 60, 2, 2),  -- 西游记
+                                                                                                                                (3, 1, 22.90, 45.00, 30, 1, 1),  -- 红楼梦（晚场）
+                                                                                                                                (3, 2, 59.90, 98.00, 25, 1, 2);  -- Java核心技术（晚场）
+
+-- ========================================
+-- 6. 创建索引优化查询性能
+-- ========================================
+
+-- 秒杀活动表复合索引
+CREATE INDEX `idx_activity_time_status` ON `spikeActivity` (`startTime`, `endTime`, `status`);
+
+-- 秒杀商品表复合索引
+CREATE INDEX `idx_goods_activity_status` ON `spikeGoods` (`activityId`, `status`);
+CREATE INDEX `idx_goods_book_status` ON `spikeGoods` (`bookId`, `status`);
+
+-- 秒杀订单表复合索引
+CREATE INDEX `idx_order_user_time` ON `spikeOrder` (`userAccount`, `createTime`);
+CREATE INDEX `idx_order_goods_status` ON `spikeOrder` (`spikeGoodsId`, `status`);
+
+-- 秒杀记录表复合索引
+CREATE INDEX `idx_record_user_goods` ON `spikeRecord` (`userAccount`, `spikeGoodsId`);
+CREATE INDEX `idx_record_time_result` ON `spikeRecord` (`spikeTime`, `result`);
+
+-- ========================================
+-- 7. 验证表创建结果
+-- ========================================
+
+-- 查看创建的表
+SELECT
+    TABLE_NAME as '表名',
+    TABLE_COMMENT as '表注释',
+    TABLE_ROWS as '行数'
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'bookstore'
+  AND TABLE_NAME LIKE 'spike%'
+ORDER BY TABLE_NAME;
+
+-- 查看外键约束
+SELECT
+    TABLE_NAME as '表名',
+    COLUMN_NAME as '列名',
+    CONSTRAINT_NAME as '约束名',
+    REFERENCED_TABLE_NAME as '引用表',
+    REFERENCED_COLUMN_NAME as '引用列'
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'bookstore'
+  AND TABLE_NAME LIKE 'spike%'
+  AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME, COLUMN_NAME;
+
+-- 查看示例数据
+SELECT
+    a.id,
+    a.activityName,
+    a.startTime,
+    a.endTime,
+    a.status,
+    COUNT(g.id) as goodsCount
+FROM spikeActivity a
+         LEFT JOIN spikeGoods g ON a.id = g.activityId
+GROUP BY a.id, a.activityName, a.startTime, a.endTime, a.status
+ORDER BY a.startTime;
+
+-- 查看秒杀商品详情
+SELECT
+    g.id,
+    a.activityName,
+    b.bookName,
+    g.spikePrice,
+    g.originalPrice,
+    ROUND((g.spikePrice / g.originalPrice) * 10, 1) as discount,
+    g.spikeStock,
+    g.soldCount,
+    g.status
+FROM spikeGoods g
+         JOIN spikeActivity a ON g.activityId = a.id
+         JOIN book b ON g.bookId = b.id
+ORDER BY g.activityId, g.sortOrder;
+
+-- ========================================
+-- 8. 数据完整性检查
+-- ========================================
+
+-- 检查是否有孤立的秒杀商品（引用不存在的图书）
+SELECT 'spikeGoods中引用不存在的图书' as checkType, COUNT(*) as count
+FROM spikeGoods g
+         LEFT JOIN book b ON g.bookId = b.id
+WHERE b.id IS NULL;
+
+-- 检查是否有孤立的秒杀商品（引用不存在的活动）
+SELECT 'spikeGoods中引用不存在的活动' as checkType, COUNT(*) as count
+FROM spikeGoods g
+         LEFT JOIN spikeActivity a ON g.activityId = a.id
+WHERE a.id IS NULL;
+
+-- 检查用户账号是否存在
+SELECT 'spikeActivity中不存在的创建人' as checkType, COUNT(*) as count
+FROM spikeActivity a
+         LEFT JOIN user u ON a.createdBy = u.account
+WHERE a.createdBy IS NOT NULL AND u.account IS NULL;
+
+-- ========================================
+-- 9. 性能优化建议
+-- ========================================
+
+/*
+性能优化建议：
+
+1. 数据库层面：
+   - 已创建必要的索引优化查询性能
+   - 使用InnoDB引擎支持事务和外键约束
+   - 字段类型选择合理，避免浪费存储空间
+
+2. 缓存策略：
+   - 秒杀活动信息可以缓存到Redis
+   - 秒杀商品库存使用Redis计数器
+   - 用户购买限制使用Redis记录
+
+3. 并发控制：
+   - 使用Redis分布式锁防止超卖
+   - 数据库层面使用乐观锁更新库存
+   - 限制单用户请求频率
+
+4. 监控指标：
+   - 监控秒杀成功率
+   - 监控数据库连接数和查询性能
+   - 监控Redis内存使用情况
+*/
+
+-- 执行完成提示
+SELECT '秒杀系统表结构创建完成！' as message, NOW() as createTime;
+
+
+
 -- ========================================
 -- 检查和添加基础数据
 -- ========================================
@@ -273,141 +524,141 @@ ALTER TABLE `expense` ADD CONSTRAINT `fk_expense_order` FOREIGN KEY (`orderId`) 
 -- 书店系统示例数据插入脚本
 -- 注意：请先执行 bookstore_ddl.sql 创建表结构
 -- ========================================
-
-USE `bookstore`;
-
--- ========================================
--- 用户数据
--- ========================================
-
--- 插入管理员用户
-INSERT INTO `user` (`account`, `password`, `name`, `gender`, `manage`, `enable`) VALUES
-                                                                                     ('admin@bookstore.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '管理员', '男', 1, 1),
-                                                                                     ('user1@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '张三', '男', 0, 1),
-                                                                                     ('user2@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '李四', '女', 0, 1);
-
--- 插入地址数据
-INSERT INTO `address` (`account`, `name`, `phone`, `addr`, `label`) VALUES
-                                                                        ('user1@example.com', '张三', '13800138001', '北京市朝阳区某某街道123号', '家'),
-                                                                        ('user1@example.com', '张三', '13800138001', '北京市海淀区某某大厦456号', '公司'),
-                                                                        ('user2@example.com', '李四', '13800138002', '上海市浦东新区某某路789号', '家');
-
--- ========================================
--- 图书分类数据
--- ========================================
-
--- 一级分类
-INSERT INTO `booksort` (`sortName`, `upperName`, `level`, `rank`) VALUES
-                                                                      ('文学', '无', '级别一', 1),
-                                                                      ('科技', '无', '级别一', 2),
-                                                                      ('教育', '无', '级别一', 3),
-                                                                      ('生活', '无', '级别一', 4);
-
--- 二级分类
-INSERT INTO `booksort` (`sortName`, `upperName`, `level`, `rank`) VALUES
-                                                                      ('小说', '文学', '级别二', 1),
-                                                                      ('散文', '文学', '级别二', 2),
-                                                                      ('诗歌', '文学', '级别二', 3),
-                                                                      ('计算机', '科技', '级别二', 1),
-                                                                      ('电子', '科技', '级别二', 2),
-                                                                      ('教材', '教育', '级别二', 1),
-                                                                      ('考试', '教育', '级别二', 2),
-                                                                      ('健康', '生活', '级别二', 1),
-                                                                      ('美食', '生活', '级别二', 2);
-
--- ========================================
--- 出版社数据
--- ========================================
-
-INSERT INTO `publish` (`name`, `showPublish`, `rank`) VALUES
-                                                          ('人民文学出版社', 1, 1),
-                                                          ('机械工业出版社', 1, 2),
-                                                          ('清华大学出版社', 1, 3),
-                                                          ('电子工业出版社', 1, 4),
-                                                          ('中信出版社', 1, 5);
-
--- ========================================
--- 图书数据
--- ========================================
-
-INSERT INTO `book` (`bookName`, `author`, `isbn`, `publish`, `birthday`, `marketPrice`, `price`, `stock`, `description`, `put`, `rank`, `newProduct`, `recommend`) VALUES
-                                                                                                                                                                       ('红楼梦', '曹雪芹', '9787020002207', '人民文学出版社', '2020-01-01 00:00:00', 59.00, 45.00, 100, '中国古典文学四大名著之一', 1, 10, 0, 1),
-                                                                                                                                                                       ('Java核心技术', 'Cay S. Horstmann', '9787111213826', '机械工业出版社', '2021-03-15 00:00:00', 128.00, 98.00, 50, 'Java编程经典教程', 1, 9, 1, 1),
-                                                                                                                                                                       ('算法导论', 'Thomas H. Cormen', '9787111407010', '机械工业出版社', '2020-06-01 00:00:00', 158.00, 128.00, 30, '计算机算法经典教材', 1, 8, 0, 1),
-                                                                                                                                                                       ('Spring Boot实战', '汪云飞', '9787121291005', '电子工业出版社', '2021-05-20 00:00:00', 89.00, 69.00, 80, 'Spring Boot开发实战指南', 1, 7, 1, 0),
-                                                                                                                                                                       ('西游记', '吴承恩', '9787020002214', '人民文学出版社', '2020-02-01 00:00:00', 49.00, 38.00, 120, '中国古典文学四大名著之一', 1, 6, 0, 1);
-
--- ========================================
--- 图书图片数据
--- ========================================
-
-INSERT INTO `bookimg` (`isbn`, `imgSrc`, `cover`) VALUES
-                                                      ('9787020002207', 'static/image/book/hongloumeng_cover.jpg', 1),
-                                                      ('9787020002207', 'static/image/book/hongloumeng_1.jpg', 0),
-                                                      ('9787111213826', 'static/image/book/java_cover.jpg', 1),
-                                                      ('9787111213826', 'static/image/book/java_1.jpg', 0),
-                                                      ('9787111407010', 'static/image/book/algorithm_cover.jpg', 1),
-                                                      ('9787121291005', 'static/image/book/springboot_cover.jpg', 1),
-                                                      ('9787020002214', 'static/image/book/xiyouji_cover.jpg', 1);
-
--- ========================================
--- 图书分类关联数据
--- ========================================
-
-INSERT INTO `booksortlist` (`bookSortId`, `bookId`) VALUES
-                                                        (5, 1),  -- 红楼梦 -> 小说
-                                                        (5, 5),  -- 西游记 -> 小说
-                                                        (8, 2),  -- Java核心技术 -> 计算机
-                                                        (8, 3),  -- 算法导论 -> 计算机
-                                                        (8, 4);  -- Spring Boot实战 -> 计算机
-
--- ========================================
--- 书单数据
--- ========================================
-
-INSERT INTO `booktopic` (`topicName`, `subTitle`, `cover`, `rank`, `put`) VALUES
-                                                                              ('程序员必读书单', '提升编程技能的经典书籍', 'static/image/topic/programmer_books.jpg', 1, 1),
-                                                                              ('古典文学精选', '传承千年的文学瑰宝', 'static/image/topic/classic_literature.jpg', 2, 1);
-
-INSERT INTO `subbooktopic` (`topicId`, `bookId`, `recommendReason`) VALUES
-                                                                        (1, 2, 'Java开发者的必备参考书，内容全面深入'),
-                                                                        (1, 3, '算法学习的经典教材，计算机科学基础'),
-                                                                        (1, 4, '现代Java开发框架实战指南'),
-                                                                        (2, 1, '中国古典小说的巅峰之作，文学价值极高'),
-                                                                        (2, 5, '神话色彩浓厚的古典小说，想象力丰富');
-
--- ========================================
--- 购物车示例数据
--- ========================================
-
-INSERT INTO `cart` (`account`, `id`, `num`) VALUES
-                                                ('user1@example.com', 1, 2),
-                                                ('user1@example.com', 2, 1),
-                                                ('user2@example.com', 3, 1);
-
--- ========================================
--- 订单示例数据
--- ========================================
-
-INSERT INTO `bookorder` (`orderId`, `account`, `addressId`, `orderTime`, `orderStatus`) VALUES
-                                                                                            ('ORD202401010001', 'user1@example.com', 1, '2024-01-01 10:30:00', '已完成'),
-                                                                                            ('ORD202401020001', 'user2@example.com', 3, '2024-01-02 14:20:00', '待发货');
-
-INSERT INTO `orderdetail` (`orderId`, `bookId`, `num`, `price`) VALUES
-                                                                    ('ORD202401010001', 1, 1, 45.00),
-                                                                    ('ORD202401010001', 2, 1, 98.00),
-                                                                    ('ORD202401020001', 3, 1, 128.00);
-
-INSERT INTO `expense` (`orderId`, `productTotalMoney`, `freight`, `coupon`, `activityDiscount`, `allPrice`, `finallyPrice`) VALUES
-                                                                                                                                ('ORD202401010001', 143.00, 0.00, 0, 0.00, 143.00, 143.00),
-                                                                                                                                ('ORD202401020001', 128.00, 0.00, 0, 0.00, 128.00, 128.00);
-
--- ========================================
--- 更新出版社图书数量
--- ========================================
-
-UPDATE `publish` SET `num` = (
-    SELECT COUNT(*) FROM `book` WHERE `book`.`publish` = `publish`.`name`
-) WHERE `id` > 0;
-
-
+#
+# USE `bookstore`;
+#
+# -- ========================================
+# -- 用户数据
+# -- ========================================
+#
+# -- 插入管理员用户
+# INSERT INTO `user` (`account`, `password`, `name`, `gender`, `manage`, `enable`) VALUES
+#                                                                                      ('admin@bookstore.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '管理员', '男', 1, 1),
+#                                                                                      ('user1@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '张三', '男', 0, 1),
+#                                                                                      ('user2@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '李四', '女', 0, 1);
+#
+# -- 插入地址数据
+# INSERT INTO `address` (`account`, `name`, `phone`, `addr`, `label`) VALUES
+#                                                                         ('user1@example.com', '张三', '13800138001', '北京市朝阳区某某街道123号', '家'),
+#                                                                         ('user1@example.com', '张三', '13800138001', '北京市海淀区某某大厦456号', '公司'),
+#                                                                         ('user2@example.com', '李四', '13800138002', '上海市浦东新区某某路789号', '家');
+#
+# -- ========================================
+# -- 图书分类数据
+# -- ========================================
+#
+# -- 一级分类
+# INSERT INTO `booksort` (`sortName`, `upperName`, `level`, `rank`) VALUES
+#                                                                       ('文学', '无', '级别一', 1),
+#                                                                       ('科技', '无', '级别一', 2),
+#                                                                       ('教育', '无', '级别一', 3),
+#                                                                       ('生活', '无', '级别一', 4);
+#
+# -- 二级分类
+# INSERT INTO `booksort` (`sortName`, `upperName`, `level`, `rank`) VALUES
+#                                                                       ('小说', '文学', '级别二', 1),
+#                                                                       ('散文', '文学', '级别二', 2),
+#                                                                       ('诗歌', '文学', '级别二', 3),
+#                                                                       ('计算机', '科技', '级别二', 1),
+#                                                                       ('电子', '科技', '级别二', 2),
+#                                                                       ('教材', '教育', '级别二', 1),
+#                                                                       ('考试', '教育', '级别二', 2),
+#                                                                       ('健康', '生活', '级别二', 1),
+#                                                                       ('美食', '生活', '级别二', 2);
+#
+# -- ========================================
+# -- 出版社数据
+# -- ========================================
+#
+# INSERT INTO `publish` (`name`, `showPublish`, `rank`) VALUES
+#                                                           ('人民文学出版社', 1, 1),
+#                                                           ('机械工业出版社', 1, 2),
+#                                                           ('清华大学出版社', 1, 3),
+#                                                           ('电子工业出版社', 1, 4),
+#                                                           ('中信出版社', 1, 5);
+#
+# -- ========================================
+# -- 图书数据
+# -- ========================================
+#
+# INSERT INTO `book` (`bookName`, `author`, `isbn`, `publish`, `birthday`, `marketPrice`, `price`, `stock`, `description`, `put`, `rank`, `newProduct`, `recommend`) VALUES
+#                                                                                                                                                                        ('红楼梦', '曹雪芹', '9787020002207', '人民文学出版社', '2020-01-01 00:00:00', 59.00, 45.00, 100, '中国古典文学四大名著之一', 1, 10, 0, 1),
+#                                                                                                                                                                        ('Java核心技术', 'Cay S. Horstmann', '9787111213826', '机械工业出版社', '2021-03-15 00:00:00', 128.00, 98.00, 50, 'Java编程经典教程', 1, 9, 1, 1),
+#                                                                                                                                                                        ('算法导论', 'Thomas H. Cormen', '9787111407010', '机械工业出版社', '2020-06-01 00:00:00', 158.00, 128.00, 30, '计算机算法经典教材', 1, 8, 0, 1),
+#                                                                                                                                                                        ('Spring Boot实战', '汪云飞', '9787121291005', '电子工业出版社', '2021-05-20 00:00:00', 89.00, 69.00, 80, 'Spring Boot开发实战指南', 1, 7, 1, 0),
+#                                                                                                                                                                        ('西游记', '吴承恩', '9787020002214', '人民文学出版社', '2020-02-01 00:00:00', 49.00, 38.00, 120, '中国古典文学四大名著之一', 1, 6, 0, 1);
+#
+# -- ========================================
+# -- 图书图片数据
+# -- ========================================
+#
+# INSERT INTO `bookimg` (`isbn`, `imgSrc`, `cover`) VALUES
+#                                                       ('9787020002207', 'static/image/book/hongloumeng_cover.jpg', 1),
+#                                                       ('9787020002207', 'static/image/book/hongloumeng_1.jpg', 0),
+#                                                       ('9787111213826', 'static/image/book/java_cover.jpg', 1),
+#                                                       ('9787111213826', 'static/image/book/java_1.jpg', 0),
+#                                                       ('9787111407010', 'static/image/book/algorithm_cover.jpg', 1),
+#                                                       ('9787121291005', 'static/image/book/springboot_cover.jpg', 1),
+#                                                       ('9787020002214', 'static/image/book/xiyouji_cover.jpg', 1);
+#
+# -- ========================================
+# -- 图书分类关联数据
+# -- ========================================
+#
+# INSERT INTO `booksortlist` (`bookSortId`, `bookId`) VALUES
+#                                                         (5, 1),  -- 红楼梦 -> 小说
+#                                                         (5, 5),  -- 西游记 -> 小说
+#                                                         (8, 2),  -- Java核心技术 -> 计算机
+#                                                         (8, 3),  -- 算法导论 -> 计算机
+#                                                         (8, 4);  -- Spring Boot实战 -> 计算机
+#
+# -- ========================================
+# -- 书单数据
+# -- ========================================
+#
+# INSERT INTO `booktopic` (`topicName`, `subTitle`, `cover`, `rank`, `put`) VALUES
+#                                                                               ('程序员必读书单', '提升编程技能的经典书籍', 'static/image/topic/programmer_books.jpg', 1, 1),
+#                                                                               ('古典文学精选', '传承千年的文学瑰宝', 'static/image/topic/classic_literature.jpg', 2, 1);
+#
+# INSERT INTO `subbooktopic` (`topicId`, `bookId`, `recommendReason`) VALUES
+#                                                                         (1, 2, 'Java开发者的必备参考书，内容全面深入'),
+#                                                                         (1, 3, '算法学习的经典教材，计算机科学基础'),
+#                                                                         (1, 4, '现代Java开发框架实战指南'),
+#                                                                         (2, 1, '中国古典小说的巅峰之作，文学价值极高'),
+#                                                                         (2, 5, '神话色彩浓厚的古典小说，想象力丰富');
+#
+# -- ========================================
+# -- 购物车示例数据
+# -- ========================================
+#
+# INSERT INTO `cart` (`account`, `id`, `num`) VALUES
+#                                                 ('user1@example.com', 1, 2),
+#                                                 ('user1@example.com', 2, 1),
+#                                                 ('user2@example.com', 3, 1);
+#
+# -- ========================================
+# -- 订单示例数据
+# -- ========================================
+#
+# INSERT INTO `bookorder` (`orderId`, `account`, `addressId`, `orderTime`, `orderStatus`) VALUES
+#                                                                                             ('ORD202401010001', 'user1@example.com', 1, '2024-01-01 10:30:00', '已完成'),
+#                                                                                             ('ORD202401020001', 'user2@example.com', 3, '2024-01-02 14:20:00', '待发货');
+#
+# INSERT INTO `orderdetail` (`orderId`, `bookId`, `num`, `price`) VALUES
+#                                                                     ('ORD202401010001', 1, 1, 45.00),
+#                                                                     ('ORD202401010001', 2, 1, 98.00),
+#                                                                     ('ORD202401020001', 3, 1, 128.00);
+#
+# INSERT INTO `expense` (`orderId`, `productTotalMoney`, `freight`, `coupon`, `activityDiscount`, `allPrice`, `finallyPrice`) VALUES
+#                                                                                                                                 ('ORD202401010001', 143.00, 0.00, 0, 0.00, 143.00, 143.00),
+#                                                                                                                                 ('ORD202401020001', 128.00, 0.00, 0, 0.00, 128.00, 128.00);
+#
+# -- ========================================
+# -- 更新出版社图书数量
+# -- ========================================
+#
+# UPDATE `publish` SET `num` = (
+#     SELECT COUNT(*) FROM `book` WHERE `book`.`publish` = `publish`.`name`
+# ) WHERE `id` > 0;
+#
+#
