@@ -457,4 +457,15 @@ public class BookServiceImp implements BookService {
 
         System.out.println("==========图书缓存清空完成==========");
     }
+
+    @Override
+    public List<Book> searchBooks(String keyword, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        return bookMapper.searchBooks(keyword, start, pageSize);
+    }
+
+    @Override
+    public int getSearchBookCount(String keyword) {
+        return bookMapper.getSearchBookCount(keyword);
+    }
 }

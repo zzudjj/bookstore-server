@@ -32,6 +32,10 @@ public interface BookMapper {
     int getBookCount();//得到图书的数量
     List<Book> getPublishBooks(String publishName);//得到某一个出版社的所有图书
 
+    // 图书搜索相关方法
+    List<Book> searchBooks(String keyword, int page, int pageSize);//根据关键字搜索图书（书名、作者、ISBN、出版社）
+    int getSearchBookCount(String keyword);//获取搜索结果总数
+
 
 
     //对于bookimg表的操作

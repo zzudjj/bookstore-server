@@ -30,7 +30,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     private static final String tokenHeader = "Authorization";
-    private static final String tokenHead = "Bearer";
+    private static final String tokenHead = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
