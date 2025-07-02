@@ -138,3 +138,18 @@ INSERT INTO `expense` (`orderId`, `productTotalMoney`, `freight`, `coupon`, `act
 UPDATE `publish` SET `num` = (
     SELECT COUNT(*) FROM `book` WHERE `book`.`publish` = `publish`.`name`
 ) WHERE `id` > 0;
+
+-- ========================================
+-- 公告示例数据
+-- ========================================
+
+INSERT INTO `announcement` (`title`, `content`, `author`, `publishTime`, `enable`) VALUES
+('系统维护通知', '尊敬的读者：网站将于本周日 00:00-02:00 进行服务器维护，期间将暂停访问，敬请谅解。', 'admin@bookstore.com', NOW(), 1),
+('新书上架公告', '本月新上架 50 余种精品好书，欢迎大家选购！', 'admin@bookstore.com', NOW(), 1);
+
+-- ========================================
+-- 网站介绍示例数据（仅 1 条）
+-- ========================================
+
+INSERT INTO `about` (`id`, `content`, `updateTime`) VALUES
+(1, '智慧书店致力于为读者提供多元化、精品化的阅读体验——精选图书、每日特价、秒杀活动，尽享阅读乐趣。', NOW());

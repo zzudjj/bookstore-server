@@ -662,3 +662,27 @@ SELECT '秒杀系统表结构创建完成！' as message, NOW() as createTime;
 # ) WHERE `id` > 0;
 #
 #
+
+-- ========================================
+-- 公告与网站介绍相关表
+-- ========================================
+
+-- 公告表
+CREATE TABLE `announcement` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '公告编号',
+    `title` VARCHAR(255) NOT NULL COMMENT '公告标题',
+    `content` TEXT NOT NULL COMMENT '公告内容',
+    `author` VARCHAR(100) DEFAULT NULL COMMENT '发布人账号',
+    `publishTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+    `enable` TINYINT(1) DEFAULT '1' COMMENT '是否展示 (1=展示,0=隐藏)',
+    PRIMARY KEY (`id`),
+    KEY `idx_enable` (`enable`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站公告表';
+
+-- 网站介绍表 (理论上只保存一条记录)
+CREATE TABLE `about` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID (固定为1)',
+    `content` TEXT NOT NULL COMMENT '网站介绍内容',
+    `updateTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站介绍信息表';
