@@ -1,6 +1,7 @@
 package com.huang.store.entity.dto;
 
 import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @author: 黄龙
@@ -12,6 +13,7 @@ public class TopicBook {
     private String bookName;
     private String author;
     private String publish;//出版社
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Timestamp birthday;//出版时间
     private String coverImg;//书的封面图
     private String isbn;

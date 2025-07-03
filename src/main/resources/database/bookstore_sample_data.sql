@@ -94,16 +94,26 @@ INSERT INTO `booksortlist` (`bookSortId`, `bookId`) VALUES
 -- 书单数据
 -- ========================================
 
-INSERT INTO `booktopic` (`topicName`, `subTitle`, `cover`, `rank`, `put`) VALUES
-('程序员必读书单', '提升编程技能的经典书籍', 'static/image/topic/programmer_books.jpg', 1, 1),
-('古典文学精选', '传承千年的文学瑰宝', 'static/image/topic/classic_literature.jpg', 2, 1);
+-- 删除旧表插入示例数据
+# DELETE FROM `topic_fav`;
+# DELETE FROM `topic_item`;
+# DELETE FROM `topic`;
 
-INSERT INTO `subbooktopic` (`topicId`, `bookId`, `recommendReason`) VALUES
-(1, 2, 'Java开发者的必备参考书，内容全面深入'),
-(1, 3, '算法学习的经典教材，计算机科学基础'),
-(1, 4, '现代Java开发框架实战指南'),
-(2, 1, '中国古典小说的巅峰之作，文学价值极高'),
-(2, 5, '神话色彩浓厚的古典小说，想象力丰富');
+-- 新书单示例数据
+INSERT INTO `topic` (`title`,`subTitle`,`cover`,`rank`,`status`,`viewCnt`,`favCnt`,`orderCnt`) VALUES
+('程序员必读书单','提升编程技能的经典书籍','static/image/topic/programmer_books.jpg',1,1,0,0,0),
+('古典文学精选','传承千年的文学瑰宝','static/image/topic/classic_literature.jpg',2,1,0,0,0);
+
+-- 书单条目
+INSERT INTO `topic_item` (`topicId`,`bookId`,`recommendReason`,`orderNo`) VALUES
+(1,2,'Java开发者的必备参考书，内容全面深入',1),
+(1,3,'算法学习的经典教材，计算机科学基础',2),
+(1,4,'现代Java开发框架实战指南',3),
+(2,1,'中国古典小说的巅峰之作，文学价值极高',1),
+(2,5,'神话色彩浓厚的古典小说，想象力丰富',2);
+
+-- 示例收藏（可选）
+-- INSERT INTO `topic_fav` (`userAccount`,`topicId`) VALUES ('user1@example.com',1);
 
 -- ========================================
 -- 购物车示例数据

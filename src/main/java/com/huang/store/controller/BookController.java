@@ -79,6 +79,17 @@ public class BookController {
     }
 
     /**
+     * 获取所有图书，用于选择器等场景
+     * @return
+     */
+    @GetMapping("/all")
+    public Map<String,Object> getAllBooks() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("books", bookService.getBooks());
+        return ResultUtil.resultSuccess(map);
+    }
+
+    /**
      * 修改图书
      * @param book
      * @return
