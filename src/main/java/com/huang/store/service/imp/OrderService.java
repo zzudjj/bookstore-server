@@ -1,5 +1,6 @@
 package com.huang.store.service.imp;
 
+import com.huang.store.entity.dto.OrderBookDto;
 import com.huang.store.entity.dto.OrderDetailDto;
 import com.huang.store.entity.dto.OrderDto;
 import com.huang.store.entity.dto.OrderInitDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: 黄龙
@@ -46,4 +48,52 @@ public interface OrderService {
     //得到订单的统计数据
     List<OrderStatistic> getOrderStatistic(String beginDate, String endDate) throws ParseException;
 
+    /**
+     * 确认支付
+     * @param orderId 订单ID
+     * @return 支付结果
+     */
+    boolean confirmPayment(String orderId);
+
+    /**
+     * 预留库存
+     * @param bookList 图书列表
+     * @param orderId 订单ID
+     */
+    void reserveStock(List<OrderBookDto> bookList, String orderId);
+
+    /**
+     * 释放预留库存
+     * @param orderId 订单ID
+     */
+    void releaseReservedStock(String orderId);
+
+    /**
+     * 确认库存扣减
+     * @param orderId 订单ID
+     */
+    void confirmStockReduction(String orderId);
+
+    /**
+     * 检查状态流转是否合法
+     * @param currentStatus 当前状态
+     * @param targetStatus 目标状态
+     * @return 是否合法
+     */
+    boolean canTransitionTo(String currentStatus, String targetStatus);
+
+    /**
+     * 批量操作订单
+     * @param ids 订单ID列表
+     * @param operation 操作类型
+     * @return 操作结果
+     */
+    Map<String, Object> batchOperateOrders(List<Integer> ids, String operation);
+
+    /**
+     * 查找超时未支付订单
+     * @param timeoutMinutes 超时分钟数
+     * @return 超时订单列表
+     */
+    List<Order> findTimeoutPendingOrders(int timeoutMinutes);
 }

@@ -2,6 +2,7 @@ package com.huang.store.mapper;
 
 import com.huang.store.entity.book.*;
 import com.huang.store.entity.dto.OrderBookDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,12 +16,13 @@ public interface BookMapper {
     int modifyBookRec(int id,boolean recommend);//修改图书是否为推荐图书
     int modifyBookNewPro(int id,boolean newProduct);//修改图书是否为新品
     int modifyBookStock(int id,int stockNum);//减库存stockNum
+    int restoreBookStock(@Param("id") int id, @Param("stockNum") int stockNum);//恢复库存stockNum
     int deleteBook(int id);//删除图书
     List<Book> getBooks();//得到所有图书
     List<Book> getBooksByPage(int page,int pageSize);//按页得到图书集合
     List<Book> getNewPutBookList(int page,int pageSize);//按页得到新上架的图书集合
 
-    List<OrderBookDto> getBatchBookList(int[] ids);//根据ids数组，得到对应的图书集合
+    List<OrderBookDto> getBatchBookList(@Param("ids") int[] ids, @Param("account") String account);//根据ids数组和用户账号，得到对应的图书集合
     List<OrderBookDto> getOneBookList(int[] ids);//根据ids数组，得到对应的图书集合
 
     int getBookId(String isbn);

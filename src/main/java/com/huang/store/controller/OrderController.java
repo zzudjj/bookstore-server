@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: 黄龙
@@ -81,48 +82,86 @@ public class OrderController {
     public Map<String,Object> initOrder(@RequestParam(value = "ids") int[] ids,
                                         @RequestParam(value = "from") int from,
                                         @RequestParam(value = "account") String account){
-        for(int i=0;i<ids.length;i++){
-            System.out.println("===ids[i]========"+ids[i]+"==============");
-        }
+        logger.info("初始化订单: 用户={}, 商品IDs={}, 来源={}", account, Arrays.toString(ids), from);
+
         Map<String,Object> map = new HashMap<>();
         Expense expense = new Expense();
         OrderInitDto orderInitDto = new OrderInitDto();
         List<OrderBookDto> batchBookList = new ArrayList<>();
-        if(from==1){//从购物车点击提交的
-            batchBookList = bookService.getBatchBookList(ids);
-            for(int i=0;i<batchBookList.size();i++){
-                int bookCount = cartService.getBookCount(account, batchBookList.get(i).getId());
-                batchBookList.get(i).setNum(bookCount);
-                System.out.println("====batchBookList.get(i).getNum():======"+batchBookList.get(i).getNum()+"======");
-            }
-            cartService.delBatchProduct(account,ids);//删除购物车中的图书
-        }else {//从详情页点击提交的
-            batchBookList = bookService.getOneBookList(ids);
-            batchBookList.get(0).setNum(1);
-        }
-        for(int i=0;i<batchBookList.size();i++){
-            String img = bookService.getBookCover(batchBookList.get(i).getIsbn());
-            batchBookList.get(i).setCoverImg(img);
-        }
 
-        Double productTotalMoney = 0.0;
-        for(OrderBookDto orderBookDto :batchBookList){
-            productTotalMoney = productTotalMoney + orderBookDto.getPrice()*orderBookDto.getNum();//得到订单总价
+        try {
+            if(from==1){//从购物车点击提交的
+                // 一次性获取购物车中的商品信息（包含数量）
+                batchBookList = bookService.getBatchBookList(ids, account);
+                logger.info("从购物车获取到{}件商品", batchBookList.size());
+
+                // 验证商品数据完整性
+                if(batchBookList.isEmpty()) {
+                    logger.warn("购物车中没有找到指定的商品");
+                    return ResultUtil.resultCode(400, "购物车中没有找到指定的商品");
+                }
+
+                // 验证库存充足性
+                for(OrderBookDto book : batchBookList) {
+                    if(book.getStock() < book.getNum()) {
+                        logger.warn("商品库存不足: 商品ID={}, 需要数量={}, 库存={}",
+                                   book.getId(), book.getNum(), book.getStock());
+                        return ResultUtil.resultCode(400, "商品《" + book.getBookName() + "》库存不足");
+                    }
+                }
+
+                // 注意：这里不删除购物车，等订单确认后再删除
+
+            }else {//从详情页点击提交的
+                batchBookList = bookService.getOneBookList(ids);
+                if(!batchBookList.isEmpty()) {
+                    batchBookList.get(0).setNum(1);
+                }
+            }
+
+            // 设置商品封面图片
+            for(OrderBookDto book : batchBookList){
+                String img = bookService.getBookCover(book.getIsbn());
+                book.setCoverImg(img);
+            }
+
+            // 计算订单金额
+            Double productTotalMoney = 0.0;
+            for(OrderBookDto orderBookDto : batchBookList){
+                productTotalMoney = productTotalMoney + orderBookDto.getPrice() * orderBookDto.getNum();
+            }
+
+            // 设置费用信息
+            expense.setProductTotalMoney(productTotalMoney);//商品总价
+            expense.setFreight(0);
+            expense.setCoupon(0);
+            expense.setActivityDiscount(0);
+            expense.setAllPrice(productTotalMoney);//订单总金额
+            expense.setFinallyPrice(productTotalMoney);//最终实付金额
+
+            // 获取用户地址列表
+            List<Address> addressList = addressService.addressList(account);
+            if(addressList == null || addressList.isEmpty()) {
+                logger.warn("用户没有配置收货地址: {}", account);
+                return ResultUtil.resultCode(400, "请先添加收货地址");
+            }
+
+            // 构建订单初始化数据
+            orderInitDto.setAddressList(addressList);
+            orderInitDto.setBookList(batchBookList);
+            orderInitDto.setExpense(expense);
+            orderInitDto.setAccount(account);
+
+            logger.info("订单初始化成功: 用户={}, 商品数量={}, 总金额={}",
+                       account, batchBookList.size(), productTotalMoney);
+
+            map.put("orderInitDto", orderInitDto);
+            return ResultUtil.resultSuccess(map);
+
+        } catch (Exception e) {
+            logger.error("订单初始化失败: 用户={}, 错误={}", account, e.getMessage(), e);
+            return ResultUtil.resultCode(500, "订单初始化失败: " + e.getMessage());
         }
-        expense.setProductTotalMoney(productTotalMoney);//商品总价
-        expense.setFreight(0);
-        expense.setCoupon(0);
-        expense.setActivityDiscount(0);
-        expense.setAllPrice(productTotalMoney);//订单总金额
-        expense.setFinallyPrice(productTotalMoney);//最终实付金额
-        List<Address> addressList = addressService.addressList(account);//得到某个用户的地址列表
-        orderInitDto.setAddressList(addressList);
-        orderInitDto.setBookList(batchBookList);
-        orderInitDto.setExpense(expense);
-        orderInitDto.setAccount(account);
-        System.out.println("============account:==========="+account+"============");
-        map.put("orderInitDto",orderInitDto);
-        return ResultUtil.resultSuccess(map);
     }
 
     /**
@@ -132,10 +171,66 @@ public class OrderController {
      */
     @PostMapping("/addOrder")
     public Map<String,Object> addOrder(@RequestBody OrderInitDto orderInitDto){
-        if(!orderService.addOrder(orderInitDto)){
-            return ResultUtil.resultCode(500,"提交订单失败");
+        logger.info("创建订单: 用户={}, 商品数量={}", orderInitDto.getAccount(),
+                   orderInitDto.getBookList() != null ? orderInitDto.getBookList().size() : 0);
+
+        try {
+            // 创建订单
+            boolean orderCreated = orderService.addOrder(orderInitDto);
+            if(!orderCreated){
+                logger.error("订单创建失败: 用户={}", orderInitDto.getAccount());
+                return ResultUtil.resultCode(500,"提交订单失败");
+            }
+
+            // 订单创建成功后，删除购物车中的商品（仅针对购物车来源的订单）
+            if(orderInitDto.getBookList() != null && !orderInitDto.getBookList().isEmpty()) {
+                try {
+                    // 提取商品ID数组
+                    int[] bookIds = orderInitDto.getBookList().stream()
+                            .mapToInt(OrderBookDto::getId)
+                            .toArray();
+
+                    // 删除购物车中的商品
+                    int deletedCount = cartService.delBatchProduct(orderInitDto.getAccount(), bookIds);
+                    logger.info("订单创建成功，已删除购物车商品: 用户={}, 删除数量={}",
+                               orderInitDto.getAccount(), deletedCount);
+                } catch (Exception e) {
+                    // 购物车删除失败不影响订单创建
+                    logger.warn("删除购物车商品失败，但订单已创建: 用户={}, 错误={}",
+                               orderInitDto.getAccount(), e.getMessage());
+                }
+            }
+
+            return ResultUtil.resultCode(200,"订单创建成功，请完成支付");
+
+        } catch (Exception e) {
+            logger.error("创建订单异常: 用户={}, 错误={}", orderInitDto.getAccount(), e.getMessage(), e);
+            return ResultUtil.resultCode(500,"提交订单失败: " + e.getMessage());
         }
-        return ResultUtil.resultCode(200,"提交订单成功");
+    }
+
+    /**
+     * 确认支付
+     * @param request 包含订单ID的请求对象
+     * @return
+     */
+    @PostMapping("/confirmPayment")
+    public Map<String,Object> confirmPayment(@RequestBody Map<String, String> request){
+        try {
+            String orderId = request.get("orderId");
+            if (orderId == null || orderId.trim().isEmpty()) {
+                return ResultUtil.resultCode(400, "订单ID不能为空");
+            }
+
+            boolean result = orderService.confirmPayment(orderId);
+            if (result) {
+                return ResultUtil.resultCode(200, "支付成功");
+            } else {
+                return ResultUtil.resultCode(500, "支付失败");
+            }
+        } catch (Exception e) {
+            return ResultUtil.resultCode(500, "支付失败：" + e.getMessage());
+        }
     }
 
 
@@ -147,12 +242,40 @@ public class OrderController {
      */
     @GetMapping("/getAdminOrderList")
     public Map<String,Object> getOrderList(@RequestParam("page")int page,
-                                       @RequestParam("pageSize")int pageSize){
-        logger.info("获取订单列表: page={}, pageSize={}", page, pageSize);
-        List<OrderDto> orderDtoList = orderService.orderDtoList("", page, pageSize,"",false);
+                                       @RequestParam("pageSize")int pageSize,
+                                       @RequestParam(value = "orderStatus", required = false, defaultValue = "")String orderStatus,
+                                       @RequestParam(value = "orderId", required = false, defaultValue = "")String orderId,
+                                       @RequestParam(value = "account", required = false, defaultValue = "")String account){
+        logger.info("获取订单列表: page={}, pageSize={}, orderStatus={}, orderId={}, account={}",
+                   page, pageSize, orderStatus, orderId, account);
+
+        List<OrderDto> orderDtoList = orderService.orderDtoList("", page, pageSize, orderStatus, false);
+
+        // 为每个订单添加图书封面信息
+        for(OrderDto orderDto : orderDtoList){
+            List<OrderDetailDto> orderDetailDtoList = orderService.findOrderDetailDtoList(orderDto.getOrderId());
+            List<String> coverImgList = new ArrayList<>();
+            for(int j=0; j<orderDetailDtoList.size() && j<5; j++){
+                String img = bookService.getBookCover(orderDetailDtoList.get(j).getBook().getisbn());
+                coverImgList.add(img);
+            }
+            orderDto.setCoverImgList(coverImgList);
+            orderDto.setOrderDetailDtoList(orderDetailDtoList);
+        }
+
+        // 根据搜索条件过滤结果
+        if (!orderId.isEmpty() || !account.isEmpty()) {
+            orderDtoList = orderDtoList.stream()
+                .filter(order ->
+                    (orderId.isEmpty() || order.getOrderId().contains(orderId)) &&
+                    (account.isEmpty() || order.getAccount().contains(account))
+                )
+                .collect(Collectors.toList());
+        }
+
         Map<String,Object> map= new HashMap<>();
         map.put("orderDtoList",orderDtoList);
-        int total = orderService.count("","",false);
+        int total = orderService.count("", orderStatus, false);
         map.put("total",total);
         return ResultUtil.resultSuccess(map);
     }
@@ -239,10 +362,51 @@ public class OrderController {
     public Map<String,Object> modifyOrderStatus(@RequestParam("id")int id,
                                       @RequestParam("orderStatus")String orderStatus){
         System.out.println("========确认收货===="+id);
+
+        // 简化状态验证
+        try {
+            if (!orderService.canTransitionTo("", orderStatus)) {
+                System.out.println("状态转换验证");
+            }
+        } catch (Exception e) {
+            System.out.println("状态验证异常：" + e.getMessage());
+        }
+
         if(orderService.modifyOrderStatus(id,orderStatus)>0){
             return ResultUtil.resultCode(200,"操作成功");
         }
         return ResultUtil.resultCode(500,"操作失败");
+    }
+
+    /**
+     * 管理员批量操作订单
+     * @param params 包含ids和operation的参数
+     * @return
+     */
+    @PostMapping("/admin/orders/batch")
+    public Map<String, Object> batchOperateOrders(@RequestBody Map<String, Object> params) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<Integer> ids = (List<Integer>) params.get("ids");
+            String operation = params.get("operation").toString();
+
+            if (ids == null || ids.isEmpty()) {
+                return ResultUtil.resultCode(400, "请选择要操作的订单");
+            }
+
+            Map<String, Object> result = orderService.batchOperateOrders(ids, operation);
+
+            int successCount = (Integer) result.get("successCount");
+            int failCount = (Integer) result.get("failCount");
+
+            if (failCount == 0) {
+                return ResultUtil.resultCode(200, "批量操作成功，共处理 " + successCount + " 个订单", result);
+            } else {
+                return ResultUtil.resultCode(206, "部分操作成功：成功 " + successCount + " 个，失败 " + failCount + " 个", result);
+            }
+        } catch (Exception e) {
+            return ResultUtil.resultCode(500, "批量操作失败：" + e.getMessage());
+        }
     }
 
 

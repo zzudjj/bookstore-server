@@ -29,4 +29,10 @@ public class Order {
     private int logisticsCompany;//物流公司 用id号进行辨识是哪个物流公司,这样物流公司也可以进行管理
     private String logisticsNum;//物流单号
     private boolean beUserDelete;//订单是否被用户删除的标记
+
+    // 新增字段
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Timestamp paymentDeadline;//支付截止时间
+    private String cancelReason;//取消原因
+    private String operator;//最后操作人
 }

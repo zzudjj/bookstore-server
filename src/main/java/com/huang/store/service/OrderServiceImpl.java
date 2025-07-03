@@ -5,12 +5,14 @@ import com.huang.store.entity.dto.*;
 import com.huang.store.entity.order.Expense;
 import com.huang.store.entity.order.Order;
 import com.huang.store.entity.order.OrderDetail;
-import com.huang.store.entity.order.OrderStatusEnum;
+import com.huang.store.entity.order.StockReservation;
+import com.huang.store.enums.OrderStatusEnum;
 import com.huang.store.entity.user.User;
 import com.huang.store.entity.user.Address;
 import com.huang.store.mapper.BookMapper;
 import com.huang.store.mapper.ExpenseMapper;
 import com.huang.store.mapper.OrderMapper;
+import com.huang.store.mapper.StockReservationMapper;
 import com.huang.store.service.imp.OrderService;
 import com.huang.store.service.imp.AddressService;
 import com.huang.store.service.imp.BookService;
@@ -43,6 +45,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     BookMapper bookMapper;
+
+    @Autowired
+    StockReservationMapper stockReservationMapper;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -146,10 +151,25 @@ public class OrderServiceImpl implements OrderService {
         order.setAccount(orderInitDto.getAccount());
         order.setAddressId(orderInitDto.getAddress().getId());//收货地址编号
         order.setOrderTime(timestamp);
-        order.setOrderStatus(OrderStatusEnum.SUBMIT.getName());
+        order.setOrderStatus(OrderStatusEnum.PENDING_PAYMENT.getValue());
 
+        // 1. 先检查所有商品库存是否充足（不扣减）
+        for(OrderBookDto orderBookDto : orderInitDto.getBookList()){
+            Book book = bookMapper.getBook(orderBookDto.getId());
+            if (book == null) {
+                System.err.println("商品不存在：ID=" + orderBookDto.getId());
+                return false;
+            }
+            if (book.getStock() < orderBookDto.getNum()) {
+                System.err.println("库存不足：" + book.getBookName() +
+                    "，当前库存：" + book.getStock() + "，需要：" + orderBookDto.getNum());
+                return false;
+            }
+        }
+
+        // 2. 创建订单详情
         List<OrderDetail> orderDetailList = new ArrayList<>();
-        for(OrderBookDto orderBookDto :orderInitDto.getBookList()){
+        for(OrderBookDto orderBookDto : orderInitDto.getBookList()){
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setBookId(orderBookDto.getId());
             orderDetail.setNum(orderBookDto.getNum());
@@ -157,59 +177,6 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setOrderId(orderId);
             orderDetailList.add(orderDetail);
             System.out.println("=====orderDetail.toString()====="+orderDetail.toString());
-            String clientId = UUID.randomUUID().toString();
-            try{
-                Boolean result = redisTemplate.opsForValue().setIfAbsent(stock_prefix+orderBookDto.getId(), clientId, 10, TimeUnit.SECONDS);
-                if(!result){
-                    return false;//获取分布式锁出错了！
-                }
-                if(redisTemplate.hasKey(book_stock+orderBookDto.getId())){//如果缓存中有库存数据
-                    int stock = Integer.parseInt((String) redisTemplate.opsForValue().get(book_stock+orderBookDto.getId()));
-                    if(stock>orderBookDto.getNum()){
-                        int realStock = stock-orderBookDto.getNum();
-                        redisTemplate.opsForValue().set(book_stock+orderBookDto.getId(),realStock);//更新库存缓存
-                        ValueOperations<String, Book> operations = redisTemplate.opsForValue();
-                        if(redisTemplate.hasKey(book_prefix+orderBookDto.getId())){
-                            System.out.println("=========从缓存中读取数据==========");
-                            Book book = operations.get(book_prefix + orderBookDto.getId());
-                            book.setStock(realStock);
-                            redisTemplate.opsForValue().set(book_prefix+book.getId(),book);//更新图书缓存中的数据
-                        }
-                        Book book = bookMapper.getBook(orderBookDto.getId());
-                        redisTemplate.opsForValue().set(book_prefix+book.getId(),book);//更新图书缓存中的数据
-//                        redisTemplate.opsForZSet().remove(book);//删除集合中原来的图书数据
-                        book.setStock(realStock);
-//                        redisTemplate.opsForZSet().add(bookList_prefix,book,book.getRank());//添加新的图书数据到缓存集合中去
-                        try{
-                            System.out.println("================开始减库存====================");
-                            int update = bookMapper.modifyBookStock(orderBookDto.getId(), orderBookDto.getNum());//减去库存
-                            System.out.println("==============减去库存=====================");
-                        }catch (Exception e){
-                            redisTemplate.opsForValue().set(book_stock+orderBookDto.getId(),stock);//恢复缓存中的库存数量，避免少买
-//                            redisTemplate.opsForZSet().remove(book);//删除集合中原来的图书数据
-                            book.setStock(stock);
-                            redisTemplate.opsForValue().set(book_prefix+book.getId(),book);//更新图书缓存中的数据
-//                            redisTemplate.opsForZSet().add(bookList_prefix,book,book.getRank());//添加新的图书数据到缓存集合中去
-                        }
-                        System.out.println("=============减去库存没有问题======================");
-                    }else {
-                        throw new Exception("=====库存不足========");
-                    }
-                }else{
-                    int update = bookMapper.modifyBookStock(orderBookDto.getId(), orderBookDto.getNum());//减去库存
-                    if(update<1){
-                        System.out.println("=====库存不足========");
-                        return false;
-                    }
-                }
-
-            }catch (Exception e){
-                System.out.println(e.getMessage());
-            }finally {
-                if(clientId.equals(redisTemplate.opsForValue().get(stock_prefix+orderBookDto.getId()))){
-                    redisTemplate.delete(stock_prefix+orderBookDto.getId());
-                }
-            }
         }
         for(int i=0;i<orderDetailList.size();i++){
             System.out.println("=====orderDetailList[i]====="+orderDetailList.get(i));
@@ -225,12 +192,48 @@ public class OrderServiceImpl implements OrderService {
         expense.setOrderId(orderId);
         expenseMapper.addExpense(expense);//订单订单费用到费用表中
         System.out.println("===========添加订单费用成功==============");
+
+        // 3. 创建库存预留记录
+        try {
+            reserveStock(orderInitDto.getBookList(), orderId);
+            System.out.println("库存预留完成: 订单ID=" + orderId);
+        } catch (Exception e) {
+            System.err.println("库存预留失败，回滚订单: " + e.getMessage());
+            // 如果库存预留失败，需要删除已创建的订单
+            orderMapper.delOrder(order.getId());
+            return false;
+        }
+
         return true;
     }
 
     @Override
+    @Transactional
     public int delOrder(int id) {
-        return orderMapper.delOrder(id);
+        // 1. 获取订单信息
+        OrderDto orderDto = orderMapper.findOrderDto(id);
+        if (orderDto == null) {
+            System.out.println("删除订单失败：订单不存在, ID=" + id);
+            return 0;
+        }
+
+        // 2. 如果是待支付订单，需要释放库存预留
+        if ("待付款".equals(orderDto.getOrderStatus())) {
+            System.out.println("删除待支付订单，释放库存预留: 订单ID=" + orderDto.getOrderId());
+            try {
+                releaseReservedStock(orderDto.getOrderId());
+            } catch (Exception e) {
+                System.err.println("释放库存预留失败: " + e.getMessage());
+                // 即使释放库存失败，也继续删除订单，避免数据不一致
+            }
+        }
+
+        // 3. 删除订单记录
+        int result = orderMapper.delOrder(id);
+        if (result > 0) {
+            System.out.println("订单删除成功: ID=" + id + ", 订单号=" + orderDto.getOrderId());
+        }
+        return result;
     }
 
     @Override
@@ -247,11 +250,41 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public int modifyOrderStatus(int id, String orderStatus) {
+        // 1. 获取当前订单信息
+        OrderDto orderDto = orderMapper.findOrderDto(id);
+        if (orderDto == null) {
+            System.err.println("修改订单状态失败：订单不存在, ID=" + id);
+            return 0;
+        }
+
+        String currentStatus = orderDto.getOrderStatus();
+        System.out.println("修改订单状态: ID=" + id + ", " + currentStatus + " -> " + orderStatus);
+
+        // 2. 如果是从"待付款"状态取消订单，需要释放库存预留
+        if ("待付款".equals(currentStatus) && "已取消".equals(orderStatus)) {
+            System.out.println("取消待支付订单，释放库存预留: 订单ID=" + orderDto.getOrderId());
+            try {
+                releaseReservedStock(orderDto.getOrderId());
+                System.out.println("库存预留释放成功: 订单ID=" + orderDto.getOrderId());
+            } catch (Exception e) {
+                System.err.println("释放库存预留失败: " + e.getMessage());
+                // 即使释放库存失败，也继续修改订单状态，避免用户无法取消订单
+            }
+        }
+
+        // 3. 更新订单状态
         Order order = new Order();
         order.setId(id);
         order.setOrderStatus(orderStatus);
-        return orderMapper.modifyOrder(order);
+        int result = orderMapper.modifyOrder(order);
+
+        if (result > 0) {
+            System.out.println("订单状态修改成功: ID=" + id + ", 新状态=" + orderStatus);
+        }
+
+        return result;
     }
 
     @Transactional
@@ -300,5 +333,284 @@ public class OrderServiceImpl implements OrderService {
         Date date1 = format.parse(endDate);
 
         return orderMapper.getOrderStatistic(new Timestamp(date.getTime()), new Timestamp(date1.getTime()));
+    }
+
+    @Override
+    @Transactional
+    public boolean confirmPayment(String orderId) {
+        try {
+            // 1. 查找订单
+            OrderDto orderDto = orderMapper.findOrderDtoByOrderId(orderId);
+            if (orderDto == null) {
+                System.err.println("支付确认失败：订单不存在, 订单ID=" + orderId);
+                return false;
+            }
+
+            // 2. 检查订单状态
+            if (!"待付款".equals(orderDto.getOrderStatus())) {
+                System.err.println("支付确认失败：订单状态不正确, 当前状态=" + orderDto.getOrderStatus());
+                return false;
+            }
+
+            // 3. 确认库存扣减（将预留转为确认）
+            confirmStockReduction(orderId);
+            System.out.println("库存预留确认完成: 订单ID=" + orderId);
+
+            // 4. 更新订单状态为"已付款"
+            int result = modifyOrderStatus(orderDto.getId(), "已付款");
+            if (result > 0) {
+                System.out.println("支付确认成功，订单状态已更新为已付款: 订单ID=" + orderId);
+                return true;
+            } else {
+                System.err.println("更新订单状态失败: 订单ID=" + orderId);
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.err.println("支付确认失败: 订单ID=" + orderId + ", 错误=" + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public List<Order> findTimeoutPendingOrders(int timeoutMinutes) {
+        try {
+            List<Order> timeoutOrders = orderMapper.findTimeoutPendingOrders(timeoutMinutes);
+            System.out.println("查找到 " + timeoutOrders.size() + " 个超时订单");
+            return timeoutOrders;
+        } catch (Exception e) {
+            System.err.println("查找超时订单失败: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void reserveStock(List<OrderBookDto> bookList, String orderId) {
+        System.out.println("开始预留库存: 订单ID=" + orderId + ", 商品数量=" + bookList.size());
+
+        for (OrderBookDto book : bookList) {
+            try {
+                // 1. 检查库存是否充足
+                Book bookInfo = bookMapper.getBook(book.getId());
+                if (bookInfo == null) {
+                    throw new RuntimeException("商品不存在：ID=" + book.getId());
+                }
+
+                if (bookInfo.getStock() < book.getNum()) {
+                    throw new RuntimeException("库存不足：" + bookInfo.getBookName() +
+                        "，当前库存：" + bookInfo.getStock() + "，需要：" + book.getNum());
+                }
+
+                // 2. 创建库存预留记录
+                StockReservation reservation = new StockReservation();
+                reservation.setBookId(book.getId());
+                reservation.setOrderId(orderId);
+                reservation.setReservedQuantity(book.getNum());
+                reservation.setStatus(0); // 预留中
+
+                int result = stockReservationMapper.insert(reservation);
+                if (result <= 0) {
+                    throw new RuntimeException("创建库存预留记录失败：" + bookInfo.getBookName());
+                }
+
+                // 3. 扣减可用库存（实际库存）
+                int stockResult = bookMapper.modifyBookStock(book.getId(), book.getNum());
+                if (stockResult <= 0) {
+                    throw new RuntimeException("扣减库存失败：" + bookInfo.getBookName());
+                }
+
+                // 4. 更新Redis缓存
+                updateStockInCache(book.getId(), book.getNum());
+
+                System.out.println("库存预留成功: 商品ID=" + book.getId() + ", 预留数量=" + book.getNum());
+
+            } catch (Exception e) {
+                System.err.println("预留库存失败: 商品ID=" + book.getId() + ", 错误=" + e.getMessage());
+                throw new RuntimeException("预留库存失败：" + e.getMessage());
+            }
+        }
+
+        System.out.println("库存预留完成: 订单ID=" + orderId);
+    }
+
+    @Override
+    @Transactional
+    public void releaseReservedStock(String orderId) {
+        System.out.println("开始释放预留库存: 订单ID=" + orderId);
+
+        try {
+            // 1. 查找该订单的库存预留记录
+            List<StockReservation> reservations = stockReservationMapper.findByOrderId(orderId);
+
+            if (reservations.isEmpty()) {
+                System.out.println("未找到库存预留记录: 订单ID=" + orderId);
+                return;
+            }
+
+            for (StockReservation reservation : reservations) {
+                if (reservation.getStatus() == 0) { // 预留中
+                    try {
+                        // 2. 恢复图书库存
+                        int restoreResult = bookMapper.restoreBookStock(reservation.getBookId(),
+                            reservation.getReservedQuantity());
+
+                        if (restoreResult > 0) {
+                            // 3. 更新预留记录状态为已释放
+                            reservation.setStatus(2);
+                            stockReservationMapper.updateById(reservation);
+
+                            // 4. 更新Redis缓存
+                            restoreStockInCache(reservation.getBookId(), reservation.getReservedQuantity());
+
+                            System.out.println("库存释放成功: 图书ID=" + reservation.getBookId() +
+                                ", 释放数量=" + reservation.getReservedQuantity());
+                        } else {
+                            System.err.println("恢复库存失败: 图书ID=" + reservation.getBookId() +
+                                ", 数量=" + reservation.getReservedQuantity());
+                        }
+
+                    } catch (Exception e) {
+                        System.err.println("释放单个库存预留失败: 图书ID=" + reservation.getBookId() +
+                            ", 错误=" + e.getMessage());
+                    }
+                }
+            }
+
+            System.out.println("库存预留释放完成: 订单ID=" + orderId);
+
+        } catch (Exception e) {
+            System.err.println("释放预留库存失败: 订单ID=" + orderId + ", 错误=" + e.getMessage());
+            throw new RuntimeException("释放预留库存失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void confirmStockReduction(String orderId) {
+        System.out.println("开始确认库存扣减: 订单ID=" + orderId);
+
+        try {
+            // 查找该订单的库存预留记录
+            List<StockReservation> reservations = stockReservationMapper.findByOrderId(orderId);
+
+            if (reservations.isEmpty()) {
+                System.out.println("未找到库存预留记录: 订单ID=" + orderId);
+                return;
+            }
+
+            for (StockReservation reservation : reservations) {
+                if (reservation.getStatus() == 0) { // 预留中
+                    // 更新预留记录状态为已确认
+                    reservation.setStatus(1);
+                    stockReservationMapper.updateById(reservation);
+
+                    System.out.println("库存扣减确认: 图书ID=" + reservation.getBookId() +
+                        ", 数量=" + reservation.getReservedQuantity());
+                }
+            }
+
+            System.out.println("库存扣减确认完成: 订单ID=" + orderId);
+
+        } catch (Exception e) {
+            System.err.println("确认库存扣减失败: 订单ID=" + orderId + ", 错误=" + e.getMessage());
+            throw new RuntimeException("确认库存扣减失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean canTransitionTo(String currentStatus, String targetStatus) {
+        return false;
+    }
+
+    @Override
+    public Map<String, Object> batchOperateOrders(List<Integer> ids, String operation) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int successCount = 0;
+            int failCount = 0;
+
+            for (Integer id : ids) {
+                try {
+                    switch (operation) {
+                        case "delete":
+                            delOrder(id);
+                            successCount++;
+                            break;
+                        case "cancel":
+                            modifyOrderStatus(id, "已取消");
+                            successCount++;
+                            break;
+                        default:
+                            failCount++;
+                            break;
+                    }
+                } catch (Exception e) {
+                    failCount++;
+                    System.err.println("批量操作订单失败: ID=" + id + ", 错误=" + e.getMessage());
+                }
+            }
+
+            result.put("success", true);
+            result.put("successCount", successCount);
+            result.put("failCount", failCount);
+            result.put("message", "批量操作完成：成功" + successCount + "个，失败" + failCount + "个");
+
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "批量操作失败：" + e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+     * 更新缓存中的库存（扣减）
+     */
+    private void updateStockInCache(int bookId, int quantity) {
+        try {
+            if(redisTemplate.hasKey(book_stock + bookId)){
+                int currentStock = Integer.parseInt((String) redisTemplate.opsForValue().get(book_stock + bookId));
+                int newStock = currentStock - quantity;
+                redisTemplate.opsForValue().set(book_stock + bookId, String.valueOf(newStock));
+
+                // 更新缓存中的图书信息
+                if(redisTemplate.hasKey(book_prefix + bookId)){
+                    ValueOperations<String, Book> operations = redisTemplate.opsForValue();
+                    Book book = operations.get(book_prefix + bookId);
+                    if(book != null) {
+                        book.setStock(newStock);
+                        redisTemplate.opsForValue().set(book_prefix + bookId, book);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("更新缓存库存失败: 图书ID=" + bookId + ", 错误=" + e.getMessage());
+        }
+    }
+
+    /**
+     * 恢复缓存中的库存（增加）
+     */
+    private void restoreStockInCache(int bookId, int quantity) {
+        try {
+            if(redisTemplate.hasKey(book_stock + bookId)){
+                int currentStock = Integer.parseInt((String) redisTemplate.opsForValue().get(book_stock + bookId));
+                int newStock = currentStock + quantity;
+                redisTemplate.opsForValue().set(book_stock + bookId, String.valueOf(newStock));
+
+                // 更新缓存中的图书信息
+                if(redisTemplate.hasKey(book_prefix + bookId)){
+                    ValueOperations<String, Book> operations = redisTemplate.opsForValue();
+                    Book book = operations.get(book_prefix + bookId);
+                    if(book != null) {
+                        book.setStock(newStock);
+                        redisTemplate.opsForValue().set(book_prefix + bookId, book);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("恢复缓存库存失败: 图书ID=" + bookId + ", 错误=" + e.getMessage());
+        }
     }
 }

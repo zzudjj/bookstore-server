@@ -59,6 +59,13 @@
                 where id=#{id} and stock>=#{stockNum}
     </update>
 
+<!--    restoreBookStock-->
+    <update id="restoreBookStock">
+        update book
+            set stock=stock+#{stockNum}
+                where id=#{id}
+    </update>
+
 
     <select id="getBooks" resultType="com.huang.store.entity.book.Book">
         select * from book
@@ -96,14 +103,16 @@
     </select>
 
 
-<!--    根据id集合查询需要购买的图书的信息-->
+<!--    根据id集合查询需要购买的图书的信息（从购物车）-->
     <select id="getBatchBookList" resultType="com.huang.store.entity.dto.OrderBookDto">
         select book.id,author,bookName,isbn,publish,
-                birthday,marketPrice,price,stock,description,IFNULL(num,1)
-         from book left join cart on book.id = cart.id
-         where book.id in
-        <foreach collection="array" index="index" item="ids" open="(" separator="," close=")">
-            #{ids}
+                birthday,marketPrice,price,stock,description,cart.num
+         from book
+         inner join cart on book.id = cart.id
+         where cart.account = #{account}
+         and book.id in
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </select>
 

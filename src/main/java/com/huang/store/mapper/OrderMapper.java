@@ -6,6 +6,7 @@ import com.huang.store.entity.dto.OrderStatistic;
 import com.huang.store.entity.order.Order;
 import com.huang.store.entity.order.OrderDetail;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -45,4 +46,7 @@ public interface OrderMapper {
 
     //得到订单的统计数据
     List<OrderStatistic> getOrderStatistic(Timestamp beginDate, Timestamp endDate);
+
+    //查找超时未支付订单
+    List<Order> findTimeoutPendingOrders(@Param("timeoutMinutes") int timeoutMinutes);
 }

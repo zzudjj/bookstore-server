@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.OrderConfigMapper">
+
+    <!-- 根据配置键获取配置 -->
+    <select id="getByKey" resultType="com.huang.store.entity.order.OrderConfig">
+        SELECT * FROM order_config WHERE config_key = #{configKey}
+    </select>
+
+    <!-- 获取所有配置 -->
+    <select id="getAllConfigs" resultType="com.huang.store.entity.order.OrderConfig">
+        SELECT * FROM order_config ORDER BY config_key
+    </select>
+
+    <!-- 更新配置值 -->
+    <update id="updateConfig">
+        UPDATE order_config 
+        SET config_value = #{configValue}, update_time = CURRENT_TIMESTAMP
+        WHERE config_key = #{configKey}
+    </update>
+
+    <!-- 插入新配置 -->
+    <insert id="insertConfig" parameterType="com.huang.store.entity.order.OrderConfig">
+        INSERT INTO order_config (config_key, config_value, description)
+        VALUES (#{configKey}, #{configValue}, #{description})
+    </insert>
+
+    <!-- 批量更新配置 -->
+    <update id="batchUpdateConfigs">
+        <foreach collection="configs" item="config" separator=";">
+            UPDATE order_config 
+            SET config_value = #{config.configValue}, update_time = CURRENT_TIMESTAMP
+            WHERE config_key = #{config.configKey}
+        </foreach>
+    </update>
+
+    <!-- 根据配置键删除配置 -->
+    <delete id="deleteByKey">
+        DELETE FROM order_config WHERE config_key = #{configKey}
+    </delete>
+
+</mapper>

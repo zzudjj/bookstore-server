@@ -5,7 +5,7 @@ import com.huang.store.entity.dto.OrderDetailDto;
 import com.huang.store.entity.dto.OrderDto;
 import com.huang.store.entity.order.Expense;
 import com.huang.store.entity.order.OrderDetail;
-import com.huang.store.entity.order.OrderStatusEnum;
+import com.huang.store.enums.OrderStatusEnum;
 import com.huang.store.entity.user.Address;
 import com.huang.store.entity.user.Cart;
 import com.huang.store.entity.user.User;
@@ -194,8 +194,8 @@ class StoreApplicationTests {
 
     @Test
     void TestEnum(){
-        OrderStatusEnum orderStatusEnum = OrderStatusEnum.SUBMIT;
-        System.out.println(orderStatusEnum.getIndex()+":"+orderStatusEnum.getName());
+        OrderStatusEnum orderStatusEnum = OrderStatusEnum.PAID;
+        System.out.println(orderStatusEnum.getValue()+":"+orderStatusEnum.getDescription());
     }
 
     @Test

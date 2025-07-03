@@ -223,4 +223,13 @@
             ) AS dateOrder
         GROUP BY orderTime
     </select>
+
+    <!-- 查找超时未支付订单（基于订单创建时间判断，不依赖payment_deadline字段） -->
+    <select id="findTimeoutPendingOrders" resultType="com.huang.store.entity.order.Order">
+        SELECT * FROM bookorder
+        WHERE orderStatus = '待付款'
+        AND TIMESTAMPDIFF(MINUTE, orderTime, NOW()) > #{timeoutMinutes}
+        ORDER BY orderTime ASC
+    </select>
+
 </mapper>

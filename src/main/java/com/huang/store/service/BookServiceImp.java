@@ -149,8 +149,8 @@ public class BookServiceImp implements BookService {
     }
 
     @Override
-    public List<OrderBookDto> getBatchBookList(int[] ids) {
-        return bookMapper.getBatchBookList(ids);
+    public List<OrderBookDto> getBatchBookList(int[] ids, String account) {
+        return bookMapper.getBatchBookList(ids, account);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.huang.store.service.imp;
 
 import com.huang.store.entity.book.*;
+import com.huang.store.entity.book.Book;
 import com.huang.store.entity.dto.OrderBookDto;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public interface BookService {
     List<Book> getBooksByPage(int page,int pageSize);
     List<Book> getNewPutBookList(int page,int pageSize);
 
-    List<OrderBookDto> getBatchBookList(int[] ids);//根据ids数组，得到对应的图书集合
+    List<OrderBookDto> getBatchBookList(int[] ids, String account);//根据ids数组和用户账号，得到对应的图书集合
     List<OrderBookDto> getOneBookList(int[] ids);//根据ids数组，得到对应的图书集合
 
     int getBookId(String isbn);

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.StockReservationMapper">
+
+    <!-- 插入库存预留记录 -->
+    <insert id="insert" parameterType="com.huang.store.entity.order.StockReservation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO stock_reservation (
+            book_id, order_id, reserved_quantity, expire_time, status, create_time, update_time
+        ) VALUES (
+            #{bookId}, #{orderId}, #{reservedQuantity},
+            DATE_ADD(NOW(), INTERVAL 30 MINUTE), #{status},
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 根据ID更新库存预留记录 -->
+    <update id="updateById" parameterType="com.huang.store.entity.order.StockReservation">
+        UPDATE stock_reservation 
+        SET 
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+            <if test="expireTime != null">, expire_time = #{expireTime}</if>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据订单ID查找库存预留记录 -->
+    <select id="findByOrderId" resultType="com.huang.store.entity.order.StockReservation">
+        SELECT * FROM stock_reservation 
+        WHERE order_id = #{orderId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据图书ID查找预留中的库存 -->
+    <select id="findReservingByBookId" resultType="com.huang.store.entity.order.StockReservation">
+        SELECT * FROM stock_reservation 
+        WHERE book_id = #{bookId} AND status = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查找已过期的预留记录（基于创建时间+30分钟） -->
+    <select id="findExpiredReservations" resultType="com.huang.store.entity.order.StockReservation">
+        SELECT * FROM stock_reservation
+        WHERE status = 0 AND TIMESTAMPDIFF(MINUTE, create_time, NOW()) > 30
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 查找指定时间之前过期的预留记录 -->
+    <select id="findExpiredReservationsBefore" resultType="com.huang.store.entity.order.StockReservation">
+        SELECT * FROM stock_reservation
+        WHERE status = 0 AND TIMESTAMPDIFF(MINUTE, create_time, #{expireTime}) > 30
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 根据订单ID删除库存预留记录 -->
+    <delete id="deleteByOrderId">
+        DELETE FROM stock_reservation WHERE order_id = #{orderId}
+    </delete>
+
+    <!-- 根据订单ID更新预留状态 -->
+    <update id="updateStatusByOrderId">
+        UPDATE stock_reservation 
+        SET status = #{status}, update_time = CURRENT_TIMESTAMP
+        WHERE order_id = #{orderId}
+    </update>
+
+    <!-- 获取图书的总预留数量 -->
+    <select id="getTotalReservedQuantity" resultType="java.lang.Integer">
+        SELECT COALESCE(SUM(reserved_quantity), 0) 
+        FROM stock_reservation 
+        WHERE book_id = #{bookId} AND status = 0
+    </select>
+
+    <!-- 批量更新过期预留记录状态为已释放 -->
+    <update id="batchUpdateExpiredToReleased">
+        UPDATE stock_reservation
+        SET status = 2, update_time = CURRENT_TIMESTAMP
+        WHERE status = 0 AND TIMESTAMPDIFF(MINUTE, create_time, NOW()) > 30
+    </update>
+
+</mapper>

@@ -30798,3 +30798,956 @@ Caused by: java.lang.NumberFormatException: For input string: "undefined"
 2025-07-01 23:09:43.840 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
 2025-07-01 23:09:43.840 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
 2025-07-01 23:09:43.842 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:05.892 [http-nio-8080-exec-7] INFO  com.huang.store.controller.BookController - 获取分类图书列表: sortId=117
+2025-07-01 23:18:05.900 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:05.900 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:18:05.900 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:05.900 [http-nio-8080-exec-10] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==>  Preparing: select * from book order by birthday desc limit ?,?
+2025-07-01 23:18:05.900 [http-nio-8080-exec-5] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==>  Preparing: select * from booktopic limit ?,?
+2025-07-01 23:18:05.900 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from recommend limit ?,?)as t )
+2025-07-01 23:18:05.901 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.901 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.901 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.901 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.901 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.901 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select * from booktopic limit ?,? ::: DataSources: slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select * from book order by birthday desc limit ?,? ::: DataSources: slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from recommend limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:05.902 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:18:05.997 [http-nio-8080-exec-5] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==> Parameters: 0(Integer), 5(Integer)
+2025-07-01 23:18:06.012 [http-nio-8080-exec-5] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - <==      Total: 2
+2025-07-01 23:18:06.019 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==>  Preparing: select count(*) from booktopic
+2025-07-01 23:18:06.019 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.019 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select count(*) from booktopic ::: DataSources: slave
+2025-07-01 23:18:06.020 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:06.021 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:06.032 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:06.033 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:06.033 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.033 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:06.033 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==> Parameters: 
+2025-07-01 23:18:06.040 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - <==      Total: 1
+2025-07-01 23:18:06.041 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:06.043 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:06.047 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - <==      Total: 0
+2025-07-01 23:18:06.048 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:06.048 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.048 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:06.049 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:06.053 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:06.098 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:18:06.098 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 117(Integer)
+2025-07-01 23:18:06.099 [http-nio-8080-exec-10] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==> Parameters: 0(Integer), 10(Integer)
+2025-07-01 23:18:06.104 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 0
+2025-07-01 23:18:06.110 [http-nio-8080-exec-10] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - <==      Total: 5
+2025-07-01 23:18:06.111 [http-nio-8080-exec-10] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:06.111 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.111 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:06.111 [http-nio-8080-exec-10] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:06.111 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:18:06.112 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:06.112 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.112 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:06.112 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:18:06.112 [http-nio-8080-exec-10] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:06.113 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:06.113 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.113 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:06.114 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:18:06.114 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:18:06.114 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:06.114 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.114 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:06.115 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:18:06.116 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:06.116 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:06.116 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:06.116 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:06.116 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.116 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.116 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:06.116 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:06.116 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:18:06.116 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:18:06.118 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:06.118 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:06.118 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:06.118 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:06.118 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.118 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.118 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:06.118 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:06.118 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:18:06.118 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:18:06.120 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:06.120 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:06.120 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:06.120 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.120 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:06.121 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:06.122 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:06.123 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:06.123 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:06.123 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:06.123 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:18:06.124 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:07.562 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:18:07.563 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.563 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:18:07.563 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:18:07.565 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:18:07.565 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:07.565 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.565 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:07.566 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:18:07.567 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:18:07.567 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:07.568 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.568 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:07.568 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:18:07.569 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:07.569 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:07.569 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.569 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:07.570 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:18:07.571 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:07.571 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:07.571 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.571 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:07.572 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:18:07.573 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:07.600 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBook - ==>  Preparing: select * from book where id = ?
+2025-07-01 23:18:07.600 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.600 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select * from book where id = ? ::: DataSources: slave
+2025-07-01 23:18:07.601 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBook - ==> Parameters: 5(Integer)
+2025-07-01 23:18:07.603 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBook - <==      Total: 1
+2025-07-01 23:18:07.604 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getBookImgSrcList - ==>  Preparing: select imgSrc from bookimg where isbn=?
+2025-07-01 23:18:07.604 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.604 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? ::: DataSources: slave
+2025-07-01 23:18:07.604 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getBookImgSrcList - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:07.605 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getBookImgSrcList - <==      Total: 1
+2025-07-01 23:18:07.606 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:07.606 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.606 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:07.606 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:07.608 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:07.609 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookSort - ==>  Preparing: select * from booksort where id in (select bookSortId from booksortlist where bookId=?)
+2025-07-01 23:18:07.609 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.609 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select * from booksort where id in (select bookSortId from booksortlist where bookId=?) ::: DataSources: slave
+2025-07-01 23:18:07.609 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookSort - ==> Parameters: 5(Integer)
+2025-07-01 23:18:07.611 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookSort - <==      Total: 1
+2025-07-01 23:18:07.611 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortId - ==>  Preparing: select id from booksort where upperName=? and sortName=?
+2025-07-01 23:18:07.611 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:07.611 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select id from booksort where upperName=? and sortName=? ::: DataSources: slave
+2025-07-01 23:18:07.612 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortId - ==> Parameters: 无(String), 文学(String)
+2025-07-01 23:18:07.613 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortId - <==      Total: 1
+2025-07-01 23:18:09.233 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==>  Preparing: select * from book order by birthday desc limit ?,?
+2025-07-01 23:18:09.234 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.234 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from book order by birthday desc limit ?,? ::: DataSources: slave
+2025-07-01 23:18:09.234 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==> Parameters: 0(Integer), 10(Integer)
+2025-07-01 23:18:09.236 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==>  Preparing: select * from booktopic limit ?,?
+2025-07-01 23:18:09.236 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.236 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from booktopic limit ?,? ::: DataSources: slave
+2025-07-01 23:18:09.237 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==> Parameters: 0(Integer), 5(Integer)
+2025-07-01 23:18:09.238 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - <==      Total: 5
+2025-07-01 23:18:09.238 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - <==      Total: 2
+2025-07-01 23:18:09.238 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==>  Preparing: select count(*) from booktopic
+2025-07-01 23:18:09.239 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.238 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:09.239 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.239 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:09.239 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:09.239 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select count(*) from booktopic ::: DataSources: slave
+2025-07-01 23:18:09.239 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==> Parameters: 
+2025-07-01 23:18:09.240 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:09.241 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:09.241 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.241 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:09.241 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:18:09.242 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - <==      Total: 1
+2025-07-01 23:18:09.242 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:09.242 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:09.242 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.242 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:09.242 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:18:09.243 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:09.246 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:09.246 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.246 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:09.246 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:18:09.250 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:09.250 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:09.250 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.250 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:09.250 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:09.250 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.250 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:09.250 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:09.250 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:09.252 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:09.252 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:09.252 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:09.252 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.252 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:09.252 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:18:09.252 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:09.253 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.253 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:09.253 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:09.253 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:09.256 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:09.261 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:18:09.261 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.261 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:18:09.261 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:18:09.264 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:18:09.264 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:09.264 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.264 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:09.264 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:18:09.266 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:18:09.266 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:09.266 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.266 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:09.266 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:18:09.267 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from recommend limit ?,?)as t )
+2025-07-01 23:18:09.268 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.268 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from recommend limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:09.268 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:09.268 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:09.268 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:09.268 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.268 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:09.269 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:18:09.270 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - <==      Total: 0
+2025-07-01 23:18:09.270 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:09.270 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:09.270 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.270 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:09.270 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:09.270 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:09.271 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.271 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:09.272 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:18:09.272 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:09.273 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:09.276 [http-nio-8080-exec-5] INFO  com.huang.store.controller.BookController - 获取分类图书列表: sortId=117
+2025-07-01 23:18:09.277 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:09.277 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:09.277 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:09.277 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 117(Integer)
+2025-07-01 23:18:09.278 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 0
+2025-07-01 23:18:10.245 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:18:10.245 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:10.245 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:18:10.245 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:18:10.248 [http-nio-8080-exec-4] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:18:10.248 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:10.248 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:10.248 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:10.248 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:18:10.249 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:18:10.249 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:10.249 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:10.249 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:10.249 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:18:10.250 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:10.251 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:10.251 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:10.251 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:10.251 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:18:10.253 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:10.253 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:10.253 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:10.253 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:10.253 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:18:10.254 [http-nio-8080-exec-4] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:10.297 [http-nio-8080-exec-10] ERROR com.huang.store.exception.GlobalExceptionHandler - 运行时异常
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; nested exception is java.lang.NumberFormatException: For input string: "undefined"
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:133)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:179)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:146)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1072)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:965)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:529)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:623)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:209)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:111)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at com.alibaba.druid.support.http.WebStatFilter.doFilter(WebStatFilter.java:114)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:337)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:115)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:122)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:126)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:81)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:109)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:149)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:223)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:217)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at com.huang.store.security.JwtAuthenticationTokenFilter.doFilterInternal(JwtAuthenticationTokenFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:112)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:82)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:346)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:221)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:186)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:354)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:178)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:153)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:168)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:481)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:130)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:928)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1794)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.lang.NumberFormatException: For input string: "undefined"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:668)
+	at java.base/java.lang.Integer.valueOf(Integer.java:999)
+	at org.springframework.util.NumberUtils.parseNumber(NumberUtils.java:211)
+	at org.springframework.beans.propertyeditors.CustomNumberEditor.setAsText(CustomNumberEditor.java:115)
+	at org.springframework.beans.TypeConverterDelegate.doConvertTextValue(TypeConverterDelegate.java:429)
+	at org.springframework.beans.TypeConverterDelegate.doConvertValue(TypeConverterDelegate.java:402)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:155)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:73)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:729)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:125)
+	... 107 common frames omitted
+2025-07-01 23:18:10.309 [http-nio-8080-exec-10] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; nested exception is java.lang.NumberFormatException: For input string: "undefined"]
+2025-07-01 23:18:11.661 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:11.661 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.661 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:11.662 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 2(Integer)
+2025-07-01 23:18:11.663 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 1
+2025-07-01 23:18:11.664 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:11.664 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.664 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:11.666 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 科技(String), 科技(String)
+2025-07-01 23:18:11.668 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 3
+2025-07-01 23:18:11.673 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==>  Preparing: select * from book where id in (select t.bookId from (select * from booksortlist WHERE bookSortId in ( ? , ? , ? ) ) as t ) limit ?,?
+2025-07-01 23:18:11.674 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.674 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from book
+            where id in (select t.bookId from
+                (select * from booksortlist
+                     WHERE bookSortId in
+                        (
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ) 
+                )
+        as t ) limit ?,? ::: DataSources: slave
+2025-07-01 23:18:11.674 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==> Parameters: 2(Integer), 8(Integer), 9(Integer), 0(Integer), 10(Integer)
+2025-07-01 23:18:11.676 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - <==      Total: 3
+2025-07-01 23:18:11.677 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:11.677 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.677 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:11.677 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 科技(String), 科技(String)
+2025-07-01 23:18:11.679 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 3
+2025-07-01 23:18:11.680 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==>  Preparing: select count(*) from book where id in (select bookId from booksortlist WHERE bookSortId in ( ? , ? , ? ) )
+2025-07-01 23:18:11.680 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.680 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select count(*) from book
+        where id in (select bookId from booksortlist
+         WHERE bookSortId in
+            (
+                ?
+            ,
+                ?
+            ,
+                ?
+            ) 
+        ) ::: DataSources: slave
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==> Parameters: 2(Integer), 8(Integer), 9(Integer)
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - <==      Total: 1
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:11.681 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:18:11.682 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:11.682 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:11.682 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.682 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:11.682 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:18:11.683 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:11.684 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:11.684 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:11.684 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:11.684 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:18:11.687 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:13.769 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:13.770 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.770 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:13.770 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 1(Integer)
+2025-07-01 23:18:13.771 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 1
+2025-07-01 23:18:13.771 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:13.771 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.772 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:13.772 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 文学(String), 文学(String)
+2025-07-01 23:18:13.773 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 4
+2025-07-01 23:18:13.774 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==>  Preparing: select * from book where id in (select t.bookId from (select * from booksortlist WHERE bookSortId in ( ? , ? , ? , ? ) ) as t ) limit ?,?
+2025-07-01 23:18:13.774 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.774 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select * from book
+            where id in (select t.bookId from
+                (select * from booksortlist
+                     WHERE bookSortId in
+                        (
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ) 
+                )
+        as t ) limit ?,? ::: DataSources: slave
+2025-07-01 23:18:13.776 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==> Parameters: 5(Integer), 6(Integer), 7(Integer), 1(Integer), 0(Integer), 10(Integer)
+2025-07-01 23:18:13.779 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - <==      Total: 2
+2025-07-01 23:18:13.780 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:13.780 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.781 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:13.781 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 文学(String), 文学(String)
+2025-07-01 23:18:13.783 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 4
+2025-07-01 23:18:13.784 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==>  Preparing: select count(*) from book where id in (select bookId from booksortlist WHERE bookSortId in ( ? , ? , ? , ? ) )
+2025-07-01 23:18:13.785 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.785 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select count(*) from book
+        where id in (select bookId from booksortlist
+         WHERE bookSortId in
+            (
+                ?
+            ,
+                ?
+            ,
+                ?
+            ,
+                ?
+            ) 
+        ) ::: DataSources: slave
+2025-07-01 23:18:13.785 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==> Parameters: 5(Integer), 6(Integer), 7(Integer), 1(Integer)
+2025-07-01 23:18:13.786 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - <==      Total: 1
+2025-07-01 23:18:13.787 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:13.787 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.787 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:13.787 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:18:13.789 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:13.790 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:13.791 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:13.791 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:13.791 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:13.793 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:17.252 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:17.252 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.252 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:17.253 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 2(Integer)
+2025-07-01 23:18:17.255 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 1
+2025-07-01 23:18:17.255 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:17.255 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.255 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:17.255 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 科技(String), 科技(String)
+2025-07-01 23:18:17.258 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 3
+2025-07-01 23:18:17.258 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==>  Preparing: select * from book where id in (select t.bookId from (select * from booksortlist WHERE bookSortId in ( ? , ? , ? ) ) as t ) limit ?,?
+2025-07-01 23:18:17.258 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.259 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from book
+            where id in (select t.bookId from
+                (select * from booksortlist
+                     WHERE bookSortId in
+                        (
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ) 
+                )
+        as t ) limit ?,? ::: DataSources: slave
+2025-07-01 23:18:17.259 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==> Parameters: 2(Integer), 8(Integer), 9(Integer), 0(Integer), 10(Integer)
+2025-07-01 23:18:17.261 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - <==      Total: 3
+2025-07-01 23:18:17.261 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:17.261 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.261 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:17.262 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 科技(String), 科技(String)
+2025-07-01 23:18:17.263 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 3
+2025-07-01 23:18:17.264 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==>  Preparing: select count(*) from book where id in (select bookId from booksortlist WHERE bookSortId in ( ? , ? , ? ) )
+2025-07-01 23:18:17.264 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.264 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select count(*) from book
+        where id in (select bookId from booksortlist
+         WHERE bookSortId in
+            (
+                ?
+            ,
+                ?
+            ,
+                ?
+            ) 
+        ) ::: DataSources: slave
+2025-07-01 23:18:17.264 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==> Parameters: 2(Integer), 8(Integer), 9(Integer)
+2025-07-01 23:18:17.265 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - <==      Total: 1
+2025-07-01 23:18:17.266 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:17.266 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.266 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:17.266 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:18:17.267 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:17.267 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:17.267 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.267 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:17.267 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:18:17.269 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:17.269 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:17.269 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:17.269 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:17.270 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:18:17.271 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:18.182 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:18.182 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.182 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:18.182 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 1(Integer)
+2025-07-01 23:18:18.183 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 1
+2025-07-01 23:18:18.184 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:18.184 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.184 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:18.185 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 文学(String), 文学(String)
+2025-07-01 23:18:18.186 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 4
+2025-07-01 23:18:18.186 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==>  Preparing: select * from book where id in (select t.bookId from (select * from booksortlist WHERE bookSortId in ( ? , ? , ? , ? ) ) as t ) limit ?,?
+2025-07-01 23:18:18.187 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.187 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from book
+            where id in (select t.bookId from
+                (select * from booksortlist
+                     WHERE bookSortId in
+                        (
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ,
+                            ?
+                        ) 
+                )
+        as t ) limit ?,? ::: DataSources: slave
+2025-07-01 23:18:18.187 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - ==> Parameters: 5(Integer), 6(Integer), 7(Integer), 1(Integer), 0(Integer), 10(Integer)
+2025-07-01 23:18:18.188 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBooksByFirst - <==      Total: 2
+2025-07-01 23:18:18.189 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==>  Preparing: select id from booksort where (upperName="无" and sortName=?) or upperName=?
+2025-07-01 23:18:18.189 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.189 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select id from booksort where (upperName="无" and sortName=?) or upperName=? ::: DataSources: slave
+2025-07-01 23:18:18.189 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - ==> Parameters: 文学(String), 文学(String)
+2025-07-01 23:18:18.191 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.SortMapper.getAllFirSortId - <==      Total: 4
+2025-07-01 23:18:18.192 [http-nio-8080-exec-6] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==>  Preparing: select count(*) from book where id in (select bookId from booksortlist WHERE bookSortId in ( ? , ? , ? , ? ) )
+2025-07-01 23:18:18.192 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.192 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select count(*) from book
+        where id in (select bookId from booksortlist
+         WHERE bookSortId in
+            (
+                ?
+            ,
+                ?
+            ,
+                ?
+            ,
+                ?
+            ) 
+        ) ::: DataSources: slave
+2025-07-01 23:18:18.192 [http-nio-8080-exec-6] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - ==> Parameters: 5(Integer), 6(Integer), 7(Integer), 1(Integer)
+2025-07-01 23:18:18.194 [http-nio-8080-exec-6] DEBUG c.huang.store.mapper.BookMapper.getFirstBookCount - <==      Total: 1
+2025-07-01 23:18:18.194 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:18.194 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.194 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:18.194 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:18:18.195 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:18.196 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:18.196 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:18.196 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:18.196 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:18.197 [http-nio-8080-exec-6] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.698 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==>  Preparing: select * from booktopic limit ?,?
+2025-07-01 23:18:58.698 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.698 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booktopic limit ?,? ::: DataSources: slave
+2025-07-01 23:18:58.699 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==> Parameters: 0(Integer), 5(Integer)
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - <==      Total: 2
+2025-07-01 23:18:58.701 [http-nio-8080-exec-1] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==>  Preparing: select * from book order by birthday desc limit ?,?
+2025-07-01 23:18:58.701 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==>  Preparing: select count(*) from booktopic
+2025-07-01 23:18:58.701 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book order by birthday desc limit ?,? ::: DataSources: slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select count(*) from booktopic ::: DataSources: slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==> Parameters: 
+2025-07-01 23:18:58.701 [http-nio-8080-exec-5] INFO  com.huang.store.controller.BookController - 获取分类图书列表: sortId=117
+2025-07-01 23:18:58.701 [http-nio-8080-exec-1] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==> Parameters: 0(Integer), 10(Integer)
+2025-07-01 23:18:58.701 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:18:58.701 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:18:58.701 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 117(Integer)
+2025-07-01 23:18:58.701 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - <==      Total: 1
+2025-07-01 23:18:58.702 [http-nio-8080-exec-5] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 0
+2025-07-01 23:18:58.704 [http-nio-8080-exec-1] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - <==      Total: 5
+2025-07-01 23:18:58.705 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:58.705 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.705 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:58.706 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:58.707 [http-nio-8080-exec-1] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:58.707 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:18:58.707 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.707 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:18:58.708 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:58.708 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.708 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:58.708 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:58.708 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.708 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:58.708 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:18:58.708 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:18:58.709 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:58.710 [http-nio-8080-exec-7] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:18:58.710 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.710 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:58.710 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.710 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:58.710 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:58.710 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.710 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:58.710 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:18:58.710 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:18:58.711 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:58.712 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:18:58.712 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:58.712 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.712 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:58.712 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:58.712 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.712 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:58.712 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:18:58.713 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.713 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:58.713 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:58.713 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.713 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:58.713 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:58.714 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:18:58.714 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:58.714 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.714 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:58.714 [http-nio-8080-exec-9] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:18:58.714 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:18:58.715 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.715 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:58.715 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.715 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:58.715 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:58.715 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:18:58.715 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:18:58.715 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.715 [http-nio-8080-exec-7] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:18:58.715 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:18:58.716 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.716 [http-nio-8080-exec-7] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:18:58.716 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:18:58.716 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.716 [http-nio-8080-exec-1] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:18:58.717 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:18:58.718 [http-nio-8080-exec-1] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:18:58.718 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from recommend limit ?,?)as t )
+2025-07-01 23:18:58.718 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.718 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from recommend limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:58.718 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:58.720 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - <==      Total: 0
+2025-07-01 23:18:58.721 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:18:58.721 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:18:58.721 [http-nio-8080-exec-4] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:18:58.721 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:18:58.722 [http-nio-8080-exec-4] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:19:01.470 [http-nio-8080-exec-2] DEBUG c.h.s.m.S.getAllActivitiesOrderByTime - ==>  Preparing: SELECT * FROM spikeActivity ORDER BY startTime ASC
+2025-07-01 23:19:01.470 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.470 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: SELECT * FROM spikeActivity 
+        ORDER BY startTime ASC ::: DataSources: slave
+2025-07-01 23:19:01.473 [http-nio-8080-exec-2] DEBUG c.h.s.m.S.getAllActivitiesOrderByTime - ==> Parameters: 
+2025-07-01 23:19:01.499 [http-nio-8080-exec-2] DEBUG c.h.s.m.S.getAllActivitiesOrderByTime - <==      Total: 6
+2025-07-01 23:19:01.522 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==>  Preparing: SELECT sg.*, b.id as book_id, b.bookName, b.author, b.publish, b.isbn, b.price, b.marketPrice, b.description, b.stock FROM spikeGoods sg LEFT JOIN book b ON sg.bookId = b.id WHERE sg.activityId = ? AND sg.status = 1 ORDER BY sg.sortOrder ASC
+2025-07-01 23:19:01.522 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.522 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.activityId = ?
+        AND sg.status = 1
+        ORDER BY sg.sortOrder ASC ::: DataSources: slave
+2025-07-01 23:19:01.550 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==> Parameters: 4(Long)
+2025-07-01 23:19:01.569 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - <==      Total: 1
+2025-07-01 23:19:01.572 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBook - ==>  Preparing: select * from book where id = ?
+2025-07-01 23:19:01.572 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.572 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select * from book where id = ? ::: DataSources: slave
+2025-07-01 23:19:01.573 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBook - ==> Parameters: 1(Integer)
+2025-07-01 23:19:01.577 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBook - <==      Total: 1
+2025-07-01 23:19:01.578 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:01.578 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.578 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:01.578 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:19:01.580 [http-nio-8080-exec-2] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:01.597 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==>  Preparing: SELECT sg.*, b.id as book_id, b.bookName, b.author, b.publish, b.isbn, b.price, b.marketPrice, b.description, b.stock FROM spikeGoods sg LEFT JOIN book b ON sg.bookId = b.id WHERE sg.activityId = ? AND sg.status = 1 ORDER BY sg.sortOrder ASC
+2025-07-01 23:19:01.597 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.597 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.activityId = ?
+        AND sg.status = 1
+        ORDER BY sg.sortOrder ASC ::: DataSources: slave
+2025-07-01 23:19:01.597 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==> Parameters: 5(Long)
+2025-07-01 23:19:01.600 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - <==      Total: 0
+2025-07-01 23:19:01.600 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==>  Preparing: SELECT sg.*, b.id as book_id, b.bookName, b.author, b.publish, b.isbn, b.price, b.marketPrice, b.description, b.stock FROM spikeGoods sg LEFT JOIN book b ON sg.bookId = b.id WHERE sg.activityId = ? AND sg.status = 1 ORDER BY sg.sortOrder ASC
+2025-07-01 23:19:01.600 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:01.600 [http-nio-8080-exec-2] INFO  ShardingSphere-SQL - SQL: SELECT 
+            sg.*,
+            b.id as book_id,
+            b.bookName,
+            b.author,
+            b.publish,
+            b.isbn,
+            b.price,
+            b.marketPrice,
+            b.description,
+            b.stock
+        FROM spikeGoods sg
+        LEFT JOIN book b ON sg.bookId = b.id
+        WHERE sg.activityId = ?
+        AND sg.status = 1
+        ORDER BY sg.sortOrder ASC ::: DataSources: slave
+2025-07-01 23:19:01.601 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - ==> Parameters: 6(Long)
+2025-07-01 23:19:01.604 [http-nio-8080-exec-2] DEBUG c.h.s.m.SpikeGoodsMapper.getSpikeGoodsByActivity - <==      Total: 0
+2025-07-01 23:19:06.635 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==>  Preparing: select * from booktopic limit ?,?
+2025-07-01 23:19:06.636 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.636 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select * from booktopic limit ?,? ::: DataSources: slave
+2025-07-01 23:19:06.636 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - ==> Parameters: 0(Integer), 5(Integer)
+2025-07-01 23:19:06.636 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from recommend limit ?,?)as t )
+2025-07-01 23:19:06.636 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.636 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from recommend limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:19:06.637 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:19:06.639 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getRecommendsByPage - <==      Total: 0
+2025-07-01 23:19:06.639 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:19:06.639 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.639 [http-nio-8080-exec-6] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:19:06.640 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:19:06.642 [http-nio-8080-exec-6] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:19:06.647 [http-nio-8080-exec-3] DEBUG c.huang.store.mapper.TopicMapper.getBookTopicList - <==      Total: 2
+2025-07-01 23:19:06.647 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==>  Preparing: select count(*) from booktopic
+2025-07-01 23:19:06.647 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.647 [http-nio-8080-exec-3] INFO  ShardingSphere-SQL - SQL: select count(*) from booktopic ::: DataSources: slave
+2025-07-01 23:19:06.648 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - ==> Parameters: 
+2025-07-01 23:19:06.650 [http-nio-8080-exec-3] DEBUG com.huang.store.mapper.TopicMapper.getTopicCount - <==      Total: 1
+2025-07-01 23:19:06.652 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==>  Preparing: select * from book order by birthday desc limit ?,?
+2025-07-01 23:19:06.653 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.653 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from book order by birthday desc limit ?,? ::: DataSources: slave
+2025-07-01 23:19:06.653 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - ==> Parameters: 0(Integer), 10(Integer)
+2025-07-01 23:19:06.655 [http-nio-8080-exec-8] DEBUG c.huang.store.mapper.BookMapper.getNewPutBookList - <==      Total: 5
+2025-07-01 23:19:06.657 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:19:06.657 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.657 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:19:06.657 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:19:06.658 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==>  Preparing: select * from booksort where level="级别一"
+2025-07-01 23:19:06.658 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.658 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where level="级别一" ::: DataSources: slave
+2025-07-01 23:19:06.658 [http-nio-8080-exec-8] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:19:06.658 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - ==> Parameters: 
+2025-07-01 23:19:06.659 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:06.659 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.659 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:06.659 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787121291005(String)
+2025-07-01 23:19:06.659 [http-nio-8080-exec-10] INFO  com.huang.store.controller.BookController - 获取分类图书列表: sortId=117
+2025-07-01 23:19:06.659 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==>  Preparing: select * from booksort where id=?
+2025-07-01 23:19:06.659 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.659 [http-nio-8080-exec-10] INFO  ShardingSphere-SQL - SQL: select * from booksort where id=? ::: DataSources: slave
+2025-07-01 23:19:06.659 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - ==> Parameters: 117(Integer)
+2025-07-01 23:19:06.659 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:06.652 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:19:06.660 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:06.660 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.660 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:06.660 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111213826(String)
+2025-07-01 23:19:06.660 [http-nio-8080-exec-10] DEBUG com.huang.store.mapper.SortMapper.getBookSortById - <==      Total: 0
+2025-07-01 23:19:06.661 [http-nio-8080-exec-9] DEBUG com.huang.store.mapper.SortMapper.getAllFirSorts - <==      Total: 4
+2025-07-01 23:19:06.662 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:06.662 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:19:06.662 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.662 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:19:06.662 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:06.662 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.663 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:06.663 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787111407010(String)
+2025-07-01 23:19:06.663 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 文学(String)
+2025-07-01 23:19:06.661 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.664 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:19:06.664 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:06.665 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 3
+2025-07-01 23:19:06.665 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:06.665 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:19:06.665 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.665 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:19:06.665 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.665 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:06.665 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 科技(String)
+2025-07-01 23:19:06.665 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002214(String)
+2025-07-01 23:19:06.665 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:19:06.666 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:19:06.666 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:06.666 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==>  Preparing: select * from book where id in (select t.bookId from (select * from newproduct limit ?,?)as t )
+2025-07-01 23:19:06.667 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-5] INFO  ShardingSphere-SQL - SQL: select * from book where id in
+         (select t.bookId from (select * from newproduct limit ?,?)as t ) ::: DataSources: slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:19:06.667 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - ==> Parameters: 1(Integer), 14(Integer)
+2025-07-01 23:19:06.667 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:19:06.667 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==>  Preparing: select imgSrc from bookimg where isbn=? limit 1
+2025-07-01 23:19:06.667 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-8] INFO  ShardingSphere-SQL - SQL: select imgSrc from bookimg where isbn=? limit 1 ::: DataSources: slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - ==> Parameters: 9787020002207(String)
+2025-07-01 23:19:06.667 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:19:06.667 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 教育(String)
+2025-07-01 23:19:06.668 [http-nio-8080-exec-5] DEBUG c.h.store.mapper.BookMapper.getNewProductsByPage - <==      Total: 0
+2025-07-01 23:19:06.668 [http-nio-8080-exec-8] DEBUG com.huang.store.mapper.BookMapper.getBookCover - <==      Total: 1
+2025-07-01 23:19:06.669 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:19:06.669 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==>  Preparing: select * from booksort where upperName=?
+2025-07-01 23:19:06.669 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-01 23:19:06.669 [http-nio-8080-exec-9] INFO  ShardingSphere-SQL - SQL: select * from booksort where upperName=? ::: DataSources: slave
+2025-07-01 23:19:06.672 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - ==> Parameters: 生活(String)
+2025-07-01 23:19:06.674 [http-nio-8080-exec-9] DEBUG c.huang.store.mapper.SortMapper.getSecondSortList - <==      Total: 2
+2025-07-01 23:19:56.047 [lettuce-eventExecutorLoop-1-4] INFO  io.lettuce.core.protocol.ConnectionWatchdog - Reconnecting, last destination was /127.0.0.1:6380
+2025-07-01 23:19:56.103 [lettuce-nioEventLoop-4-2] WARN  io.lettuce.core.protocol.ConnectionWatchdog - Cannot reconnect to [127.0.0.1/<unresolved>:6380]: 你的主机中的软件中止了一个已建立的连接。
+java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
+	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:330)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:284)
+	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:259)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:417)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:254)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2025-07-01 23:20:02.245 [lettuce-eventExecutorLoop-1-2] INFO  io.lettuce.core.protocol.ConnectionWatchdog - Reconnecting, last destination was 127.0.0.1/<unresolved>:6380
+2025-07-01 23:20:02.247 [lettuce-nioEventLoop-4-1] WARN  io.lettuce.core.protocol.ConnectionWatchdog - Cannot reconnect to [127.0.0.1/<unresolved>:6380]: Connection refused: no further information: /127.0.0.1:6380
+2025-07-01 23:20:02.688 [SpringApplicationShutdownHook] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2025-07-01 23:20:02.692 [SpringApplicationShutdownHook] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2025-07-01 23:20:02.692 [SpringApplicationShutdownHook] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-2} closing ...
+2025-07-01 23:20:02.693 [SpringApplicationShutdownHook] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-2} closed
