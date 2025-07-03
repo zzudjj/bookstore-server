@@ -71,4 +71,8 @@ public interface BookService {
 
     // 清空图书缓存
     void clearBookCache();
+
+    //图书搜索功能
+    List<Book> searchBooks(String keyword, int page, int pageSize);//根据关键字搜索图书
+    int getSearchBookCount(String keyword);//获取搜索结果总数
 }

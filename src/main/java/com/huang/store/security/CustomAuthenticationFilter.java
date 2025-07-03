@@ -28,8 +28,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     //这里是得到前端传来的用户的账号密码，将其注入到过滤器中，终于之后的验证
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        // 判断 Content-Type 时，应使用 startsWith("application/json") 来进行判断。
+        // 这是因为不同的浏览器或HTTP客户端在发送JSON请求时，可能会附加不同的字符集信息（如 "UTF-8" vs "utf-8"），
+        // 或者不附加字符集。使用 startsWith 可以确保只要请求是JSON类型，就能被正确处理，
+        // 从而使后端服务更具健壮性和兼容性，避免因客户端的微小差异导致认证失败。
+        if (request.getContentType() != null && request.getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE)) {
             //ObjectMapper是jackson的主要类
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;

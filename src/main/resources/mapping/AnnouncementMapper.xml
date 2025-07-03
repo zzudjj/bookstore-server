@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.AnnouncementMapper">
+
+    <!-- 插入公告 -->
+    <insert id="addAnnouncement" parameterType="com.huang.store.entity.notice.Announcement">
+        INSERT INTO announcement(title, content, author, publishTime, enable)
+        VALUES (#{title}, #{content}, #{author}, #{publishTime}, #{enable})
+    </insert>
+
+    <!-- 删除公告 -->
+    <delete id="deleteAnnouncement">
+        DELETE FROM announcement WHERE id = #{id}
+    </delete>
+
+    <!-- 更新公告 -->
+    <update id="modifyAnnouncement" parameterType="com.huang.store.entity.notice.Announcement">
+        UPDATE announcement
+        SET title = #{title},
+            content = #{content},
+            author = #{author},
+            publishTime = #{publishTime},
+            enable = #{enable}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询单条公告 -->
+    <select id="getAnnouncement" resultType="com.huang.store.entity.notice.Announcement">
+        SELECT * FROM announcement WHERE id = #{id}
+    </select>
+
+    <!-- 分页查询公告列表 -->
+    <select id="getAnnouncementList" resultType="com.huang.store.entity.notice.Announcement">
+        SELECT * FROM announcement ORDER BY publishTime DESC LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 公告数量 -->
+    <select id="getAnnouncementCount" resultType="int">
+        SELECT COUNT(*) FROM announcement
+    </select>
+
+    <!-- 启用的公告 -->
+    <select id="getEnabledAnnouncements" resultType="com.huang.store.entity.notice.Announcement">
+        SELECT * FROM announcement WHERE enable = 1 ORDER BY publishTime DESC
+    </select>
+
+</mapper> 

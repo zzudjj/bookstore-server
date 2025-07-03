@@ -1,18 +1,22 @@
 package com.huang.store.entity.order;
 
+import java.math.BigDecimal;
+
 /**
  * @author: 黄龙
  * @date: 2020/7/22 9:37
  * @description: 订单费用
  */
-public class  Expense {
-    private String orderId;//订单编号
-    private double productTotalMoney; //商品总价
-    private double freight;//运费 默认为0元
-    private int coupon;//优惠券 默认为0元
-    private double activityDiscount;//活动优惠 默认为0元
-    private double allPrice;//订单总金额
-    private double finallyPrice;//最终实付总额
+public class Expense {
+    private String orderId;// 订单编号
+    private double productTotalMoney; // 商品总价
+    private double freight;// 运费 默认为0元
+    private int coupon;// 优惠券 默认为0元（保留原字段兼容性）
+    private Integer couponId;// 使用的优惠券ID
+    private BigDecimal couponDiscount;// 优惠券折扣金额
+    private double activityDiscount;// 活动优惠 默认为0元
+    private double allPrice;// 订单总金额
+    private double finallyPrice;// 最终实付总额
 
     public String getOrderId() {
         return orderId;
@@ -70,6 +74,22 @@ public class  Expense {
         this.finallyPrice = finallyPrice;
     }
 
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
+
+    public BigDecimal getCouponDiscount() {
+        return couponDiscount;
+    }
+
+    public void setCouponDiscount(BigDecimal couponDiscount) {
+        this.couponDiscount = couponDiscount;
+    }
+
     @Override
     public String toString() {
         return "Expense{" +
@@ -77,6 +97,8 @@ public class  Expense {
                 ", productTotalMoney=" + productTotalMoney +
                 ", freight=" + freight +
                 ", coupon=" + coupon +
+                ", couponId=" + couponId +
+                ", couponDiscount=" + couponDiscount +
                 ", activityDiscount=" + activityDiscount +
                 ", allPrice=" + allPrice +
                 ", finallyPrice=" + finallyPrice +

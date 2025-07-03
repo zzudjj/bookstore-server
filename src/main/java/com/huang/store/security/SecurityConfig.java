@@ -78,6 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/user/register","/api/user/accountVerify")// API路径的注册相关接口允许匿名访问
                 .permitAll()
+                .antMatchers("/uploadBookImg","/delOneImg")// 允许图片上传和删除接口
+                .permitAll()
                 .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
                 .permitAll()
 //                .antMatchers("/**")//测试时全部运行访问

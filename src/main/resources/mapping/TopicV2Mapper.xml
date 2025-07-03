@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.TopicV2Mapper">
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        `id`,`title`,`subTitle`,`cover`,`rank`,`status`,`viewCnt`,`favCnt`,`orderCnt`,`createdAt`,`updatedAt`
+    </sql>
+
+    <!-- 列表 -->
+    <select id="getTopicList" resultType="com.huang.store.entity.topic.Topic">
+        select <include refid="Base_Column_List"/> from topic order by `rank` asc limit #{offset},#{limit}
+    </select>
+
+    <select id="getTopicCount" resultType="int">
+        select count(*) from topic
+    </select>
+
+    <!-- 前台可见 -->
+    <select id="getPublicTopicList" resultType="com.huang.store.entity.topic.Topic">
+        select <include refid="Base_Column_List"/> from topic where `status`=1 order by `rank` asc limit #{offset},#{limit}
+    </select>
+
+    <select id="getPublicTopicCount" resultType="int">
+        select count(*) from topic where `status`=1
+    </select>
+
+    <!-- 详情 -->
+    <select id="getTopic" resultType="com.huang.store.entity.topic.Topic">
+        select <include refid="Base_Column_List"/> from topic where id=#{id}
+    </select>
+
+    <resultMap id="TopicItemResult" type="com.huang.store.entity.topic.TopicItem">
+        <id column="topicId" property="topicId"/>
+        <result column="bookId" property="bookId"/>
+        <result column="recommendReason" property="recommendReason"/>
+        <result column="orderNo" property="orderNo"/>
+    </resultMap>
+
+    <select id="getTopicItems" resultMap="TopicItemResult">
+        select topicId,bookId,recommendReason,orderNo from topic_item where topicId=#{topicId} order by orderNo asc
+    </select>
+
+    <!-- 增删改 -->
+    <insert id="addTopic" parameterType="com.huang.store.entity.topic.Topic" useGeneratedKeys="true" keyProperty="id">
+        insert into topic(`title`,`subTitle`,`cover`,`rank`,`status`)
+        values(#{title},#{subTitle},#{cover},#{rank},#{status})
+    </insert>
+
+    <update id="updateTopic" parameterType="com.huang.store.entity.topic.Topic">
+        update topic
+        <set>
+            <if test="title!=null">title=#{title},</if>
+            <if test="subTitle!=null">subTitle=#{subTitle},</if>
+            <if test="cover!=null">cover=#{cover},</if>
+            <if test="rank!=null">`rank`=#{rank},</if>
+            <if test="status!=null">`status`=#{status},</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteTopic">
+        delete from topic where id=#{id}
+    </delete>
+
+    <update id="changeTopicStatus">
+        update topic set `status`=#{status} where id=#{id}
+    </update>
+
+    <!-- 条目批量 -->
+    <insert id="batchInsertItems" parameterType="java.util.List">
+        insert into topic_item(topicId,bookId,recommendReason,orderNo) values
+        <foreach collection="items" item="item" separator=",">
+            (#{item.topicId},#{item.bookId},#{item.recommendReason},#{item.orderNo})
+        </foreach>
+    </insert>
+
+    <delete id="deleteTopicItems">
+        delete from topic_item where topicId=#{topicId}
+    </delete>
+
+</mapper> 

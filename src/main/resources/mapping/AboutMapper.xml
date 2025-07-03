@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.AboutMapper">
+
+    <!-- 插入网站介绍 (首次初始化) -->
+    <insert id="addAbout" parameterType="com.huang.store.entity.notice.About">
+        INSERT INTO about(content, updateTime) VALUES (#{content}, #{updateTime})
+    </insert>
+
+    <!-- 更新网站介绍 -->
+    <update id="modifyAbout" parameterType="com.huang.store.entity.notice.About">
+        UPDATE about SET content = #{content}, updateTime = CURRENT_TIMESTAMP WHERE id = #{id}
+    </update>
+
+    <!-- 获取网站介绍（仅一条记录） -->
+    <select id="getAbout" resultType="com.huang.store.entity.notice.About">
+        SELECT * FROM about LIMIT 1
+    </select>
+
+</mapper> 
