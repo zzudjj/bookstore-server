@@ -105,8 +105,6 @@ CREATE INDEX IF NOT EXISTS `idx_activity_time_status` ON `spikeactivity` (`start
 CREATE INDEX IF NOT EXISTS `idx_goods_activity_status` ON `spikegoods` (`activityId`, `status`);
 CREATE INDEX IF NOT EXISTS `idx_goods_book_status` ON `spikegoods` (`bookId`, `status`);
 
--- 秒杀记录表复合索引（用于限购检查优化）
-CREATE INDEX IF NOT EXISTS `idx_record_user_goods_result` ON `spikerecord` (`userAccount`, `spikeGoodsId`, `result`);
 
 -- ========================================
 -- 6. 插入示例数据（仅在表为空时插入）

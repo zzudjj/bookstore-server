@@ -51,4 +51,8 @@
     <update id="updateImg">
         update user set imgUrl=#{imgUrl} where account=#{account}
     </update>
+
+    <select id="getUserById" resultType="com.huang.store.entity.user.User">
+        select * from user where id = #{id}
+    </select>
 </mapper>

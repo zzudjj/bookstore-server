@@ -14,4 +14,5 @@ public interface UserMapper {
     int updateUser(User user);//更新用户信息
     int updatePwd(String account,String newPassword);//更新用户密码
     int updateImg(String account,String imgUrl);//更新用户头像
+    User getUserById(int id);//通过id得到用户
 }
