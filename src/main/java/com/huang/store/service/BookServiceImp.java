@@ -272,7 +272,8 @@ public class BookServiceImp implements BookService {
 
     @Override
     public List<Book> getRecommendsByPage(int page, int pageSize) {
-        return bookMapper.getRecommendsByPage(page,pageSize);
+        int start = (page-1)*pageSize;
+        return bookMapper.getRecommendsByPage(start,pageSize);
     }
 
 
@@ -304,7 +305,8 @@ public class BookServiceImp implements BookService {
 
     @Override
     public List<Book> getNewProductsByPage(int page, int pageSize) {
-        return bookMapper.getNewProductsByPage(page,pageSize);
+        int start = (page-1)*pageSize;
+        return bookMapper.getNewProductsByPage(start,pageSize);
     }
 
 

@@ -312,7 +312,6 @@ public class BookController {
             default:
                 return ResultUtil.resultCode(200,"批量操作失败");
         }
-                bookService.getNewProductsByPage(1, 14);
         for(int i=0;i<bookList.size();i++){
             String img = bookService.getBookCover(bookList.get(i).getisbn());
             bookList.get(i).setCoverImg(img);

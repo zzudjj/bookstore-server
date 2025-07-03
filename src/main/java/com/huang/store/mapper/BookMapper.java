@@ -2,6 +2,7 @@ package com.huang.store.mapper;
 
 import com.huang.store.entity.book.*;
 import com.huang.store.entity.dto.OrderBookDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public interface BookMapper {
     int modifyRecommendRank(int bookId,int rank);
     int modifyRecommend(Recommend recommend);
     int hasExistInRec(int bookId);
-    List<Book> getRecommendsByPage(int page,int pageSize);
+    List<Book> getRecommendsByPage(@Param("page") int page, @Param("pageSize") int pageSize);
 
     //对于新品推荐的操作
     int addToNewProduct(Recommend newProduct);
@@ -60,7 +61,7 @@ public interface BookMapper {
     int modifyNewProductRank(int bookId,int rank);
     int modifyNewProduct(Recommend newProduct);
     int hasExistInNew(int bookId);
-    List<Book> getNewProductsByPage(int page,int pageSize);
+    List<Book> getNewProductsByPage(@Param("page") int page, @Param("pageSize") int pageSize);
 
 
     //添加图书到分类
