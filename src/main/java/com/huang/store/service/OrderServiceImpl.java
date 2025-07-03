@@ -6,6 +6,8 @@ import com.huang.store.entity.order.Expense;
 import com.huang.store.entity.order.Order;
 import com.huang.store.entity.order.OrderDetail;
 import com.huang.store.entity.order.StockReservation;
+import com.huang.store.entity.dto.CouponCalculationResult;
+import com.huang.store.entity.dto.CouponUsageRequest;
 import com.huang.store.enums.OrderStatusEnum;
 import com.huang.store.entity.user.User;
 import com.huang.store.entity.user.Address;
@@ -15,6 +17,7 @@ import com.huang.store.mapper.OrderMapper;
 import com.huang.store.mapper.StockReservationMapper;
 import com.huang.store.service.imp.OrderService;
 import com.huang.store.service.imp.AddressService;
+import com.huang.store.service.imp.CouponService;
 import com.huang.store.service.imp.BookService;
 import com.huang.store.util.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     AddressService addressService;
+
+    @Autowired
+    CouponService couponService;
 
     @Autowired
     BookService bookService;
@@ -181,6 +188,42 @@ public class OrderServiceImpl implements OrderService {
         for(int i=0;i<orderDetailList.size();i++){
             System.out.println("=====orderDetailList[i]====="+orderDetailList.get(i));
         }
+        // 2. 处理优惠券（如果不是秒杀订单且提供了优惠券码）
+        if (!orderInitDto.isSpikeOrder() && orderInitDto.getCouponCode() != null && !orderInitDto.getCouponCode().trim().isEmpty()) {
+            try {
+                System.out.println("开始处理优惠券: " + orderInitDto.getCouponCode());
+
+                // 计算优惠券折扣
+                CouponCalculationResult couponResult = couponService.calculateCouponDiscount(
+                    orderInitDto.getCouponCode(),
+                    orderInitDto.getAccount(),
+                    BigDecimal.valueOf(orderInitDto.getExpense().getProductTotalMoney())
+                );
+
+                if (couponResult.getAvailable()) {
+                    // 更新费用信息
+                    Expense expense = orderInitDto.getExpense();
+                    expense.setCoupon(couponResult.getDiscountAmount().intValue());
+                    expense.setCouponDiscount(couponResult.getDiscountAmount());
+                    expense.setCouponId(couponResult.getCouponInfo().getId());
+                    expense.setFinallyPrice(couponResult.getFinalAmount().doubleValue());
+
+                    // 设置订单使用的优惠券ID
+                    order.setCouponId(couponResult.getCouponInfo().getId());
+
+                    System.out.println("优惠券计算成功: 原价=" + couponResult.getOriginalAmount() +
+                        ", 优惠=" + couponResult.getDiscountAmount() +
+                        ", 实付=" + couponResult.getFinalAmount());
+                } else {
+                    System.err.println("优惠券不可用: " + couponResult.getReason());
+                    throw new RuntimeException("优惠券不可用: " + couponResult.getReason());
+                }
+            } catch (Exception e) {
+                System.err.println("优惠券处理失败: " + e.getMessage());
+                throw new RuntimeException("优惠券处理失败: " + e.getMessage());
+            }
+        }
+
         System.out.println("=============初始化总的订单没有问题===========");
         orderMapper.addOrder(order);//添加总的订单
         System.out.println("============添加总的订单成功============");
@@ -188,12 +231,49 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.batchAddOrderDetail(orderDetailList);//批量添加订单明细
         System.out.println("==============添加订单明细成功==============");
 
+        // 3. 处理优惠券（在保存费用之前）
         Expense expense = orderInitDto.getExpense();
         expense.setOrderId(orderId);
-        expenseMapper.addExpense(expense);//订单订单费用到费用表中
+
+        if (!orderInitDto.isSpikeOrder() && orderInitDto.getCouponCode() != null && !orderInitDto.getCouponCode().trim().isEmpty()) {
+            try {
+                // 计算优惠券折扣
+                CouponCalculationResult couponResult = couponService.calculateCouponDiscount(
+                    orderInitDto.getCouponCode(),
+                    orderInitDto.getAccount(),
+                    BigDecimal.valueOf(expense.getProductTotalMoney())
+                );
+
+                if (couponResult.getAvailable()) {
+                    // 更新费用信息
+                    int couponIntValue = couponResult.getDiscountAmount().intValue();
+                    expense.setCoupon(couponIntValue);
+                    expense.setCouponDiscount(couponResult.getDiscountAmount());
+                    expense.setCouponId(couponResult.getCouponInfo().getId());
+                    expense.setFinallyPrice(couponResult.getFinalAmount().doubleValue());
+
+                    // 设置订单使用的优惠券ID
+                    order.setCouponId(couponResult.getCouponInfo().getId());
+
+                    System.out.println("优惠券计算成功: 原价=" + couponResult.getOriginalAmount() +
+                        ", 优惠=" + couponResult.getDiscountAmount() +
+                        ", 优惠int=" + couponIntValue +
+                        ", 实付=" + couponResult.getFinalAmount());
+                } else {
+                    System.err.println("优惠券不可用: " + couponResult.getReason());
+                    throw new RuntimeException("优惠券不可用: " + couponResult.getReason());
+                }
+            } catch (Exception e) {
+                System.err.println("优惠券计算异常: " + e.getMessage());
+                throw new RuntimeException("优惠券处理失败: " + e.getMessage());
+            }
+        }
+
+        // 4. 保存费用信息（包含优惠券信息）
+        expenseMapper.addExpense(expense);
         System.out.println("===========添加订单费用成功==============");
 
-        // 3. 创建库存预留记录
+        // 5. 创建库存预留记录
         try {
             reserveStock(orderInitDto.getBookList(), orderId);
             System.out.println("库存预留完成: 订单ID=" + orderId);
@@ -202,6 +282,37 @@ public class OrderServiceImpl implements OrderService {
             // 如果库存预留失败，需要删除已创建的订单
             orderMapper.delOrder(order.getId());
             return false;
+        }
+
+        // 6. 标记优惠券为已使用（如果有）
+        if (!orderInitDto.isSpikeOrder() && orderInitDto.getCouponCode() != null && !orderInitDto.getCouponCode().trim().isEmpty()) {
+            try {
+                System.out.println("开始标记优惠券为已使用: 优惠券=" + orderInitDto.getCouponCode() + ", 订单ID=" + orderId);
+
+                // 使用已计算的折扣金额
+                BigDecimal discountAmount = expense.getCouponDiscount();
+                if (discountAmount == null) {
+                    discountAmount = BigDecimal.valueOf(expense.getCoupon());
+                }
+
+                boolean couponMarked = couponService.markCouponAsUsed(
+                    orderInitDto.getCouponCode(),
+                    orderInitDto.getAccount(),
+                    orderId,
+                    discountAmount
+                );
+
+                if (couponMarked) {
+                    System.out.println("优惠券标记成功: 订单ID=" + orderId + ", 优惠券=" + orderInitDto.getCouponCode());
+                } else {
+                    System.err.println("优惠券标记失败: 订单ID=" + orderId + ", 优惠券=" + orderInitDto.getCouponCode());
+                    // 优惠券标记失败不回滚订单，但记录日志
+                }
+            } catch (Exception e) {
+                System.err.println("优惠券标记异常: 订单ID=" + orderId + ", 优惠券=" + orderInitDto.getCouponCode() + ", 异常=" + e.getMessage());
+                e.printStackTrace();
+                // 优惠券标记失败不回滚订单，但记录日志
+            }
         }
 
         return true;
@@ -262,7 +373,7 @@ public class OrderServiceImpl implements OrderService {
         String currentStatus = orderDto.getOrderStatus();
         System.out.println("修改订单状态: ID=" + id + ", " + currentStatus + " -> " + orderStatus);
 
-        // 2. 如果是从"待付款"状态取消订单，需要释放库存预留
+        // 2. 如果是从"待付款"状态取消订单，需要释放库存预留和优惠券
         if ("待付款".equals(currentStatus) && "已取消".equals(orderStatus)) {
             System.out.println("取消待支付订单，释放库存预留: 订单ID=" + orderDto.getOrderId());
             try {
@@ -271,6 +382,17 @@ public class OrderServiceImpl implements OrderService {
             } catch (Exception e) {
                 System.err.println("释放库存预留失败: " + e.getMessage());
                 // 即使释放库存失败，也继续修改订单状态，避免用户无法取消订单
+            }
+
+            // 释放优惠券（如果有使用）
+            try {
+                boolean couponReleased = couponService.releaseCouponByOrderId(orderDto.getOrderId());
+                if (couponReleased) {
+                    System.out.println("优惠券释放成功: 订单ID=" + orderDto.getOrderId());
+                }
+            } catch (Exception e) {
+                System.err.println("释放优惠券失败: " + e.getMessage());
+                // 即使释放优惠券失败，也继续修改订单状态
             }
         }
 

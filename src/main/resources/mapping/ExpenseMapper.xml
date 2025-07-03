@@ -9,12 +9,12 @@
     private double allPrice;//订单总金额
     private double finallyPrice;//最终实付总额-->
     <insert id="addExpense" parameterType="com.huang.store.entity.order.Expense">
-        insert into expense(orderId,productTotalMoney,freight,coupon,activityDiscount,allPrice,finallyPrice)
-            values (#{orderId},#{productTotalMoney},#{freight},#{coupon},#{activityDiscount},#{allPrice},#{finallyPrice})
+        insert into expense(orderId,productTotalMoney,freight,coupon,coupon_id,coupon_discount,activityDiscount,allPrice,finallyPrice)
+            values (#{orderId},#{productTotalMoney},#{freight},#{coupon},#{couponId},#{couponDiscount},#{activityDiscount},#{allPrice},#{finallyPrice})
     </insert>
 
     <select id="findExpenseByOrderId" resultType="com.huang.store.entity.order.Expense">
-        select orderId, productTotalMoney, freight, coupon, activityDiscount, allPrice, finallyPrice
+        select orderId, productTotalMoney, freight, coupon, coupon_id as couponId, coupon_discount as couponDiscount, activityDiscount, allPrice, finallyPrice
         from expense
         where orderId = #{orderId}
     </select>

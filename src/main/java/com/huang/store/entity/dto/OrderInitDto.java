@@ -16,6 +16,8 @@ public class OrderInitDto {
     private List<Address> addressList;//返回给前端显示的某个用户的地址
     private Expense expense;
     private Address address;
+    private String couponCode;//使用的优惠券码
+    private boolean isSpikeOrder;//是否为秒杀订单
 
     public String getAccount() {
         return account;
@@ -57,6 +59,22 @@ public class OrderInitDto {
         this.address = address;
     }
 
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public boolean isSpikeOrder() {
+        return isSpikeOrder;
+    }
+
+    public void setSpikeOrder(boolean spikeOrder) {
+        isSpikeOrder = spikeOrder;
+    }
+
     @Override
     public String toString() {
         return "OrderInitDto{" +
@@ -65,6 +83,8 @@ public class OrderInitDto {
                 ", addressList=" + addressList +
                 ", expense=" + expense +
                 ", address=" + address +
+                ", couponCode='" + couponCode + '\'' +
+                ", isSpikeOrder=" + isSpikeOrder +
                 '}';
     }
 }

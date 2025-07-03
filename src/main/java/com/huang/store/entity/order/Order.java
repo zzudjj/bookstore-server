@@ -14,10 +14,10 @@ import java.sql.Timestamp;
  */
 @Data
 public class Order {
-    private int id;//编号
-    private String orderId;//订单号
-    private String account;//账户
-    private int addressId;//收货地址编号
+    private int id;// 编号
+    private String orderId;// 订单号
+    private String account;// 账户
+    private int addressId;// 收货地址编号
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp orderTime;//下单时间
     private Timestamp shipTime;//发货时间
@@ -35,4 +35,22 @@ public class Order {
     private Timestamp paymentDeadline;//支付截止时间
     private String cancelReason;//取消原因
     private String operator;//最后操作人
+    private Integer couponId;// 使用的优惠券ID
+    private String couponCode;// 使用的优惠券码
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
 }

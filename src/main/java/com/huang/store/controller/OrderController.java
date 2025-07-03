@@ -10,6 +10,8 @@ import com.huang.store.service.imp.AddressService;
 import com.huang.store.service.imp.BookService;
 import com.huang.store.service.imp.CartService;
 import com.huang.store.service.imp.OrderService;
+import com.huang.store.service.imp.CouponService;
+import com.huang.store.entity.dto.CouponCalculationResult;
 import com.huang.store.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,6 +55,9 @@ public class OrderController {
     @Autowired
     @Qualifier("orderService")
     OrderService orderService;
+
+    @Autowired
+    CouponService couponService;
 
     /**
      * 初始化秒杀订单支付页面
@@ -171,8 +177,11 @@ public class OrderController {
      */
     @PostMapping("/addOrder")
     public Map<String,Object> addOrder(@RequestBody OrderInitDto orderInitDto){
-        logger.info("创建订单: 用户={}, 商品数量={}", orderInitDto.getAccount(),
-                   orderInitDto.getBookList() != null ? orderInitDto.getBookList().size() : 0);
+        logger.info("创建订单: 用户={}, 商品数量={}, 优惠券={}, 是否秒杀={}",
+                   orderInitDto.getAccount(),
+                   orderInitDto.getBookList() != null ? orderInitDto.getBookList().size() : 0,
+                   orderInitDto.getCouponCode(),
+                   orderInitDto.isSpikeOrder());
 
         try {
             // 创建订单
@@ -435,6 +444,33 @@ public class OrderController {
         List<OrderStatistic> orderStatistic = orderService.getOrderStatistic(beginDate, endDate);
         map.put("orderStatistic",orderStatistic);
         return ResultUtil.resultSuccess(map);
+    }
+
+    /**
+     * 计算订单优惠券折扣
+     */
+    @PostMapping("/calculateCouponDiscount")
+    public Map<String, Object> calculateCouponDiscount(@RequestParam String couponCode,
+                                                      @RequestParam BigDecimal orderAmount,
+                                                      @RequestParam String account) {
+        try {
+            logger.info("计算订单优惠券折扣: 用户={}, 优惠券={}, 订单金额={}", account, couponCode, orderAmount);
+
+            CouponCalculationResult result = couponService.calculateCouponDiscount(couponCode, account, orderAmount);
+
+            if (result.getAvailable()) {
+                logger.info("优惠券计算成功: 原价={}, 优惠={}, 实付={}",
+                    result.getOriginalAmount(), result.getDiscountAmount(), result.getFinalAmount());
+                return ResultUtil.resultCode(200, "计算成功", result);
+            } else {
+                logger.warn("优惠券不可用: {}", result.getReason());
+                return ResultUtil.resultCode(400, result.getReason());
+            }
+
+        } catch (Exception e) {
+            logger.error("计算优惠券折扣失败", e);
+            return ResultUtil.resultCode(500, "计算失败: " + e.getMessage());
+        }
     }
 
 
