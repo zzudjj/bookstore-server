@@ -40,5 +40,10 @@ public class myConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/book/**")
                 .addResourceLocations("classpath:/static/image/book/")
                 .setCachePeriod(3600);
+
+        // 添加头像目录映射
+        registry.addResourceHandler("/avatar/**")
+                .addResourceLocations("classpath:/static/image/avatar/")
+                .setCachePeriod(3600);
     }
 }

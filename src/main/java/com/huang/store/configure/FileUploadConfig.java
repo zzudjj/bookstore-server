@@ -35,6 +35,11 @@ public class FileUploadConfig {
     private String topicPath = "image/topic/";
     
     /**
+     * 头像相对路径
+     */
+    private String avatarPath = "image/avatar/";
+
+    /**
      * 获取图书图片完整上传路径
      * @return 完整路径
      */
@@ -48,6 +53,14 @@ public class FileUploadConfig {
      */
     public String getTopicUploadPath() {
         return getAbsoluteBasePath() + topicPath;
+    }
+
+    /**
+     * 获取头像完整上传路径
+     * @return 完整路径
+     */
+    public String getAvatarUploadPath() {
+        return getAbsoluteBasePath() + avatarPath;
     }
 
     /**
@@ -122,14 +135,24 @@ public class FileUploadConfig {
         this.topicPath = topicPath;
     }
     
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+    
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+    
     @Override
     public String toString() {
         return "FileUploadConfig{" +
                 "basePath='" + basePath + '\'' +
                 ", bookPath='" + bookPath + '\'' +
                 ", topicPath='" + topicPath + '\'' +
+                ", avatarPath='" + avatarPath + '\'' +
                 ", bookUploadPath='" + getBookUploadPath() + '\'' +
                 ", topicUploadPath='" + getTopicUploadPath() + '\'' +
+                ", avatarUploadPath='" + getAvatarUploadPath() + '\'' +
                 '}';
     }
 }

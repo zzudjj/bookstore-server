@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huang.store.mapper.CommentMapper">
+
+    <!-- 添加评论 -->
+    <insert id="addComment" parameterType="com.huang.store.entity.book.BookComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO book_comment (bookId, userId, parentId, content, likeCount, createTime)
+        VALUES (#{bookId}, #{userId}, #{parentId}, #{content}, #{likeCount}, #{createTime})
+    </insert>
+
+    <!-- 更新评论 -->
+    <update id="updateComment" parameterType="com.huang.store.entity.book.BookComment">
+        UPDATE book_comment
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除评论 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM book_comment WHERE id = #{id}
+    </delete>
+
+    <!-- 根据ID获取评论 -->
+    <select id="getComment" resultType="com.huang.store.entity.book.BookComment">
+        SELECT * FROM book_comment WHERE id = #{id}
+    </select>
+
+    <!-- 根据图书ID分页获取评论 -->
+    <select id="getCommentsByBook" resultType="com.huang.store.entity.book.BookComment">
+        SELECT * FROM book_comment 
+        WHERE bookId = #{bookId} AND parentId IS NULL
+        ORDER BY createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 根据用户ID分页获取评论 -->
+    <select id="getCommentsByUser" resultType="com.huang.store.entity.book.BookComment">
+        SELECT * FROM book_comment 
+        WHERE userId = #{userId}
+        ORDER BY createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 根据父评论ID获取回复 -->
+    <select id="getRepliesByParent" resultType="com.huang.store.entity.book.BookComment">
+        SELECT * FROM book_comment 
+        WHERE parentId = #{parentId}
+        ORDER BY createTime ASC
+    </select>
+
+    <!-- 获取图书评论总数 -->
+    <select id="getCommentCountByBook" resultType="int">
+        SELECT COUNT(*) FROM book_comment WHERE bookId = #{bookId} AND parentId IS NULL
+    </select>
+
+    <!-- 获取用户评论总数 -->
+    <select id="getCommentCountByUser" resultType="int">
+        SELECT COUNT(*) FROM book_comment WHERE userId = #{userId}
+    </select>
+
+    <!-- 添加点赞记录 -->
+    <insert id="addLike" parameterType="com.huang.store.entity.book.CommentLike">
+        INSERT INTO comment_like (commentId, userId)
+        VALUES (#{commentId}, #{userId})
+    </insert>
+
+    <!-- 删除点赞记录 -->
+    <delete id="deleteLike">
+        DELETE FROM comment_like WHERE commentId = #{commentId} AND userId = #{userId}
+    </delete>
+
+    <!-- 检查是否已点赞 -->
+    <select id="hasLiked" resultType="int">
+        SELECT COUNT(*) FROM comment_like WHERE commentId = #{commentId} AND userId = #{userId}
+    </select>
+
+    <!-- 更新评论点赞数 -->
+    <update id="updateLikeCount">
+        UPDATE book_comment 
+        SET likeCount = likeCount + #{delta}
+        WHERE id = #{commentId}
+    </update>
+
+    <!-- 获取评论详情（包含用户和图书信息） -->
+    <select id="getCommentDetailsByBook" resultType="com.huang.store.entity.book.BookComment">
+        SELECT 
+            c.*,
+            u.name as userName,
+            u.imgUrl as userImgUrl,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN user u ON c.userId = u.id
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.bookId = #{bookId} AND c.parentId IS NULL
+        ORDER BY c.createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 获取单个评论详情 -->
+    <select id="getCommentDetail" resultType="com.huang.store.entity.book.BookComment">
+        SELECT 
+            c.*,
+            u.name as userName,
+            u.imgUrl as userImgUrl,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN user u ON c.userId = u.id
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.id = #{id}
+    </select>
+
+    <!-- 管理员获取所有评论 -->
+    <select id="getAllComments" resultType="com.huang.store.entity.book.BookComment">
+        SELECT 
+            c.*,
+            u.name as userName,
+            u.imgUrl as userImgUrl,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN user u ON c.userId = u.id
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.parentId IS NULL
+        ORDER BY c.createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 获取评论总数 -->
+    <select id="getTotalCommentCount" resultType="int">
+        SELECT COUNT(*) FROM book_comment WHERE parentId IS NULL
+    </select>
+
+</mapper> 

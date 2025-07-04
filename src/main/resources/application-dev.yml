@@ -150,4 +150,6 @@ file:
     book-path: image/book/
     # 书单封面相对路径
     topic-path: image/topic/
+    # 头像相对路径
+    avatar-path: image/avatar/
 

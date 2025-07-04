@@ -14,11 +14,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.huang.store.configure.FileUploadConfig;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import com.huang.store.util.JwtTokenUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
+import javax.servlet.http.HttpServletRequest;
+import com.huang.store.util.UploadUtil;
 
 @Controller
 @ResponseBody
@@ -36,6 +43,12 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private FileUploadConfig fileUploadConfig;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 //  ============= 注册 =====================
 
@@ -261,5 +274,63 @@ public class UserController {
             }
         }
         return ResultUtil.resultCode(500,"修改密码错误!请确认你输入了原先正确的密码");
+    }
+
+    /**
+     * 用户头像上传（从token获取用户信息）
+     */
+    @PostMapping("/user/uploadAvatar")
+    public Map<String, Object> uploadAvatar(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        // 从token获取用户账号
+        String account = getUserAccountFromToken(request);
+        if (account == null) {
+            return ResultUtil.resultCode(401, "用户未登录");
+        }
+        if (file.isEmpty()) {
+            return ResultUtil.resultCode(400, "文件为空");
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            return ResultUtil.resultCode(400, "只允许上传图片文件");
+        }
+        String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String fileName = UUID.randomUUID().toString() + ext;
+        String path = fileUploadConfig.getAvatarUploadPath();
+        String imgName = UploadUtil.uploadFile(file, path);
+        if ("上传失败".equals(imgName)) {
+            return ResultUtil.resultCode(500, "文件上传失败");
+        }
+        String imgUrl = fileUploadConfig.getAvatarPath() + imgName;
+        int update = userService.updateImg(account, imgUrl);
+        if (update > 0) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("imgUrl", imgUrl);
+            return ResultUtil.resultSuccess(data);
+        } else {
+            return ResultUtil.resultCode(500, "头像更新失败");
+        }
+    }
+
+    /**
+     * 从Token中获取用户账号
+     */
+    private String getUserAccountFromToken(HttpServletRequest request) {
+        try {
+            // 方法1：从SecurityContext中获取（推荐）
+            org.springframework.security.core.Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getName())) {
+                return authentication.getName();
+            }
+            // 方法2：直接从Authorization header获取token（兼容现有系统）
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && !authHeader.isEmpty()) {
+                return jwtTokenUtil.getUserNameFromToken(authHeader);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
