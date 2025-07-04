@@ -113,12 +113,14 @@ public class CommentController {
      * 获取当前用户评论列表
      * @param page 页码
      * @param pageSize 每页大小
+     * @param keyword 搜索关键词
      * @param request HTTP请求
      * @return
      */
     @GetMapping("/getMyComments")
     public Map<String, Object> getMyComments(@RequestParam(defaultValue = "1") int page,
                                              @RequestParam(defaultValue = "10") int pageSize,
+                                             @RequestParam(required = false) String keyword,
                                              HttpServletRequest request) {
         try {
             // 从Token中获取用户信息
@@ -133,13 +135,22 @@ public class CommentController {
                 return ResultUtil.resultCode(404, "用户不存在");
             }
             
-            logger.info("获取用户评论: userId={}, userAccount={}, page={}, pageSize={}", user.getId(), userAccount, page, pageSize);
-            
+            logger.info("获取用户评论: userId={}, userAccount={}, page={}, pageSize={}, keyword={}", user.getId(), userAccount, page, pageSize, keyword);
+
             Map<String, Object> result = new java.util.HashMap<>();
-            result.put("comments", commentService.getCommentsByUser(user.getId(), page, pageSize));
-            result.put("total", commentService.getCommentCountByUser(user.getId()));
+
+            // 根据是否有搜索关键词选择不同的查询方法
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                result.put("comments", commentService.searchCommentsByUser(user.getId(), keyword.trim(), page, pageSize));
+                result.put("total", commentService.getSearchCommentCountByUser(user.getId(), keyword.trim()));
+            } else {
+                result.put("comments", commentService.getCommentsByUser(user.getId(), page, pageSize));
+                result.put("total", commentService.getCommentCountByUser(user.getId()));
+            }
+
             result.put("page", page);
             result.put("pageSize", pageSize);
+            result.put("keyword", keyword);
             return ResultUtil.resultSuccess(result);
         } catch (Exception e) {
             logger.error("获取用户评论失败", e);
@@ -299,12 +310,14 @@ public class CommentController {
      * 管理员获取所有评论列表（需要管理员权限）
      * @param page 页码
      * @param pageSize 每页大小
+     * @param keyword 搜索关键词
      * @param request HTTP请求
      * @return
      */
     @GetMapping("/admin/getAllComments")
     public Map<String, Object> getAllComments(@RequestParam(defaultValue = "1") int page,
                                               @RequestParam(defaultValue = "10") int pageSize,
+                                              @RequestParam(required = false) String keyword,
                                               HttpServletRequest request) {
         try {
             // 从Token中获取用户信息
@@ -325,13 +338,22 @@ public class CommentController {
                 return ResultUtil.resultCode(403, "权限不足，需要管理员权限");
             }
             
-            logger.info("管理员获取所有评论: userAccount={}, page={}, pageSize={}", userAccount, page, pageSize);
-            
+            logger.info("管理员获取所有评论: userAccount={}, page={}, pageSize={}, keyword={}", userAccount, page, pageSize, keyword);
+
             Map<String, Object> result = new java.util.HashMap<>();
-            result.put("comments", commentService.getAllComments(page, pageSize));
-            result.put("total", commentService.getTotalCommentCount());
+
+            // 根据是否有搜索关键词选择不同的查询方法
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                result.put("comments", commentService.searchAllComments(keyword.trim(), page, pageSize));
+                result.put("total", commentService.getSearchCommentCount(keyword.trim()));
+            } else {
+                result.put("comments", commentService.getAllComments(page, pageSize));
+                result.put("total", commentService.getTotalCommentCount());
+            }
+
             result.put("page", page);
             result.put("pageSize", pageSize);
+            result.put("keyword", keyword);
             return ResultUtil.resultSuccess(result);
         } catch (Exception e) {
             logger.error("获取所有评论失败", e);

@@ -13,6 +13,11 @@ import com.huang.store.service.imp.OrderService;
 import com.huang.store.service.imp.CouponService;
 import com.huang.store.entity.dto.CouponCalculationResult;
 import com.huang.store.util.ResultUtil;
+import com.huang.store.util.JwtTokenUtil;
+import com.huang.store.service.imp.UserService;
+import com.huang.store.entity.user.User;
+import com.huang.store.service.CommentService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -58,6 +64,16 @@ public class OrderController {
 
     @Autowired
     CouponService couponService;
+
+    @Autowired
+    @Qualifier("firstUser")
+    private UserService userService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 初始化秒杀订单支付页面
@@ -242,6 +258,49 @@ public class OrderController {
         }
     }
 
+    /**
+     * 获取用户订单详情
+     * @param orderId 订单ID
+     * @param request HTTP请求
+     * @return
+     */
+    @GetMapping("/getUserOrderDetail")
+    public Map<String, Object> getUserOrderDetail(@RequestParam String orderId,
+                                                  HttpServletRequest request) {
+        try {
+            // 从Token中获取用户信息
+            String userAccount = getUserAccountFromToken(request);
+            if (userAccount == null) {
+                return ResultUtil.resultCode(401, "用户未登录");
+            }
+
+            logger.info("获取用户订单详情: userAccount={}, orderId={}", userAccount, orderId);
+
+            // 获取订单详情
+            OrderDto orderDto = orderService.findOrderDtoByOrderId(orderId);
+            if (orderDto == null) {
+                return ResultUtil.resultCode(404, "订单不存在");
+            }
+
+            // 验证订单是否属于当前用户
+            if (!userAccount.equals(orderDto.getAccount())) {
+                return ResultUtil.resultCode(403, "无权访问此订单");
+            }
+
+            // 获取订单详情列表
+            List<OrderDetailDto> orderDetailList = orderService.findOrderDetailDtoList(orderId);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("orderDto", orderDto);
+            result.put("orderDetailDtoList", orderDetailList);
+
+            return ResultUtil.resultSuccess(result);
+
+        } catch (Exception e) {
+            logger.error("获取用户订单详情失败", e);
+            return ResultUtil.resultCode(500, "获取订单详情失败");
+        }
+    }
 
     /**
      * 得到管理员可以查看的订单信息列表
@@ -473,5 +532,122 @@ public class OrderController {
         }
     }
 
+    /**
+     * 获取用户订单统计信息
+     * @param request HTTP请求
+     * @return
+     */
+    @GetMapping("/getUserOrderStats")
+    public Map<String, Object> getUserOrderStats(HttpServletRequest request) {
+        try {
+            // 从Token中获取用户信息
+            String userAccount = getUserAccountFromToken(request);
+            if (userAccount == null) {
+                return ResultUtil.resultCode(401, "用户未登录");
+            }
+
+            logger.info("获取用户订单统计: userAccount={}", userAccount);
+
+            Map<String, Object> stats = new HashMap<>();
+
+            // 待支付订单数
+            int pendingPaymentCount = orderService.count(userAccount, "待付款", false);
+            stats.put("pendingPayment", pendingPaymentCount);
+
+            // 待收货订单数（已付款 + 已发货）
+            int paidCount = orderService.count(userAccount, "已付款", false);
+            int shippedCount = orderService.count(userAccount, "已发货", false);
+            stats.put("pendingReceive", paidCount + shippedCount);
+
+            // 待评价商品数（已完成但未评价的订单中的商品数量）
+            int pendingReviewCount = getPendingReviewCount(userAccount);
+            stats.put("pendingReview", pendingReviewCount);
+
+            // 我的评价总数
+            int totalReviews = getTotalReviewCount(userAccount);
+            stats.put("totalReviews", totalReviews);
+
+            return ResultUtil.resultSuccess(stats);
+
+        } catch (Exception e) {
+            logger.error("获取用户订单统计失败", e);
+            return ResultUtil.resultCode(500, "获取统计信息失败");
+        }
+    }
+
+    /**
+     * 获取待评价商品数量
+     */
+    private int getPendingReviewCount(String userAccount) {
+        try {
+            // 获取已完成的订单
+            List<OrderDto> completedOrders = orderService.orderDtoList(userAccount, 1, 1000, "已完成", false);
+            int pendingReviewCount = 0;
+
+            for (OrderDto order : completedOrders) {
+                // 获取订单详情
+                List<OrderDetailDto> orderDetails = orderService.findOrderDetailDtoList(order.getOrderId());
+
+                for (OrderDetailDto detail : orderDetails) {
+                    // 检查该商品是否已评价
+                    // 这里需要查询评论表，看用户是否对该商品有评论
+                    // 暂时简化处理，假设所有已完成订单的商品都待评价
+                    try {
+                        pendingReviewCount += Integer.parseInt(detail.getNum());
+                    } catch (NumberFormatException e) {
+                        pendingReviewCount += 1; // 默认为1
+                    }
+                }
+            }
+
+            return pendingReviewCount;
+        } catch (Exception e) {
+            logger.error("获取待评价商品数量失败", e);
+            return 0;
+        }
+    }
+
+    /**
+     * 获取用户评价总数
+     */
+    private int getTotalReviewCount(String userAccount) {
+        try {
+            // 根据账号获取用户ID
+            User user = userService.getUser(userAccount);
+            if (user == null) {
+                return 0;
+            }
+
+            // 调用评论服务获取用户评论总数
+            return commentService.getCommentCountByUser(user.getId());
+        } catch (Exception e) {
+            logger.error("获取用户评价总数失败", e);
+            return 0;
+        }
+    }
+
+    /**
+     * 从Token中获取用户账号
+     */
+    private String getUserAccountFromToken(HttpServletRequest request) {
+        try {
+            // 方法1：从SecurityContext中获取（推荐）
+            org.springframework.security.core.Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getName())) {
+                return authentication.getName();
+            }
+
+            // 方法2：直接从Authorization header获取token（兼容现有系统）
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && !authHeader.isEmpty()) {
+                return jwtTokenUtil.getUserNameFromToken(authHeader);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

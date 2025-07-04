@@ -35,9 +35,13 @@
 
     <!-- 根据用户ID分页获取评论 -->
     <select id="getCommentsByUser" resultType="com.huang.store.entity.book.BookComment">
-        SELECT * FROM book_comment 
-        WHERE userId = #{userId}
-        ORDER BY createTime DESC
+        SELECT
+            c.*,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.userId = #{userId} AND c.parentId IS NULL
+        ORDER BY c.createTime DESC
         LIMIT #{page}, #{pageSize}
     </select>
 
@@ -129,4 +133,74 @@
         SELECT COUNT(*) FROM book_comment WHERE parentId IS NULL
     </select>
 
-</mapper> 
+    <!-- 管理员搜索所有评论 -->
+    <select id="searchAllComments" resultType="com.huang.store.entity.book.BookComment">
+        SELECT
+            c.*,
+            u.name as userName,
+            u.imgUrl as userImgUrl,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN user u ON c.userId = u.id
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.parentId IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (
+                u.name LIKE CONCAT('%', #{keyword}, '%') OR
+                b.bookName LIKE CONCAT('%', #{keyword}, '%') OR
+                c.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY c.createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 获取搜索评论总数 -->
+    <select id="getSearchCommentCount" resultType="int">
+        SELECT COUNT(*)
+        FROM book_comment c
+        LEFT JOIN user u ON c.userId = u.id
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.parentId IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (
+                u.name LIKE CONCAT('%', #{keyword}, '%') OR
+                b.bookName LIKE CONCAT('%', #{keyword}, '%') OR
+                c.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+    </select>
+
+    <!-- 用户搜索自己的评论 -->
+    <select id="searchCommentsByUser" resultType="com.huang.store.entity.book.BookComment">
+        SELECT
+            c.*,
+            b.bookName as bookName
+        FROM book_comment c
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.userId = #{userId} AND c.parentId IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (
+                b.bookName LIKE CONCAT('%', #{keyword}, '%') OR
+                c.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY c.createTime DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 获取用户搜索评论总数 -->
+    <select id="getSearchCommentCountByUser" resultType="int">
+        SELECT COUNT(*)
+        FROM book_comment c
+        LEFT JOIN book b ON c.bookId = b.id
+        WHERE c.userId = #{userId} AND c.parentId IS NULL
+        <if test="keyword != null and keyword != ''">
+            AND (
+                b.bookName LIKE CONCAT('%', #{keyword}, '%') OR
+                c.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+    </select>
+
+</mapper>

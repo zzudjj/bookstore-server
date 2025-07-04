@@ -32,5 +32,11 @@ public interface CommentMapper {
     
     // 管理员相关操作
     List<BookComment> getAllComments(int page, int pageSize);
+    List<BookComment> searchAllComments(String keyword, int page, int pageSize);
     int getTotalCommentCount();
+    int getSearchCommentCount(String keyword);
+
+    // 用户搜索相关操作
+    List<BookComment> searchCommentsByUser(int userId, String keyword, int page, int pageSize);
+    int getSearchCommentCountByUser(int userId, String keyword);
 } 

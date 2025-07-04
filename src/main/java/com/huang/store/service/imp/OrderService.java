@@ -37,6 +37,8 @@ public interface OrderService {
 
     OrderDto findOrderDto(int id);//得到某个订单的所有信息明细
 
+    OrderDto findOrderDtoByOrderId(String orderId);//根据订单ID得到订单信息明细
+
     List<OrderDetailDto> findOrderDetailDtoList(String orderId);//批量得到指定订单所有图书的明细信息
 
     //按页得到所有订单的明细 这里需要根据userId判断是否是管理员

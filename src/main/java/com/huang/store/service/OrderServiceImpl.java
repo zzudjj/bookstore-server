@@ -433,6 +433,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDto findOrderDtoByOrderId(String orderId) {
+        return orderMapper.findOrderDtoByOrderId(orderId);
+    }
+
+    @Override
     public List<OrderDetailDto> findOrderDetailDtoList(String orderId) {
         return orderMapper.findOrderDetailDtoList(orderId);
     }

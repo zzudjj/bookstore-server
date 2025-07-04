@@ -52,7 +52,15 @@ public class CommentServiceImp implements CommentService {
     @Override
     public List<BookComment> getCommentsByUser(int userId, int page, int pageSize) {
         int start = (page - 1) * pageSize;
-        return commentMapper.getCommentsByUser(userId, start, pageSize);
+        List<BookComment> comments = commentMapper.getCommentsByUser(userId, start, pageSize);
+
+        // 为每个评论获取回复
+        for (BookComment comment : comments) {
+            List<BookComment> replies = commentMapper.getRepliesByParent(comment.getId());
+            comment.setReplies(replies);
+        }
+
+        return comments;
     }
 
     @Override
@@ -170,7 +178,37 @@ public class CommentServiceImp implements CommentService {
     }
 
     @Override
+    public List<BookComment> searchAllComments(String keyword, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        return commentMapper.searchAllComments(keyword, start, pageSize);
+    }
+
+    @Override
     public int getTotalCommentCount() {
         return commentMapper.getTotalCommentCount();
+    }
+
+    @Override
+    public int getSearchCommentCount(String keyword) {
+        return commentMapper.getSearchCommentCount(keyword);
+    }
+
+    @Override
+    public List<BookComment> searchCommentsByUser(int userId, String keyword, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        List<BookComment> comments = commentMapper.searchCommentsByUser(userId, keyword, start, pageSize);
+
+        // 为每个评论获取回复
+        for (BookComment comment : comments) {
+            List<BookComment> replies = commentMapper.getRepliesByParent(comment.getId());
+            comment.setReplies(replies);
+        }
+
+        return comments;
+    }
+
+    @Override
+    public int getSearchCommentCountByUser(int userId, String keyword) {
+        return commentMapper.getSearchCommentCountByUser(userId, keyword);
     }
 } 

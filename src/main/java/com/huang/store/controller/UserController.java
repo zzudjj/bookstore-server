@@ -333,4 +333,95 @@ public class UserController {
             return null;
         }
     }
+
+    /**
+     * 更新用户信息
+     */
+    @PostMapping("/updateUserInfo")
+    public Map<String, Object> updateUserInfo(@RequestBody Map<String, Object> userInfo, HttpServletRequest request) {
+        try {
+            String userAccount = getUserAccountFromToken(request);
+            if (userAccount == null) {
+                return ResultUtil.resultCode(401, "用户未登录");
+            }
+
+            logger.info("更新用户信息: userAccount={}, userInfo={}", userAccount, userInfo);
+
+            // 获取当前用户
+            User user = userService.getUser(userAccount);
+            if (user == null) {
+                return ResultUtil.resultCode(404, "用户不存在");
+            }
+
+            // 更新用户信息
+            if (userInfo.containsKey("name")) {
+                user.setName((String) userInfo.get("name"));
+            }
+            if (userInfo.containsKey("gender")) {
+                user.setGender((String) userInfo.get("gender"));
+            }
+            if (userInfo.containsKey("info")) {
+                user.setInfo((String) userInfo.get("info"));
+            }
+
+            // 保存更新
+            int result = userService.updateUser(user);
+            if (result > 0) {
+                return ResultUtil.resultCode(200, "用户信息更新成功");
+            } else {
+                return ResultUtil.resultCode(500, "更新失败");
+            }
+
+        } catch (Exception e) {
+            logger.error("更新用户信息失败", e);
+            return ResultUtil.resultCode(500, "更新失败");
+        }
+    }
+
+    /**
+     * 修改密码
+     */
+    @PostMapping("/updatePassword")
+    public Map<String, Object> updatePassword(@RequestBody Map<String, Object> passwordInfo, HttpServletRequest request) {
+        try {
+            String userAccount = getUserAccountFromToken(request);
+            if (userAccount == null) {
+                return ResultUtil.resultCode(401, "用户未登录");
+            }
+
+            String oldPassword = (String) passwordInfo.get("oldPassword");
+            String newPassword = (String) passwordInfo.get("newPassword");
+
+            if (oldPassword == null || newPassword == null) {
+                return ResultUtil.resultCode(400, "密码不能为空");
+            }
+
+            logger.info("修改密码: userAccount={}", userAccount);
+
+            // 获取当前用户
+            User user = userService.getUser(userAccount);
+            if (user == null) {
+                return ResultUtil.resultCode(404, "用户不存在");
+            }
+
+            // 验证旧密码
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                return ResultUtil.resultCode(400, "当前密码错误");
+            }
+
+            // 更新密码
+            user.setPassword(passwordEncoder.encode(newPassword));
+            int result = userService.updateUser(user);
+
+            if (result > 0) {
+                return ResultUtil.resultCode(200, "密码修改成功");
+            } else {
+                return ResultUtil.resultCode(500, "密码修改失败");
+            }
+
+        } catch (Exception e) {
+            logger.error("修改密码失败", e);
+            return ResultUtil.resultCode(500, "密码修改失败");
+        }
+    }
 }
