@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS `bookstore`;
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS `bookstore`
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
 create table about
 (
     id         int auto_increment comment '主键ID (固定为1)'

@@ -47852,3 +47852,153 @@ Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'b.coverImg' in 'fie
 2025-07-04 11:03:49.933 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - ==> Parameters: 50(Integer)
 2025-07-04 11:03:49.934 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - <==      Total: 0
 2025-07-04 11:03:49.934 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 没有发现超时订单
+2025-07-04 11:05:26.658 [Thread-51] INFO  org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:05:26.658 [Thread-51] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-07-04 11:05:26.660 [Thread-51] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Create-1909771163] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.8/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1623)
+ app//com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:2921)
+2025-07-04 11:05:26.660 [Thread-51] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Destroy-1909771163] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/java.lang.Thread.sleep(Native Method)
+ app//com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread.run(DruidDataSource.java:3020)
+2025-07-04 11:05:26.661 [Thread-51] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Create-303414370] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.8/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1623)
+ app//com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:2921)
+2025-07-04 11:05:26.661 [Thread-51] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Destroy-303414370] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/java.lang.Thread.sleep(Native Method)
+ app//com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread.run(DruidDataSource.java:3020)
+2025-07-04 11:05:26.661 [Thread-51] INFO  org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:05:26.662 [Thread-51] INFO  org.apache.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:05:26.665 [Thread-51] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-17} closing ...
+2025-07-04 11:05:26.665 [Thread-51] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-17} closed
+2025-07-04 11:05:26.665 [Thread-51] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-18} closing ...
+2025-07-04 11:05:26.666 [Thread-51] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-18} closed
+2025-07-04 11:05:26.720 [restartedMain] INFO  com.huang.store.StoreApplication - Starting StoreApplication using Java 17.0.8 on djj with PID 10480 (D:\project_home\software-project\bookStore-Springboot-Vue\bookstore_server\target\classes started by 86131 in D:\project_home\software-project\bookStore-Springboot-Vue\bookstore_server)
+2025-07-04 11:05:26.720 [restartedMain] DEBUG com.huang.store.StoreApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2025-07-04 11:05:26.720 [restartedMain] INFO  com.huang.store.StoreApplication - The following 1 profile is active: "dev"
+2025-07-04 11:05:26.821 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-04 11:05:26.822 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-04 11:05:26.829 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+2025-07-04 11:05:26.855 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.huang.store.config.ValidationConfig$$EnhancerBySpringCGLIB$$80340cd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-07-04 11:05:26.858 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-07-04 11:05:26.896 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-07-04 11:05:26.896 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.7] using APR version [1.7.4].
+2025-07-04 11:05:26.896 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true], UDS [true].
+2025-07-04 11:05:26.896 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2025-07-04 11:05:26.897 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+2025-07-04 11:05:26.897 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:05:26.897 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-04 11:05:26.897 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-07-04 11:05:26.909 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-04 11:05:26.909 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 189 ms
+2025-07-04 11:05:26.910 [restartedMain] INFO  com.huang.store.configure.DruidConfiguration - init Druid Servlet Configuration 
+2025-07-04 11:05:26.967 [restartedMain] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-19} inited
+2025-07-04 11:05:26.981 [restartedMain] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-20} inited
+2025-07-04 11:05:27.067 [restartedMain] DEBUG c.h.store.security.JwtAuthenticationTokenFilter - Filter 'jwtAuthenticationTokenFilter' configured for use
+2025-07-04 11:05:27.067 [restartedMain] DEBUG c.huang.store.security.CustomAuthenticationFilter - Filter 'CAFilter' configured for use
+2025-07-04 11:05:27.176 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-07-04 11:05:27.225 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@51c433d5, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5e4d9000, org.springframework.security.web.context.SecurityContextPersistenceFilter@6269a43e, org.springframework.security.web.header.HeaderWriterFilter@496f3fb2, org.springframework.web.filter.CorsFilter@1b72a6a2, org.springframework.security.web.authentication.logout.LogoutFilter@77d7b277, com.huang.store.security.JwtAuthenticationTokenFilter@16abdd6e, com.huang.store.security.CustomAuthenticationFilter@cda5b26, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@50255d5a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@56387d02, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@661a4ad8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@18a43a60, org.springframework.security.web.session.SessionManagementFilter@44ef4f67, org.springframework.security.web.access.ExceptionTranslationFilter@29a3b8c1, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@20b40f6a]
+2025-07-04 11:05:27.315 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35730
+2025-07-04 11:05:27.322 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:05:27.323 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-07-04 11:05:27.326 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 开始检查超时订单...
+2025-07-04 11:05:27.326 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - ==>  Preparing: SELECT * FROM order_config WHERE config_key = ?
+2025-07-04 11:05:27.326 [restartedMain] INFO  com.huang.store.StoreApplication - Started StoreApplication in 0.625 seconds (JVM running for 4151.193)
+2025-07-04 11:05:27.326 [scheduling-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-04 11:05:27.326 [scheduling-1] INFO  ShardingSphere-SQL - SQL: SELECT * FROM order_config WHERE config_key = ? ::: DataSources: slave
+2025-07-04 11:05:27.327 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - ==> Parameters: normal_payment_timeout(String)
+2025-07-04 11:05:27.330 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - <==      Total: 1
+2025-07-04 11:05:27.330 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 使用配置的超时时间: 50分钟
+2025-07-04 11:05:27.332 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - ==>  Preparing: SELECT * FROM bookorder WHERE orderStatus = '待付款' AND TIMESTAMPDIFF(MINUTE, orderTime, NOW()) > ? ORDER BY orderTime ASC
+2025-07-04 11:05:27.332 [scheduling-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-04 11:05:27.332 [scheduling-1] INFO  ShardingSphere-SQL - SQL: SELECT * FROM bookorder
+        WHERE orderStatus = '待付款'
+        AND TIMESTAMPDIFF(MINUTE, orderTime, NOW()) > ?
+        ORDER BY orderTime ASC ::: DataSources: slave
+2025-07-04 11:05:27.333 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - ==> Parameters: 50(Integer)
+2025-07-04 11:05:27.334 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - <==      Total: 0
+2025-07-04 11:05:27.334 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 没有发现超时订单
+2025-07-04 11:07:35.253 [Thread-57] INFO  org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:07:35.253 [Thread-57] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-07-04 11:07:35.256 [Thread-57] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Create-1628966959] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.8/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1623)
+ app//com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:2921)
+2025-07-04 11:07:35.256 [Thread-57] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Destroy-1628966959] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/java.lang.Thread.sleep(Native Method)
+ app//com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread.run(DruidDataSource.java:3020)
+2025-07-04 11:07:35.257 [Thread-57] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Create-1338854562] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.8/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+ java.base@17.0.8/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+ java.base@17.0.8/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1623)
+ app//com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:2921)
+2025-07-04 11:07:35.257 [Thread-57] WARN  org.apache.catalina.loader.WebappClassLoaderBase - The web application [ROOT] appears to have started a thread named [Druid-ConnectionPool-Destroy-1338854562] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.8/java.lang.Thread.sleep(Native Method)
+ app//com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread.run(DruidDataSource.java:3020)
+2025-07-04 11:07:35.257 [Thread-57] INFO  org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:07:35.259 [Thread-57] INFO  org.apache.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:07:35.263 [Thread-57] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-19} closing ...
+2025-07-04 11:07:35.264 [Thread-57] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-19} closed
+2025-07-04 11:07:35.264 [Thread-57] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-20} closing ...
+2025-07-04 11:07:35.265 [Thread-57] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-20} closed
+2025-07-04 11:07:35.324 [restartedMain] INFO  com.huang.store.StoreApplication - Starting StoreApplication using Java 17.0.8 on djj with PID 10480 (D:\project_home\software-project\bookStore-Springboot-Vue\bookstore_server\target\classes started by 86131 in D:\project_home\software-project\bookStore-Springboot-Vue\bookstore_server)
+2025-07-04 11:07:35.324 [restartedMain] DEBUG com.huang.store.StoreApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2025-07-04 11:07:35.324 [restartedMain] INFO  com.huang.store.StoreApplication - The following 1 profile is active: "dev"
+2025-07-04 11:07:35.509 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-04 11:07:35.509 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-04 11:07:35.523 [restartedMain] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2025-07-04 11:07:35.577 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.huang.store.config.ValidationConfig$$EnhancerBySpringCGLIB$$80340cd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-07-04 11:07:35.581 [restartedMain] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-07-04 11:07:35.620 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2025-07-04 11:07:35.620 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - Loaded Apache Tomcat Native library [2.0.7] using APR version [1.7.4].
+2025-07-04 11:07:35.620 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true], UDS [true].
+2025-07-04 11:07:35.620 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2025-07-04 11:07:35.620 [restartedMain] INFO  org.apache.catalina.core.AprLifecycleListener - OpenSSL successfully initialized [OpenSSL 3.0.13 30 Jan 2024]
+2025-07-04 11:07:35.620 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:07:35.621 [restartedMain] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-04 11:07:35.621 [restartedMain] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2025-07-04 11:07:35.631 [restartedMain] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-04 11:07:35.631 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 306 ms
+2025-07-04 11:07:35.633 [restartedMain] INFO  com.huang.store.configure.DruidConfiguration - init Druid Servlet Configuration 
+2025-07-04 11:07:35.693 [restartedMain] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-21} inited
+2025-07-04 11:07:35.705 [restartedMain] INFO  com.alibaba.druid.pool.DruidDataSource - {dataSource-22} inited
+2025-07-04 11:07:35.797 [restartedMain] DEBUG c.h.store.security.JwtAuthenticationTokenFilter - Filter 'jwtAuthenticationTokenFilter' configured for use
+2025-07-04 11:07:35.797 [restartedMain] DEBUG c.huang.store.security.CustomAuthenticationFilter - Filter 'CAFilter' configured for use
+2025-07-04 11:07:35.912 [restartedMain] INFO  o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-07-04 11:07:35.966 [restartedMain] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@51e8f428, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3a185659, org.springframework.security.web.context.SecurityContextPersistenceFilter@5cc5b634, org.springframework.security.web.header.HeaderWriterFilter@b35fa2e, org.springframework.web.filter.CorsFilter@22766a08, org.springframework.security.web.authentication.logout.LogoutFilter@ad25245, com.huang.store.security.JwtAuthenticationTokenFilter@7a719dea, com.huang.store.security.CustomAuthenticationFilter@319a68ba, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@31ca5e50, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@16dd68ba, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@321d04c5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@dc5b25e, org.springframework.security.web.session.SessionManagementFilter@5d329625, org.springframework.security.web.access.ExceptionTranslationFilter@3a2e0f91, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@696ebc5e]
+2025-07-04 11:07:36.075 [restartedMain] INFO  o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35730
+2025-07-04 11:07:36.082 [restartedMain] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-07-04 11:07:36.085 [restartedMain] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2025-07-04 11:07:36.089 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 开始检查超时订单...
+2025-07-04 11:07:36.090 [restartedMain] INFO  com.huang.store.StoreApplication - Started StoreApplication in 0.788 seconds (JVM running for 4279.956)
+2025-07-04 11:07:36.090 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - ==>  Preparing: SELECT * FROM order_config WHERE config_key = ?
+2025-07-04 11:07:36.090 [scheduling-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-04 11:07:36.090 [scheduling-1] INFO  ShardingSphere-SQL - SQL: SELECT * FROM order_config WHERE config_key = ? ::: DataSources: slave
+2025-07-04 11:07:36.090 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - ==> Parameters: normal_payment_timeout(String)
+2025-07-04 11:07:36.092 [scheduling-1] DEBUG com.huang.store.mapper.OrderConfigMapper.getByKey - <==      Total: 1
+2025-07-04 11:07:36.092 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 使用配置的超时时间: 50分钟
+2025-07-04 11:07:36.095 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - ==>  Preparing: SELECT * FROM bookorder WHERE orderStatus = '待付款' AND TIMESTAMPDIFF(MINUTE, orderTime, NOW()) > ? ORDER BY orderTime ASC
+2025-07-04 11:07:36.095 [scheduling-1] INFO  ShardingSphere-SQL - Rule Type: master-slave
+2025-07-04 11:07:36.095 [scheduling-1] INFO  ShardingSphere-SQL - SQL: SELECT * FROM bookorder
+        WHERE orderStatus = '待付款'
+        AND TIMESTAMPDIFF(MINUTE, orderTime, NOW()) > ?
+        ORDER BY orderTime ASC ::: DataSources: slave
+2025-07-04 11:07:36.096 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - ==> Parameters: 50(Integer)
+2025-07-04 11:07:36.097 [scheduling-1] DEBUG c.h.s.mapper.OrderMapper.findTimeoutPendingOrders - <==      Total: 0
+2025-07-04 11:07:36.098 [scheduling-1] DEBUG com.huang.store.service.OrderTimeoutService - 没有发现超时订单
