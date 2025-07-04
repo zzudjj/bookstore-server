@@ -34,6 +34,16 @@ public interface BookMapper {
     int getBookCount();//得到图书的数量
     List<Book> getPublishBooks(String publishName);//得到某一个出版社的所有图书
 
+    // 图书搜索相关方法
+    List<Book> searchBooks(String keyword, int page, int pageSize);//根据关键字搜索图书（书名、作者、ISBN、出版社）
+    int getSearchBookCount(String keyword);//获取搜索结果总数
+
+    // 统计相关方法
+    int count();//获取图书总数
+    int getTotalStock();//获取总库存
+    int getLowStockCount(@Param("threshold") int threshold);//获取低库存商品数量
+    List<Book> getLowStockBooks(@Param("threshold") int threshold, @Param("page") int page, @Param("pageSize") int pageSize);//获取低库存商品列表
+
 
 
     //对于bookimg表的操作
@@ -50,7 +60,7 @@ public interface BookMapper {
     int modifyRecommendRank(int bookId,int rank);
     int modifyRecommend(Recommend recommend);
     int hasExistInRec(int bookId);
-    List<Book> getRecommendsByPage(int page,int pageSize);
+    List<Book> getRecommendsByPage(@Param("page") int page, @Param("pageSize") int pageSize);
 
     //对于新品推荐的操作
     int addToNewProduct(Recommend newProduct);
@@ -58,7 +68,7 @@ public interface BookMapper {
     int modifyNewProductRank(int bookId,int rank);
     int modifyNewProduct(Recommend newProduct);
     int hasExistInNew(int bookId);
-    List<Book> getNewProductsByPage(int page,int pageSize);
+    List<Book> getNewProductsByPage(@Param("page") int page, @Param("pageSize") int pageSize);
 
 
     //添加图书到分类

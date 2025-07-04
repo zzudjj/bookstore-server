@@ -11,7 +11,7 @@
 
     <!--这些是对书单类的一些操作-->
     <insert id="addBookTopic" parameterType="com.huang.store.entity.book.BookTopic">
-        insert into booktopic (topicName,subTitle,cover,rank,put)
+        insert into booktopic (topicName,subTitle,cover,`rank`,put)
             values (#{topicName},#{subTitle},#{cover},#{rank},#{put})
     </insert>
 
@@ -27,7 +27,7 @@
                 <if test="topicName != null">topicName=#{topicName},</if>
                 <if test="subTitle != null">subTitle=#{subTitle},</if>
                 <if test="cover != null">cover=#{cover},</if>
-                <if test="rank != null">rank=#{rank},</if>
+                <if test="rank != null">`rank`=#{rank},</if>
                 <if test="put != null">put=#{put}</if>
             </set>
         where id=#{id}

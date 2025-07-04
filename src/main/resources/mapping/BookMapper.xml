@@ -324,5 +324,50 @@
 <!--        </foreach>-->
 <!--    </select>-->
 
+    <!-- 图书搜索相关查询 -->
+    <select id="searchBooks" resultType="com.huang.store.entity.book.Book">
+        SELECT * FROM book
+        WHERE put = 1
+        AND (
+            bookName LIKE CONCAT('%', #{keyword}, '%')
+            OR author LIKE CONCAT('%', #{keyword}, '%')
+            OR isbn LIKE CONCAT('%', #{keyword}, '%')
+            OR publish LIKE CONCAT('%', #{keyword}, '%')
+        )
+        ORDER BY `rank` DESC, book.id DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <select id="getSearchBookCount" resultType="int">
+        SELECT COUNT(*) FROM book
+        WHERE put = 1
+        AND (
+            bookName LIKE CONCAT('%', #{keyword}, '%')
+            OR author LIKE CONCAT('%', #{keyword}, '%')
+            OR isbn LIKE CONCAT('%', #{keyword}, '%')
+            OR publish LIKE CONCAT('%', #{keyword}, '%')
+        )
+    </select>
+
+    <!-- 统计相关查询 -->
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM book
+    </select>
+
+    <select id="getTotalStock" resultType="int">
+        SELECT COALESCE(SUM(stock), 0) FROM book
+    </select>
+
+    <select id="getLowStockCount" resultType="int">
+        SELECT COUNT(*) FROM book
+        WHERE stock &lt;= #{threshold}
+    </select>
+
+    <select id="getLowStockBooks" resultType="com.huang.store.entity.book.Book">
+        SELECT * FROM book
+        WHERE stock &lt;= #{threshold}
+        ORDER BY stock ASC, id DESC
+        LIMIT #{page}, #{pageSize}
+    </select>
 
 </mapper>

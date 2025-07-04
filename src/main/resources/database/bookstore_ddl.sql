@@ -129,25 +129,43 @@ CREATE TABLE `publish` (
 -- 书单相关表
 -- ========================================
 
--- 书单主题表
-CREATE TABLE `booktopic` (
-                             `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '书单编号',
-                             `topicName` varchar(255) NOT NULL COMMENT '书单名称',
-                             `subTitle` varchar(255) DEFAULT NULL COMMENT '副标题',
-                             `cover` varchar(255) DEFAULT NULL COMMENT '封面图片',
-                             `rank` int(11) DEFAULT '0' COMMENT '排序权重',
-                             `put` tinyint(1) DEFAULT '1' COMMENT '是否上架',
-                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='书单主题表';
+-- 删除旧表，避免冲突
+DROP TABLE IF EXISTS `subbooktopic`;
+DROP TABLE IF EXISTS `booktopic`;
 
--- 书单图书关联表
-CREATE TABLE `subbooktopic` (
-                                `topicId` int(11) NOT NULL COMMENT '书单ID',
-                                `bookId` int(11) NOT NULL COMMENT '图书ID',
-                                `recommendReason` text COMMENT '推荐理由',
-                                PRIMARY KEY (`topicId`, `bookId`),
-                                KEY `idx_bookId` (`bookId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='书单图书关联表';
+-- 新书单主题表（Topic）
+CREATE TABLE `topic` (
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '书单ID',
+    `title` varchar(255) NOT NULL COMMENT '书单标题',
+    `subTitle` varchar(255) DEFAULT NULL COMMENT '副标题',
+    `cover` varchar(1024) DEFAULT NULL COMMENT '封面图片',
+    `rank` int(11) DEFAULT 0 COMMENT '排序权重',
+    `status` tinyint(1) DEFAULT 1 COMMENT '是否上架(1=上架)',
+    `viewCnt` int(11) DEFAULT 0 COMMENT '浏览量',
+    `favCnt` int(11) DEFAULT 0 COMMENT '收藏量',
+    `orderCnt` int(11) DEFAULT 0 COMMENT '成交量',
+    `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='书单表';
+
+-- 书单条目表（Topic Item）
+CREATE TABLE `topic_item` (
+    `topicId` int(11) NOT NULL COMMENT '书单ID',
+    `bookId` int(11) NOT NULL COMMENT '图书ID',
+    `recommendReason` text COMMENT '推荐理由',
+    `orderNo` int(11) DEFAULT 0 COMMENT '条目排序',
+    PRIMARY KEY (`topicId`,`bookId`),
+    KEY `idx_bookId` (`bookId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='书单条目表';
+
+-- 书单收藏表（Topic Fav）
+CREATE TABLE `topic_fav` (
+    `userAccount` varchar(100) NOT NULL COMMENT '用户账号',
+    `topicId` int(11) NOT NULL COMMENT '书单ID',
+    `favAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+    PRIMARY KEY (`userAccount`,`topicId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='书单收藏表';
 
 -- ========================================
 -- 订单相关表
@@ -256,8 +274,8 @@ ALTER TABLE `cart` ADD CONSTRAINT `fk_cart_book` FOREIGN KEY (`id`) REFERENCES `
 ALTER TABLE `bookimg` ADD CONSTRAINT `fk_bookimg_book` FOREIGN KEY (`isbn`) REFERENCES `book` (`isbn`) ON DELETE CASCADE;
 ALTER TABLE `booksortlist` ADD CONSTRAINT `fk_booksortlist_sort` FOREIGN KEY (`bookSortId`) REFERENCES `booksort` (`id`) ON DELETE CASCADE;
 ALTER TABLE `booksortlist` ADD CONSTRAINT `fk_booksortlist_book` FOREIGN KEY (`bookId`) REFERENCES `book` (`id`) ON DELETE CASCADE;
-ALTER TABLE `subbooktopic` ADD CONSTRAINT `fk_subbooktopic_topic` FOREIGN KEY (`topicId`) REFERENCES `booktopic` (`id`) ON DELETE CASCADE;
-ALTER TABLE `subbooktopic` ADD CONSTRAINT `fk_subbooktopic_book` FOREIGN KEY (`bookId`) REFERENCES `book` (`id`) ON DELETE CASCADE;
+ALTER TABLE `topic_item` ADD CONSTRAINT `fk_topic_item_topic` FOREIGN KEY (`topicId`) REFERENCES `topic` (`id`) ON DELETE CASCADE;
+ALTER TABLE `topic_item` ADD CONSTRAINT `fk_topic_item_book` FOREIGN KEY (`bookId`) REFERENCES `book` (`id`) ON DELETE CASCADE;
 ALTER TABLE `bookorder` ADD CONSTRAINT `fk_bookorder_user` FOREIGN KEY (`account`) REFERENCES `user` (`account`) ON DELETE CASCADE;
 ALTER TABLE `bookorder` ADD CONSTRAINT `fk_bookorder_address` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`);
 ALTER TABLE `orderdetail` ADD CONSTRAINT `fk_orderdetail_order` FOREIGN KEY (`orderId`) REFERENCES `bookorder` (`orderId`) ON DELETE CASCADE;
@@ -662,3 +680,27 @@ SELECT '秒杀系统表结构创建完成！' as message, NOW() as createTime;
 # ) WHERE `id` > 0;
 #
 #
+
+-- ========================================
+-- 公告与网站介绍相关表
+-- ========================================
+
+-- 公告表
+CREATE TABLE `announcement` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '公告编号',
+    `title` VARCHAR(255) NOT NULL COMMENT '公告标题',
+    `content` TEXT NOT NULL COMMENT '公告内容',
+    `author` VARCHAR(100) DEFAULT NULL COMMENT '发布人账号',
+    `publishTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+    `enable` TINYINT(1) DEFAULT '1' COMMENT '是否展示 (1=展示,0=隐藏)',
+    PRIMARY KEY (`id`),
+    KEY `idx_enable` (`enable`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站公告表';
+
+-- 网站介绍表 (理论上只保存一条记录)
+CREATE TABLE `about` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID (固定为1)',
+    `content` TEXT NOT NULL COMMENT '网站介绍内容',
+    `updateTime` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网站介绍信息表';

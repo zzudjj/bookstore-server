@@ -79,6 +79,17 @@ public class BookController {
     }
 
     /**
+     * 获取所有图书，用于选择器等场景
+     * @return
+     */
+    @GetMapping("/all")
+    public Map<String,Object> getAllBooks() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("books", bookService.getBooks());
+        return ResultUtil.resultSuccess(map);
+    }
+
+    /**
      * 修改图书
      * @param book
      * @return
@@ -164,7 +175,7 @@ public class BookController {
     }
 
     /**
-     * 修改图书是否为新进状态
+     * 修改图书是否为新品状态
      * @param bookId
      * @param newProduct
      * @return
@@ -312,7 +323,6 @@ public class BookController {
             default:
                 return ResultUtil.resultCode(200,"批量操作失败");
         }
-                bookService.getNewProductsByPage(1, 14);
         for(int i=0;i<bookList.size();i++){
             String img = bookService.getBookCover(bookList.get(i).getisbn());
             bookList.get(i).setCoverImg(img);
@@ -461,5 +471,80 @@ public class BookController {
         }
         return ResultUtil.resultCode(200,"批量操作成功");
     }
+
+    /**
+     * 搜索图书
+     * @param keyword 搜索关键字（可搜索书名、作者、ISBN、出版社）
+     * @param page 页码
+     * @param pageSize 每页大小
+     * @return
+     */
+    @GetMapping("/searchBooks")
+    public Map<String, Object> searchBooks(@RequestParam(value = "keyword") String keyword,
+                                          @RequestParam(value = "page", defaultValue = "1") int page,
+                                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        logger.info("搜索图书: keyword={}, page={}, pageSize={}", keyword, page, pageSize);
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return ResultUtil.resultCode(400, "搜索关键字不能为空");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        List<Book> bookList = bookService.searchBooks(keyword.trim(), page, pageSize);
+
+        // 设置图书封面图片
+        for (int i = 0; i < bookList.size(); i++) {
+            String img = bookService.getBookCover(bookList.get(i).getisbn());
+            logger.debug("设置图书封面图片: isbn={}", bookList.get(i).getisbn());
+            bookList.get(i).setCoverImg(img);
+        }
+
+        int total = bookService.getSearchBookCount(keyword.trim());
+
+        map.put("bookList", bookList);
+        map.put("total", total);
+        map.put("keyword", keyword.trim());
+        map.put("page", page);
+        map.put("pageSize", pageSize);
+
+        return ResultUtil.resultSuccess(map);
+    }
+
+/**
+ * 搜索图书
+ * @param params 包含关键字、页码和页面大小的Map
+ * @return
+ */
+@PostMapping("/searchBooks")
+public Map<String, Object> searchBooks(@RequestBody Map<String, Object> params) {
+    String keyword = (String) params.get("keyword");
+    int page = params.containsKey("page") ? (Integer) params.get("page") : 1;
+    int pageSize = params.containsKey("pageSize") ? (Integer) params.get("pageSize") : 10;
+    logger.info("搜索图书: keyword={}, page={}, pageSize={}", keyword, page, pageSize);
+
+    if (keyword == null || keyword.trim().isEmpty()) {
+        return ResultUtil.resultCode(400, "搜索关键字不能为空");
+    }
+
+    Map<String, Object> map = new HashMap<>();
+    List<Book> bookList = bookService.searchBooks(keyword.trim(), page, pageSize);
+
+    // 设置图书封面图片
+    for (int i = 0; i < bookList.size(); i++) {
+        String img = bookService.getBookCover(bookList.get(i).getisbn());
+        logger.debug("设置图书封面图片: isbn={}", bookList.get(i).getisbn());
+        bookList.get(i).setCoverImg(img);
+    }
+
+    int total = bookService.getSearchBookCount(keyword.trim());
+
+    map.put("bookList", bookList);
+    map.put("total", total);
+    map.put("keyword", keyword.trim());
+    map.put("page", page);
+    map.put("pageSize", pageSize);
+
+    return ResultUtil.resultSuccess(map);
+}
 
 }

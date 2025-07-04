@@ -94,16 +94,26 @@ INSERT INTO `booksortlist` (`bookSortId`, `bookId`) VALUES
 -- 书单数据
 -- ========================================
 
-INSERT INTO `booktopic` (`topicName`, `subTitle`, `cover`, `rank`, `put`) VALUES
-('程序员必读书单', '提升编程技能的经典书籍', 'static/image/topic/programmer_books.jpg', 1, 1),
-('古典文学精选', '传承千年的文学瑰宝', 'static/image/topic/classic_literature.jpg', 2, 1);
+-- 删除旧表插入示例数据
+# DELETE FROM `topic_fav`;
+# DELETE FROM `topic_item`;
+# DELETE FROM `topic`;
 
-INSERT INTO `subbooktopic` (`topicId`, `bookId`, `recommendReason`) VALUES
-(1, 2, 'Java开发者的必备参考书，内容全面深入'),
-(1, 3, '算法学习的经典教材，计算机科学基础'),
-(1, 4, '现代Java开发框架实战指南'),
-(2, 1, '中国古典小说的巅峰之作，文学价值极高'),
-(2, 5, '神话色彩浓厚的古典小说，想象力丰富');
+-- 新书单示例数据
+INSERT INTO `topic` (`title`,`subTitle`,`cover`,`rank`,`status`,`viewCnt`,`favCnt`,`orderCnt`) VALUES
+('程序员必读书单','提升编程技能的经典书籍','static/image/topic/programmer_books.jpg',1,1,0,0,0),
+('古典文学精选','传承千年的文学瑰宝','static/image/topic/classic_literature.jpg',2,1,0,0,0);
+
+-- 书单条目
+INSERT INTO `topic_item` (`topicId`,`bookId`,`recommendReason`,`orderNo`) VALUES
+(1,2,'Java开发者的必备参考书，内容全面深入',1),
+(1,3,'算法学习的经典教材，计算机科学基础',2),
+(1,4,'现代Java开发框架实战指南',3),
+(2,1,'中国古典小说的巅峰之作，文学价值极高',1),
+(2,5,'神话色彩浓厚的古典小说，想象力丰富',2);
+
+-- 示例收藏（可选）
+-- INSERT INTO `topic_fav` (`userAccount`,`topicId`) VALUES ('user1@example.com',1);
 
 -- ========================================
 -- 购物车示例数据
@@ -138,3 +148,18 @@ INSERT INTO `expense` (`orderId`, `productTotalMoney`, `freight`, `coupon`, `act
 UPDATE `publish` SET `num` = (
     SELECT COUNT(*) FROM `book` WHERE `book`.`publish` = `publish`.`name`
 ) WHERE `id` > 0;
+
+-- ========================================
+-- 公告示例数据
+-- ========================================
+
+INSERT INTO `announcement` (`title`, `content`, `author`, `publishTime`, `enable`) VALUES
+('系统维护通知', '尊敬的读者：网站将于本周日 00:00-02:00 进行服务器维护，期间将暂停访问，敬请谅解。', 'admin@bookstore.com', NOW(), 1),
+('新书上架公告', '本月新上架 50 余种精品好书，欢迎大家选购！', 'admin@bookstore.com', NOW(), 1);
+
+-- ========================================
+-- 网站介绍示例数据（仅 1 条）
+-- ========================================
+
+INSERT INTO `about` (`id`, `content`, `updateTime`) VALUES
+(1, '智慧书店致力于为读者提供多元化、精品化的阅读体验——精选图书、每日特价、秒杀活动，尽享阅读乐趣。', NOW());
