@@ -10,8 +10,6 @@ import javax.validation.Validator;
 /**
  * 参数验证配置类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 配置Bean Validation相关组件
  */
 @Configuration

@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 21:52
  * @description: 用来描述订单明细中的图书信息
  */
 public class OrderBookDto {

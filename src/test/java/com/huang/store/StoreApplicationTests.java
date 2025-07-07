@@ -127,7 +127,7 @@ class StoreApplicationTests {
     @Test
     void TestUser(){
         User user = new User();
-        user.setAccount("黄龙");
+        user.setAccount("hh");
         user.setPassword("789");
         boolean flag = userService.isExist(user.getAccount(),"78910");
         System.out.println(flag);
@@ -418,7 +418,7 @@ class StoreApplicationTests {
 //        for (int i = 1; i <= 3; i++) {
 //            User user = new User();
 //            user.setSalary(200);
-//            user.setUserName("黄龙");
+//            user.setUserName("hh");
 //            user.setPassWord("123456");
 //            user.setUid(i+3);
 //            //计算分数和值
@@ -439,7 +439,7 @@ class StoreApplicationTests {
 //            User user = new User();
 //            user.setUid(i);
 //            user.setSalary(200);
-//            user.setUserName("黄龙");
+//            user.setUserName("hh");
 //            user.setPassWord("123456");
 //            redisTemplate.opsForZSet().add("cat",user,new Date().getTime());
 //        }

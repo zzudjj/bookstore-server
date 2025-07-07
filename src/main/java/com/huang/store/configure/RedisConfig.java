@@ -18,11 +18,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-/**
- * @author: 黄龙
- * @date: 2020/7/18 8:23
- * @description:
- */
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {

@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * 订单配置Mapper接口
  * 
- * @author Augment Agent
- * @date 2025-07-03
  * @description 订单配置数据访问层
  */
 @Mapper

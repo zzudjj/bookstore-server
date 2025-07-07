@@ -3,8 +3,6 @@ package com.huang.store.enums;
 /**
  * 订单状态枚举 - 统一标准版本
  *
- * @author 系统管理员
- * @date 2024-01-01
  * @description 订单状态的统一枚举定义
  */
 public enum OrderStatusEnum {

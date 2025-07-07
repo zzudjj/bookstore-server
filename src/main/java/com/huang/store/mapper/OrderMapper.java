@@ -13,8 +13,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 16:52
  * @description:
  */
 @Repository

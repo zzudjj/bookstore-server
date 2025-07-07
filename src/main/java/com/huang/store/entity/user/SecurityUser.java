@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 14:54
  * @description: 安全用户类 用于SpringSecurity中
  */
 @Data

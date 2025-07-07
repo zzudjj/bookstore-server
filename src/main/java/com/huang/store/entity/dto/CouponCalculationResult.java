@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 /**
  * 优惠券计算结果DTO
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券折扣计算结果
  */
 @Data

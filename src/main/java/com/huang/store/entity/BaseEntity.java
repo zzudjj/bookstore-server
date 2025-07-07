@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 /**
  * 基础实体类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 包含所有实体类的公共字段
  */
 @Data

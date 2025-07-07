@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:49
  * @description: 前后端交互的订单类
  */
 public class OrderDto {

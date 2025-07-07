@@ -3,8 +3,6 @@ package com.huang.store.entity.order;
 import java.sql.Timestamp;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/23 20:06
  * @description: 订单明细
  */
 public class OrderDetail {

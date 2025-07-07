@@ -3,8 +3,6 @@ package com.huang.store.enums;
 /**
  * 性别枚举
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 用户性别的枚举定义
  */
 public enum GenderEnum {

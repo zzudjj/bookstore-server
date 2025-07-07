@@ -1,8 +1,6 @@
 package com.huang.store.entity.book;
 
 /**
- * @author: 黄龙
- * @date: 2020/6/16 16:31
  * @description: 图书图片类
  */
 public class BookImg {

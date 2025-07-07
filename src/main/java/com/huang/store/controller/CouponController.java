@@ -20,8 +20,6 @@ import java.util.Map;
 /**
  * 优惠券控制器
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券相关API接口
  */
 @Controller

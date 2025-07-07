@@ -16,11 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author: 黄龙
- * @date: 2020/7/23 20:18
- * @description:
- */
 @Controller
 @ResponseBody
 public class CartController {

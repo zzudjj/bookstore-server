@@ -3,8 +3,6 @@ package com.huang.store.common;
 /**
  * 系统常量类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 统一管理系统中使用的常量
  */
 public class Constants {

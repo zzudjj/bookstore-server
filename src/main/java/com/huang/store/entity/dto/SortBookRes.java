@@ -4,8 +4,6 @@ import com.huang.store.entity.book.Book;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:50
  * @description: 某一个子分类的和这个子分类所包含的14本图书
  */
 public class SortBookRes {

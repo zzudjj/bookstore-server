@@ -18,8 +18,6 @@ import java.util.Calendar;
 /**
  * 仪表盘服务实现类
  * 
- * @author: 黄龙
- * @date: 2025/07/03
  * @description: 实现管理员仪表盘所需的各种统计数据服务
  */
 @Service

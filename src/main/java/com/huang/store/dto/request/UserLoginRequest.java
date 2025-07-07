@@ -6,8 +6,6 @@ import javax.validation.constraints.NotBlank;
 /**
  * 用户登录请求DTO
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 用户登录时的请求参数
  */
 public class UserLoginRequest {

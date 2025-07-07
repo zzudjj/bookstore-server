@@ -5,8 +5,6 @@ import com.huang.store.entity.book.Book;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 10:35
  * @description: 订单明细类
  */
 public class OrderDetailDto {

@@ -5,8 +5,6 @@ import lombok.Data;
 /**
  * 地址实体类
  *
- * @author: 黄龙
- * @date: 2020/7/23 13:30
  * @description: 地址类
  */
 @Data

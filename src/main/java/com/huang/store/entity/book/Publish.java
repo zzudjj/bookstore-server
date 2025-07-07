@@ -2,8 +2,6 @@
 package com.huang.store.entity.book;
 
 /**
- * @author: 黄龙
- * @date: 2020/6/12 20:58
  * @description: 出版社类
  */
 public class Publish {

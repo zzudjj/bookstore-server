@@ -5,8 +5,6 @@ import java.util.Map;
 /**
  * 仪表盘服务接口
  * 
- * @author: 黄龙
- * @date: 2025/07/03
  * @description: 提供管理员仪表盘所需的各种统计数据服务
  */
 public interface DashboardService {

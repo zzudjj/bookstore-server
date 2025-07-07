@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:50
  * @description: 书单图书
  */
 public class TopicBook {

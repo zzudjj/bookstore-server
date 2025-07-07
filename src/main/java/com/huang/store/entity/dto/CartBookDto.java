@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/23 20:56
  * @description: 购物车的前后端交互实体类
  */
 public class CartBookDto {

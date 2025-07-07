@@ -10,8 +10,6 @@ import java.util.Map;
 /**
  * 管理员仪表盘控制器
  * 
- * @author: 黄龙
- * @date: 2025/07/03
  * @description: 提供管理员仪表盘所需的各种统计数据
  */
 @RestController

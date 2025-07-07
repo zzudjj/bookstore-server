@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 /**
  * 优惠券服务实现类
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券业务逻辑实现
  */
 @Service

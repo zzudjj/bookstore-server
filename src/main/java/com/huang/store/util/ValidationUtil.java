@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 /**
  * 参数验证工具类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 提供常用的参数验证方法
  */
 public class ValidationUtil {
