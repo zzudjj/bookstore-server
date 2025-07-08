@@ -35,3 +35,6 @@ build/
 /src/main/resources/database/bookstore_complete_setup.sql
 /logs/error.2025-07-05.log
 /logs/error.2025-07-06.log
+/logs/
+/logs/bookstore.2025-07-08.log
+/logs/error.2025-07-08.log
