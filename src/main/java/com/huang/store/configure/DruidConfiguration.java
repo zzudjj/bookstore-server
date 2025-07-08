@@ -17,8 +17,6 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/26 19:42
  * @description:
  */
 

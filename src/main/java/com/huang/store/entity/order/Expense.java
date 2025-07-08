@@ -3,8 +3,6 @@ package com.huang.store.entity.order;
 import java.math.BigDecimal;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 9:37
  * @description: 订单费用
  */
 public class Expense {

@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 /**
  * 优惠券模板实体类
  *
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券模板，管理员创建的优惠券类型
  */
 @Data

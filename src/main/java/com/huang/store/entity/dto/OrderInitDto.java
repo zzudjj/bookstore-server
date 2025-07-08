@@ -6,8 +6,6 @@ import com.huang.store.entity.user.Address;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 21:09
  * @description: 初始化订单的交互类
  */
 public class OrderInitDto {

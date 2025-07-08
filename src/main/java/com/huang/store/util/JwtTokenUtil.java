@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/29 19:27
  * @description: JwtToken生成的工具类
  */
 @Component

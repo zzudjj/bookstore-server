@@ -9,8 +9,6 @@ import java.util.List;
 /**
  * 用户优惠券Mapper接口
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 用户优惠券数据访问层
  */
 @Mapper

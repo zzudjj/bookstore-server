@@ -7,8 +7,6 @@ import java.sql.Timestamp;
 /**
  * 库存预留实体类
  * 
- * @author Augment Agent
- * @date 2025-07-02
  * @description 用于管理订单的库存预留信息
  */
 @Data

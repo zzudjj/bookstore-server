@@ -7,8 +7,6 @@ import java.sql.Timestamp;
 /**
  * 订单配置实体类
  * 
- * @author Augment Agent
- * @date 2025-07-03
  * @description 用于管理订单相关的配置信息
  */
 @Data

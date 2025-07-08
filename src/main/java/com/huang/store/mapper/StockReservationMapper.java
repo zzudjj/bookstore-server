@@ -11,8 +11,6 @@ import java.util.List;
 /**
  * 库存预留Mapper接口
  * 
- * @author Augment Agent
- * @date 2025-07-02
  * @description 库存预留数据访问层
  */
 @Mapper

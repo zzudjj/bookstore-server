@@ -11,8 +11,6 @@ import java.io.FileNotFoundException;
  * 文件上传配置类
  * 统一管理文件上传相关的路径配置
  * 
- * @author: 系统管理员
- * @date: 2024-01-01
  * @description: 文件上传路径配置
  */
 @Component

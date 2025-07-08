@@ -1,8 +1,6 @@
 package com.huang.store.entity.order;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/25 22:29
  * @description: 订单状态
  */
 public class OrderStatus {

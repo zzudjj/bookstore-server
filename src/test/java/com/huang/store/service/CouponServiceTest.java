@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 优惠券服务测试类
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 测试优惠券系统的核心功能
  */
 @SpringBootTest

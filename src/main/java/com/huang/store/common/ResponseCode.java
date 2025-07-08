@@ -3,8 +3,6 @@ package com.huang.store.common;
 /**
  * 响应状态码常量类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 统一管理API响应状态码
  */
 public class ResponseCode {

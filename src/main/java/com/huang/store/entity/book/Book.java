@@ -9,8 +9,6 @@ import java.util.List;
 /**
  * 图书实体类
  *
- * @author: 黄龙
- * @date: 2020/7/22 21:44
  * @description: 图书实体类
  */
 @Data

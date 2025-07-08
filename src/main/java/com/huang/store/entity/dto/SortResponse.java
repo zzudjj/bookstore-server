@@ -4,8 +4,6 @@ import com.huang.store.entity.book.BookSort;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:50
  * @description: 分类集合
  */
 public class SortResponse {

@@ -10,8 +10,6 @@ import java.util.List;
 /**
  * 优惠券服务接口
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券业务逻辑接口
  */
 public interface CouponService {

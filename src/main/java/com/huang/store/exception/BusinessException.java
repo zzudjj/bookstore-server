@@ -5,8 +5,6 @@ import com.huang.store.common.ResponseCode;
 /**
  * 业务异常类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 用于处理业务逻辑中的异常情况
  */
 public class BusinessException extends RuntimeException {

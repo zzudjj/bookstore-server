@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 /**
  * 创建优惠券请求DTO
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 管理员创建优惠券时的请求参数
  */
 @Data

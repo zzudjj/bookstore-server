@@ -18,8 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/29 12:43
  * @description: JWT过滤类
  */
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {

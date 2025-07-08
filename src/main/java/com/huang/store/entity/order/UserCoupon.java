@@ -11,8 +11,6 @@ import java.sql.Timestamp;
 /**
  * 用户优惠券实体类
  *
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 用户领取的优惠券实例
  */
 @Data

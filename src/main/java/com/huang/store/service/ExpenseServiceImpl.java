@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 16:49
  * @description:
  */
 @Service("expense")

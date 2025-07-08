@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:09
  * @description:
  */
 @Component

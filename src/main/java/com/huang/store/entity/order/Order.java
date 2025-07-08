@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 /**
  * 订单实体类
  *
- * @author: 黄龙
- * @date: 2020/7/28 8:42
  * @description: 订单
  */
 @Data

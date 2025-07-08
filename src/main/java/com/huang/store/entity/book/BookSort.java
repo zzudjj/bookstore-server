@@ -1,8 +1,6 @@
 package com.huang.store.entity.book;
 
 /**
- * @author: 黄龙
- * @date: 2020/6/10 11:26
  * @description: 图书分类
  */
 public class BookSort {

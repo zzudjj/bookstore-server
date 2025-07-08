@@ -9,8 +9,6 @@ import java.util.Map;
 /**
  * 统一API响应实体类
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 统一的API响应格式，包含状态码、消息、数据和时间戳
  */
 public class ApiResponse<T> {

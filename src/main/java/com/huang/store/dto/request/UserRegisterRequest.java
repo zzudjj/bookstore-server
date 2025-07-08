@@ -7,8 +7,6 @@ import javax.validation.constraints.Size;
 /**
  * 用户注册请求DTO
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 用户注册时的请求参数
  */
 public class UserRegisterRequest {

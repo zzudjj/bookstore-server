@@ -8,8 +8,6 @@ import java.util.List;
 /**
  * 优惠券模板Mapper接口
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 优惠券模板数据访问层
  */
 @Mapper

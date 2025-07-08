@@ -2,8 +2,6 @@ package com.huang.store.entity.user;
 
 import java.sql.Timestamp;
 /**
- * @author: 黄龙
- * @date: 2020/7/22 21:46
  * @description: 购物车类
  */
 public class Cart {

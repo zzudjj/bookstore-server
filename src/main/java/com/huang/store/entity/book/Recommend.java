@@ -3,8 +3,6 @@ package com.huang.store.entity.book;
 import java.sql.Timestamp;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 21:17
  * @description: 推荐类
  */
 

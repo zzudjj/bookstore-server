@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @author: 黄龙
- * @date: 2020/6/15 21:48
  * @description:
  */
 public class FileUtil {

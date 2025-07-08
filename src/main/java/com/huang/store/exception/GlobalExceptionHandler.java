@@ -20,8 +20,6 @@ import java.util.Set;
 /**
  * 全局异常处理器
  * 
- * @author 系统管理员
- * @date 2024-01-01
  * @description 统一处理系统中的异常，返回标准的错误响应
  */
 @RestControllerAdvice

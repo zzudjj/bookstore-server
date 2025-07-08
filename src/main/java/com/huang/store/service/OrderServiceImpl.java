@@ -34,8 +34,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/22 8:59
  * @description:
  */
 @Service("orderService")

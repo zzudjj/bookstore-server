@@ -9,8 +9,6 @@ import java.sql.Timestamp;
 /**
  * 优惠券模板DTO
  * 
- * @author: 黄龙
- * @date: 2024/12/01
  * @description: 用于前后端交互的优惠券模板数据传输对象
  */
 @Data

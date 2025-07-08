@@ -1,8 +1,6 @@
 package com.huang.store.entity.dto;
 
 /**
- * @author: 黄龙
- * @date: 2020/7/20 15:50
  * @description: 子书单明细
  */
 public class SubTopicRes {
